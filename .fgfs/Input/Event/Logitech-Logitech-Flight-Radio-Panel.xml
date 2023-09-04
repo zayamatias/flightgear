@@ -1,0 +1,1375 @@
+﻿<?xml version="1.0"?>
+<PropertyList>
+  <name type="string">Logitech Logitech Flight Radio Panel</name>
+  <debug-events type="bool">false</debug-events>
+  <nasal>
+    <open>
+      <![CDATA[
+
+      var initPanel = func(){
+        ### INITIALIZE ALL PANELS TO BLANK 
+        setprop('/saitek/RP/ULpanel/digit1',10);
+        setprop('/saitek/RP/ULpanel/digit2',10);
+        setprop('/saitek/RP/ULpanel/digit3',10);
+        setprop('/saitek/RP/ULpanel/digit4',10);
+        setprop('/saitek/RP/ULpanel/digit5',10);
+        setprop('/saitek/RP/URpanel/digit1',10);
+        setprop('/saitek/RP/URpanel/digit2',10);
+        setprop('/saitek/RP/URpanel/digit3',10);
+        setprop('/saitek/RP/URpanel/digit4',10);
+        setprop('/saitek/RP/URpanel/digit5',10);
+        setprop('/saitek/RP/LLpanel/digit1',10);
+        setprop('/saitek/RP/LLpanel/digit2',10);
+        setprop('/saitek/RP/LLpanel/digit3',10);
+        setprop('/saitek/RP/LLpanel/digit4',10);
+        setprop('/saitek/RP/LLpanel/digit5',10);
+        setprop('/saitek/RP/LRpanel/digit1',10);
+        setprop('/saitek/RP/LRpanel/digit2',10);
+        setprop('/saitek/RP/LRpanel/digit3',10);
+        setprop('/saitek/RP/LRpanel/digit4',10);
+        setprop('/saitek/RP/LRpanel/digit5',10);
+      }
+      var setdefault=func(){  
+        ## CREATE DEFAULT SELECTOR PROPERTIES
+        setprop('/saitek/RP/upknoba','/instrumentation/comm/frequencies/selected-mhz');
+        setprop('/saitek/RP/upknobb','/instrumentation/comm/frequencies/standby-mhz');
+        setprop('/saitek/RP/upknobt',5);
+        setprop('/saitek/RP/upknobidx',1);
+        setprop('/saitek/RP/upknobmax',137);
+        setprop('/saitek/RP/upknobmin',118);
+        setprop('/saitek/RP/upknobfstep',1);
+        setprop('/saitek/RP/upknobhstep',0.25);
+        setprop('/saitek/RP/upknobsw','/instrumentation/comm/frq-swap-btn');
+        setprop('/saitek/RP/lowknoba','/instrumentation/nav/frequencies/selected-mhz');
+        setprop('/saitek/RP/lowknobb','/instrumentation/nav/frequencies/standby-mhz');
+        setprop('/saitek/RP/lowknobt',5);
+        setprop('/saitek/RP/lowknobidx',1);
+        setprop('/saitek/RP/lowknobmax',118);
+        setprop('/saitek/RP/lowknobmin',108);
+        setprop('/saitek/RP/lowknobfstep',1);
+        setprop('/saitek/RP/lowknobhstep',0.25);
+        setprop('/saitek/RP/lowknobsw','/instrumentation/nav/frq-swap-btn');
+        setprop('/saitek/RP/tempu',0);
+        setprop('/saitek/RP/templ',0);
+      }
+
+      ## CHECK IF COMMS 1 IS TURNED ON, FOR THIS THE BATTERY, AVIONICS AND RADIO SHOULD BE ON
+
+      var batavon = func(){
+        var bat = (typeof(getprop('/controls/electric/battery-switch'))=='nil' or getprop('/controls/electric/battery-switch'));
+        var mav = (typeof(getprop('/controls/switches/master-avionics'))=='nil' or getprop('/controls/switches/master-avionics'));
+        var mas = (typeof(getprop('/controls/switches/master'))=='nil' or getprop('/controls/switches/master'));
+        var enabled = bat and (mav and mas);
+        return enabled;
+      }
+
+      var comms1on = func(){
+        return (batavon() and getprop('/instrumentation/comm/power-btn'));
+      }
+
+      ## CHECK IF COMMS 2 IS TURNED ON, FOR THIS THE BATTERY, AVIONICS AND RADIO SHOULD BE ON
+
+      var comms2on = func(){
+        return (batavon() and getprop('/instrumentation/comm[1]/power-btn'));
+      }
+
+      ## CHECK IF NAV 1 IS TURNED ON, FOR THIS THE BATTERY, AVIONICS AND NAV SHOULD BE ON
+
+      var nav1on = func(){
+        return (batavon() and getprop('/instrumentation/nav/power-btn'));
+      }
+
+      ## CHECK IF NAV 2 IS TURNED ON, FOR THIS THE BATTERY, AVIONICS AND NAV SHOULD BE ON
+
+      var nav2on = func(){
+        return (batavon() and getprop('/instrumentation/nav[1]/power-btn'));
+      }
+
+      ## CHECK IF ADF IS TURNED ON, FOR THIS THE BATTERY, AVIONICS AND ADF SHOULD BE ON
+
+      var adfon = func(){
+        return (batavon() and getprop('/instrumentation/adf/power-btn'));
+      }
+
+      ## CHECK IF DME IS TURNED ON, FOR THIS THE BATTERY, AVIONICS AND DME SHOULD BE ON
+
+      var dmeon = func(){
+        return (batavon() and getprop('/instrumentation/dme/power-btn'));
+      }
+
+      ## CHECK IF TRANSPONDER IS TURNED ON, FOR THIS THE BATTERY, AVIONICS AND TRANSPONDER SHOULD BE ON
+
+      var xpdron = func(){
+        return (batavon() and getprop('/instrumentation/dme/power-btn'));
+      }
+
+      ##CAN WE ACTIVATE THE PANELS?
+
+      var activatepanels = func(){
+        var activate = (comms1on() or comms2on() or nav1on() or nav2on() or adfon() or dmeon());
+        return activate;
+      }
+
+      # CONVERT A STRING TO A LIST OF LEDS
+
+      var ledconvert = func(strvalue,digits,isxpdr,xpdridx){
+        var dotidx = find('.',strvalue);
+        if (dotidx == digits){
+          strvalue = substr(strvalue,0,digits);
+          dotidx = -1;
+        }
+        ## GET THE SIZE OF THE ORIGINAL STRING
+        var ssize = size(strvalue);
+        ## SET DME AS FALSE BY DEFALUT
+        ## IF DIGITS ARE MARKED AS 99 IT IS A NON FIXED SIZE
+        if (digits==99){
+          ## WE RETURN THE ACTUAL SIZE (less one if there's a DOT)
+          if (dotidx != -1){
+            digits = ssize-1;
+          }else{
+            digits=ssize;
+          }
+        }
+        ## IF IT IS AN EMPTY STRING, FILL IT WITH BLANKS (10)
+        if (ssize==0){
+          return [10,10,10,10,10];
+        }
+        ### INITIALIZE THE DIGITS TO BE RETURNED
+        var retdigs=[];
+        ## IF NUMBER IS LESS THAN 5 IN SIZE, ADD PRECEEDING EMPTY'S
+        for (n = 0;n < (5-digits);n += 1){
+          append(retdigs,10);
+        }
+        ## GO DIGIT BY DIGIT, IT IS ALWAY A DIRECT CONVERSION EXCEPT FOR THE '.', WHICH ADDS 208 TO PREVIOUS DIGIT
+        for (n = 0;n < ssize; n += 1){
+          ## DO NOT PUT A DOT AT THE END
+          if (substr(strvalue,n,1)=='.' and n<=4){
+            retdigs[size(retdigs)-1]=retdigs[size(retdigs)-1]+208;
+            }else{
+              append(retdigs,num(substr(strvalue,n,1)));
+           }
+        }
+        ## FOR XXX.00 NUMBERS THAT APPEAR AS 3 DIGITS, ADD A DOT (VALUE 208)
+        if (size(retdigs)==3 and digits==5 and retdigs[0]!=10 ){
+          retdigs[2]=retdigs[2]+208;
+        }
+        ## IF THERE ARE LESS DIGITS THAT THERE SHOULD BE, ADD TRAILING 0's
+        if (size(retdigs)<digits){
+          for (n=0;n<(digits-size(retdigs))+1;n += 1){
+            append(retdigs,0);
+          }
+        }
+        ## IF WE HAVE SELECTED THE XPDR FUNCTION, SHOW A DOT ON THE DIGIT SELECTION
+        if (isxpdr){
+          retdigs[xpdridx]=retdigs[xpdridx]+208;
+        }
+        return retdigs;
+      }
+
+      ## RETURN USABLE STRING FOR PANEL
+
+      var panelvalue=func(prop,isxpdr,isdme){
+        if (getprop(prop)!=''){
+          if (!isxpdr){
+            if (!isdme){
+              strvalue = sprintf('%.2f',getprop(getprop(prop)));
+            }else{
+              strvalue = sprintf('%.2f',getprop(getprop(prop)));
+            }
+          }else{
+            strvalue = convertxpdrvalue(getprop(getprop(prop)));
+          }
+        }
+        return strvalue;
+      }
+
+
+      ## SET LEDS FOR UPPER RIGHT PANEL
+
+      var setURPanel = func(prop) {
+        if (!activatepanels()){
+           return;
+        }
+        var isdme = (getprop('/saitek/RP/upknobsw')=='DME');
+        var isxpdr = (getprop('/saitek/RP/upknobsw')=='XPDR');
+        var idx = getprop('/saitek/RP/upknobidx');
+        var strvalue =panelvalue(prop,isxpdr,isdme);
+        var paneldigits = ledconvert(strvalue,getprop('/saitek/RP/upknobt'),isxpdr,idx); 
+        setprop('/saitek/RP/URpanel/digit1',paneldigits[0]);
+        setprop('/saitek/RP/URpanel/digit2',paneldigits[1]);
+        setprop('/saitek/RP/URpanel/digit3',paneldigits[2]);
+        setprop('/saitek/RP/URpanel/digit4',paneldigits[3]);
+        setprop('/saitek/RP/URpanel/digit5',paneldigits[4]);
+      }
+
+      ## SET LEDS FOR UPPER LEFT PANEL
+
+      var setULPanel = func(prop) {
+        if (!activatepanels()){
+          return;
+        }
+        var isxpdr = (getprop('/saitek/RP/upknobsw')=='XPDR');
+        var isdme = (getprop('/saitek/RP/upknobsw')=='DME');
+        var idx = getprop('/saitek/RP/upknobidx');
+        if (!isxpdr){
+          var strvalue =panelvalue(prop,isxpdr,isdme);
+        }else{
+          var strvalue='';
+        }
+        var paneldigits = ledconvert(strvalue,getprop('/saitek/RP/upknobt'),isxpdr,idx); 
+        setprop('/saitek/RP/ULpanel/digit1',paneldigits[0]);
+        setprop('/saitek/RP/ULpanel/digit2',paneldigits[1]);
+        setprop('/saitek/RP/ULpanel/digit3',paneldigits[2]);
+        setprop('/saitek/RP/ULpanel/digit4',paneldigits[3]);
+        setprop('/saitek/RP/ULpanel/digit5',paneldigits[4]);
+      }
+
+      ## SET LEDS FOR LOWER RIGHT PANEL
+
+      var setLRPanel = func(prop) {
+        if (!activatepanels()){
+          return;
+        }
+        var isxpdr = (getprop('/saitek/RP/lowknobsw')=='XPDR');
+        var idx = getprop('/saitek/RP/lowknobidx');
+        var isdme = (getprop('/saitek/RP/lowknobsw')=='DME');
+        var strvalue =panelvalue(prop,isxpdr,isdme);
+        var paneldigits = ledconvert(strvalue,getprop('/saitek/RP/lowknobt'),isxpdr,idx); 
+        setprop('/saitek/RP/LRpanel/digit1',paneldigits[0]);
+        setprop('/saitek/RP/LRpanel/digit2',paneldigits[1]);
+        setprop('/saitek/RP/LRpanel/digit3',paneldigits[2]);
+        setprop('/saitek/RP/LRpanel/digit4',paneldigits[3]);
+        setprop('/saitek/RP/LRpanel/digit5',paneldigits[4]);
+      }
+
+      ## SET LEDS FOR LOWER LEFT PANEL
+
+      var setLLPanel = func(prop) {
+        if (!activatepanels()){
+          return;
+        }
+        var isxpdr = (getprop('/saitek/RP/lowknobsw')=='XPDR');
+        var idx = getprop('/saitek/RP/lowknobidx');
+        var isdme = (getprop('/saitek/RP/lowknobsw')=='DME');
+        if (!isxpdr){
+          var strvalue =panelvalue(prop,isxpdr,isdme);
+        }else{
+          strvalue='';
+        }
+        var paneldigits = ledconvert(strvalue,getprop('/saitek/RP/lowknobt'),isxpdr,idx); 
+        setprop('/saitek/RP/LLpanel/digit1',paneldigits[0]);
+        setprop('/saitek/RP/LLpanel/digit2',paneldigits[1]);
+        setprop('/saitek/RP/LLpanel/digit3',paneldigits[2]);
+        setprop('/saitek/RP/LLpanel/digit4',paneldigits[3]);
+        setprop('/saitek/RP/LLpanel/digit5',paneldigits[4]);
+      }
+
+      ### REFRESH ALL PANELS
+
+      var refreshPanels = func(){
+        setURPanel('/saitek/RP/upknobb');
+        setULPanel('/saitek/RP/upknoba');
+        setLRPanel('/saitek/RP/lowknobb');
+        setLLPanel('/saitek/RP/lowknoba');
+        }
+
+        ## CONVERT STRING FOR XPDR, SINCE IT IS AN INTEGER, WE NEED TO ADD PRECEEDING 0's IF NEEDED 
+
+      var convertxpdrvalue = func (xpdr){
+        length = 4;
+        temp = sprintf(xpdr);
+        missing = length-size(temp);
+        for (n=0;n<missing;n+=1){
+          temp = '0'~temp;
+        }
+        return temp;
+      }
+
+      ## SETS THE VALUE OF A PROPERY
+
+      var adjustvalue = func (prop,step,max,min,wrap,upper){
+        if (!activatepanels()){
+          return;
+        }
+        var isdme = (getprop('/saitek/RP/lowknobsw')=='DME');
+        if (upper){
+          isdme = (getprop('/saitek/RP/upknobsw')=='DME');
+        }
+        if (isdme){
+          return;
+        }
+        var isxpdr = ((getprop('/saitek/RP/lowknobsw')=='XPDR') and !upper) or ((getprop('/saitek/RP/upknobsw')=='XPDR') and upper);
+        if (isxpdr){
+          var idx = getprop('/saitek/RP/lowknobidx');
+          sval=convertxpdrvalue(getprop(prop));
+          numbs=[substr(sval,0,1),substr(sval,1,1),substr(sval,2,1),substr(sval,3,1)];
+          numb = num(numbs[idx-1]);
+          if (step > 0){
+            numb = numb + 1;
+            if (numb==8){
+              numb = 0;
+            }
+          }else{
+            numb = numb - 1;
+            if (numb==-1){
+              numb = 7;
+            }
+          }
+          numbs[idx-1]=numb;
+          sval = numbs[0]~numbs[1]~numbs[2]~numbs[3];
+          setprop(prop,num(sval));
+          return;
+        }
+        if (substr(prop,0,1) != '/'){
+          return;
+        }
+        currval = getprop(prop);
+        currval = currval + step;
+        if (currval > max){
+          if (wrap){
+            currval = min;
+          }else{
+            currval = max;
+          }
+        }
+        if (currval < min){
+          if (wrap) {
+            currval = max;
+          }else{
+            currval = min;
+          }
+        }
+        setprop(prop,currval);
+      }
+
+      ## CALLED BY THE SWAP BUTTON EVENT, IT SWITCHES VALUES EXCEPT FOR XPDR, WHICH CYCES THROUGH DIGITS
+
+      var switchbtn = func(upper){
+        var isdme = ((getprop('/saitek/RP/lowknobsw')=='DME') and !upper) or (getprop('/saitek/RP/upknobsw')=='DME' and upper);
+        if (isdme){
+          var selected = !getprop('/instrumentation/dme/switch-min-kts');
+          setprop('/instrumentation/dme/switch-min-kts',selected);
+          if (selected){
+            if (upper){
+              setprop('/saitek/RP/upknobb','/instrumentation/dme/indicated-ground-speed-kt');
+            }else{
+              setprop('/saitek/RP/lowknobb','/instrumentation/dme/indicated-ground-speed-kt');
+            }
+          }else{
+            if (upper){
+              setprop('/saitek/RP/upknobb','/instrumentation/dme/indicated-time-min');
+            }else{
+              setprop('/saitek/RP/lowknobb','/instrumentation/dme/indicated-time-min');
+            }
+          }
+          refreshPanels();
+          return;
+        }
+        var isxpdr = (getprop('/saitek/RP/lowknobsw')=='XPDR' and !upper) or (getprop('/saitek/RP/upknobsw')=='XPDR' and upper);
+        ## XPDR, CYCLE THROUGH DIGITS, CHECK IF IT IS UPPER OR LOWER PANEL AND UPDATE DIGIT SELECTION
+        if (isxpdr){
+          var idx = getprop('/saitek/RP/lowknobidx');
+          idx = idx + 1;
+          if (idx == 5){
+            idx =1;
+          }
+          if(upper){
+            setprop('/saitek/RP/upknobidx',idx);
+          }else{
+            setprop('/saitek/RP/lowknobidx',idx);
+          }
+          refreshPanels();
+          return;
+        }
+
+        ## ALL OTHER 'NORMAL' CASES
+        if (upper){
+          setprop('/saitek/RP/tempu',getprop(getprop('/saitek/RP/upknoba')));
+          setprop(getprop('/saitek/RP/upknoba'),getprop(getprop('/saitek/RP/upknobb')));
+          setprop(getprop('/saitek/RP/upknobb'),getprop('/saitek/RP/tempu'));
+          setprop(getprop('/saitek/RP/upknobsw'),0);
+        }else{
+          setprop('/saitek/RP/templ',getprop(getprop('/saitek/RP/lowknoba')));
+          setprop(getprop('/saitek/RP/lowknoba'),getprop(getprop('/saitek/RP/lowknobb')));
+          setprop(getprop('/saitek/RP/lowknobb'),getprop('/saitek/RP/templ'));
+        setprop(getprop('/saitek/RP/lowknobsw'),0);
+        }
+      refreshPanels();
+      }
+
+      ## THIS FUNCTION IS USED WHEN STARTING UP THE AIRPLANE, TO MAKE SURE THAT OK CONDITIONS ARE MET TO INITIALIZE PANEL
+      
+      var waitabit = func(){
+        initPanel();
+        settimer(refreshPanels,1.5);
+      }
+
+      ## THIS FUNCTION IS USED BY LISTENERS TO UPDATE PANEL WHEN CHANGES IN THE SIM HAPPEN
+      
+
+      ## SET LISTENERS, SO PANEL GETS UPDATED EVEN IF CHANGES ARE DONE DIECTLY IN THE SIM
+      initPanel();
+      setdefault();
+      var lis1 = setlistener('/instrumentation/comm/power-btn',waitabit);
+      var lis16 = setlistener('/controls/switches/master-avionics',waitabit);
+      var lis17 = setlistener('/controls/switches/master',waitabit);
+      var lis2 = setlistener('/instrumentation/comm/frequencies/selected-mhz',refreshPanels);
+      var lis3 = setlistener('/instrumentation/comm/frequencies/standby-mhz',refreshPanels);
+      var lis4 = setlistener('/instrumentation/nav/frequencies/standby-mhz',refreshPanels);
+      var lis5 = setlistener('/instrumentation/nav/frequencies/selected-mhz',refreshPanels);
+      var lis6 = setlistener('/instrumentation/comm[1]/frequencies/standby-mhz',refreshPanels);
+      var lis7 = setlistener('/instrumentation/comm[1]/frequencies/selected-mhz',refreshPanels);
+      var lis8 = setlistener('/instrumentation/nav[1]/frequencies/standby-mhz',refreshPanels);
+      var lis9 = setlistener('/instrumentation/nav[1]/frequencies/selected-mhz',refreshPanels);
+      var lis10 = setlistener('/instrumentation/dme/indicated-distance-nm',refreshPanels);
+      var lis101 = setlistener('/instrumentation/dme/indicated-ground-speed-kt',refreshPanels);
+      var lis102 = setlistener('/instrumentation/dme/indicated-time-min',refreshPanels);
+      var lis11 = setlistener('/instrumentation/adf/frequencies/standby-khz',refreshPanels);
+      var lis13 = setlistener('/instrumentation/adf/frequencies/selected-khz',refreshPanels);
+      var lis14 = setlistener('/instrumentation/transponder/id-code',refreshPanels);
+      var lis15 = setlistener("/sim/signals/exit", initPanel);
+    ]]>
+    </open>
+  </nasal>
+
+  <!--UPPER KNOB IN COM1 -->
+  <event>
+    <desc>UK COMM1</desc>
+    <name>button-1</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknoba</property>
+      <value>/instrumentation/comm/frequencies/selected-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobb</property>
+      <value>/instrumentation/comm/frequencies/standby-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobt</property>
+      <value>5</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobsw</property>
+      <value>/instrumentation/comm/frq-swap-btn</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobmax</property>
+      <value>137</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobmin</property>
+      <value>118</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobfstep</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobhstep</property>
+      <value>0.25</value>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+  <!--UPPER KNOB IN COM2 -->
+  <event>
+    <desc>UK COMM2</desc>
+    <name>button-2</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknoba</property>
+      <value>/instrumentation/comm[1]/frequencies/selected-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobb</property>
+      <value>/instrumentation/comm[1]/frequencies/standby-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobt</property>
+      <value>5</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobsw</property>
+      <value>/instrumentation/comm[1]/frq-swap-btn</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobmax</property>
+      <value>137</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobmin</property>
+      <value>118</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobfstep</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobhstep</property>
+      <value>0.25</value>
+    </binding>
+
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+  <!--UPPER KNOB IN NAV1 -->
+  <event>
+    <desc>UK NAV1</desc>
+    <name>button-3</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknoba</property>
+      <value>/instrumentation/nav/frequencies/selected-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobb</property>
+      <value>/instrumentation/nav/frequencies/standby-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobt</property>
+      <value>5</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobsw</property>
+      <value>/instrumentation/nav/frq-swap-btn</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobmax</property>
+      <value>118</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobmin</property>
+      <value>108</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobfstep</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobhstep</property>
+      <value>0.05</value>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+  <!--UPPER KNOB IN NAV2 -->
+  <event>
+    <desc>UK NAV2</desc>
+    <name>button-4</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknoba</property>
+      <value>/instrumentation/nav[1]/frequencies/selected-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobb</property>
+      <value>/instrumentation/nav[1]/frequencies/standby-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobt</property>
+      <value>5</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobsw</property>
+      <value>/instrumentation/nav[1]/frq-swap-btn</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobmax</property>
+      <value>118</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobmin</property>
+      <value>108</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobfstep</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobhstep</property>
+      <value>0.05</value>
+    </binding>
+
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+  <!--UPPER KNOB IN ADF -->
+  <event>
+    <desc>UK ADF</desc>
+    <name>button-5</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknoba</property>
+      <value>/instrumentation/adf/frequencies/selected-khz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobb</property>
+      <value>/instrumentation/adf/frequencies/standby-khz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobt</property>
+      <value>3</value>
+    </binding>
+
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobsw</property>
+      <value>/instrumentation/adf/frq-swap-btn</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobmax</property>
+      <value>535</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobmin</property>
+      <value>190</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobfstep</property>
+      <value>10</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobhstep</property>
+      <value>1</value>
+    </binding>
+
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+  <!--UPPER KNOB IN DME -->
+  <event>
+    <desc>UK DME</desc>
+    <name>button-6</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknoba</property>
+      <value>/instrumentation/dme/indicated-distance-nm</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobb</property>
+      <value>/instrumentation/dme/indicated-ground-speed-kt</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobt</property>
+      <value>99</value>
+    </binding>
+
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobsw</property>
+      <value>DME</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobfstep</property>
+      <value>0</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobhstep</property>
+      <value>0</value>
+    </binding>
+
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+  <!--UPPER KNOB IN XPDR -->
+  <event>
+    <desc>UK XPDR</desc>
+    <name>button-7</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknoba</property>
+      <value></value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobb</property>
+      <value>/instrumentation/transponder/id-code</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobt</property>
+      <value>4</value>
+    </binding>
+
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/upknobsw</property>
+      <value>XPDR</value>
+    </binding>
+
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+
+
+
+
+  <!--LOWER KNOB IN COM1 -->
+  <event>
+    <desc>LK COMM1</desc>
+    <name>button-8</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknoba</property>
+      <value>/instrumentation/comm/frequencies/selected-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobb</property>
+      <value>/instrumentation/comm/frequencies/standby-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobt</property>
+      <value>5</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobsw</property>
+      <value>/instrumentation/comm/frq-swap-btn</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobmax</property>
+      <value>137</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobmin</property>
+      <value>118</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobfstep</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobhstep</property>
+      <value>0.25</value>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>setLRPanel('/saitek/RP/lowknobb');
+            setLLPanel('/saitek/RP/lowknoba');</script>
+    </binding>
+  </event>
+  <!--LOWER KNOB IN COM2 -->
+  <event>
+    <desc>LK COMM2</desc>
+    <name>button-9</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknoba</property>
+      <value>/instrumentation/comm[1]/frequencies/selected-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobb</property>
+      <value>/instrumentation/comm[1]/frequencies/standby-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobt</property>
+      <value>5</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobsw</property>
+      <value>/instrumentation/comm[1]/frq-swap-btn</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobmax</property>
+      <value>137</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobmin</property>
+      <value>118</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobfstep</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobhstep</property>
+      <value>0.25</value>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>setLRPanel('/saitek/RP/lowknobb');
+          setLLPanel('/saitek/RP/lowknoba');</script>
+    </binding>
+  </event>
+  <!--LOWER KNOB IN NAV1 -->
+  <event>
+    <desc>LK NAV1</desc>
+    <name>button-10</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknoba</property>
+      <value>/instrumentation/nav/frequencies/selected-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobb</property>
+      <value>/instrumentation/nav/frequencies/standby-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobt</property>
+      <value>5</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobsw</property>
+      <value>/instrumentation/nav/frq-swap-btn</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobmax</property>
+      <value>118</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobmin</property>
+      <value>108</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobfstep</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobhstep</property>
+      <value>0.05</value>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>setLRPanel('/saitek/RP/lowknobb');
+          setLLPanel('/saitek/RP/lowknoba');</script>
+    </binding>
+  </event>
+  <!--LOWER KNOB IN NAV2 -->
+  <event>
+    <desc>LK NAV2</desc>
+    <name>button-11</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknoba</property>
+      <value>/instrumentation/nav[1]/frequencies/selected-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobb</property>
+      <value>/instrumentation/nav[1]/frequencies/standby-mhz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobt</property>
+      <value>5</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobsw</property>
+      <value>/instrumentation/nav[1]/frq-swap-btn</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobmax</property>
+      <value>118</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobmin</property>
+      <value>108</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobfstep</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobhstep</property>
+      <value>0.05</value>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>setLRPanel('/saitek/RP/lowknobb');
+          setLLPanel('/saitek/RP/lowknoba');</script>
+    </binding>
+  </event>
+  <!--LOWER KNOB IN ADF -->
+  <event>
+    <desc>LK ADF</desc>
+    <name>button-12</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknoba</property>
+      <value>/instrumentation/adf/frequencies/selected-khz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobb</property>
+      <value>/instrumentation/adf/frequencies/standby-khz</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobt</property>
+      <value>3</value>
+    </binding>
+
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobsw</property>
+      <value>/instrumentation/adf/frq-swap-btn</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobmax</property>
+      <value>535</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobmin</property>
+      <value>190</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobfstep</property>
+      <value>10</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobhstep</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>setLRPanel('/saitek/RP/lowknobb');
+          setLLPanel('/saitek/RP/lowknoba');</script>
+    </binding>
+  </event>
+  <!--LOWER KNOB IN DME -->
+  <event>
+    <desc>UK DME</desc>
+    <name>button-13</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknoba</property>
+      <value>/instrumentation/dme/indicated-distance-nm</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobb</property>
+      <value>/instrumentation/dme/indicated-ground-speed-kt</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobt</property>
+      <value>99</value>
+    </binding>
+
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobsw</property>
+      <value>DME</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobfstep</property>
+      <value>0</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobhstep</property>
+      <value>0</value>
+    </binding>
+
+    <binding>
+      <command>nasal</command>
+      <script>setLRPanel('/saitek/RP/lowknobb');
+            setLLPanel('/saitek/RP/lowknoba');</script>
+    </binding>
+  </event>
+  <!--LOWER KNOB IN XPDR -->
+  <event>
+    <desc>LK XPDR</desc>
+    <name>button-14</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknoba</property>
+      <value></value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobb</property>
+      <value>/instrumentation/transponder/id-code</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobt</property>
+      <value>4</value>
+    </binding>
+
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobsw</property>
+      <value>XPDR</value>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>setLRPanel('/saitek/RP/lowknobb');
+          setLLPanel('/saitek/RP/lowknoba');</script>
+    </binding>
+  </event>
+
+
+
+  <!-- UPPER SWAP BUTTON -->
+  <event>
+    <desc>UPPER SWAP BUTTON</desc>
+    <name>button-270</name>
+    <binding>
+      <command>nasal</command>
+      <!-- TRUE Denotes UPPER button -->
+      <script>switchbtn(true);</script>
+    </binding>
+  </event>
+  <!-- LOWER SWAP BUTTON -->
+  <event>
+    <desc>LOWER SWAP BUTTON</desc>
+    <name>button-271</name>
+    <binding>
+      <command>nasal</command>
+      <!-- TRUE Denotes UPPER button -->
+      <script>switchbtn(false);</script>
+    </binding>
+  </event>
+  <!-- UPPER COMMS DECREASE BY FULL STEP -->
+  <event>
+    <desc>COMMS-SBY-DEC-10</desc>
+    <name>button-side</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        adjustvalue(getprop('/saitek/RP/upknobb'),-1*getprop('/saitek/RP/upknobfstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),true,true);
+      </script>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+  <!-- UPPER COMMS INCREASE BY FULL STEP -->
+  <event>
+    <desc>UPPER-SBY-INC-10</desc>
+    <name>button-middle</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        adjustvalue(getprop('/saitek/RP/upknobb'),getprop('/saitek/RP/upknobfstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),true,true);
+      </script>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+  <!-- UPPER COMMS DECREASE BY HALF STEP -->
+  <event>
+    <desc>UPPER-SBY-DEC-025</desc>
+    <name>button-right</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        adjustvalue(getprop('/saitek/RP/upknobb'),-1*getprop('/saitek/RP/upknobhstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),true,true);
+      </script>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+
+  </event>
+  <!-- UPPER COMMS INCREASE BY HALF STEP -->
+  <event>
+    <desc>UPPER-SBY-INC-025</desc>
+    <name>button-left</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        adjustvalue(getprop('/saitek/RP/upknobb'),getprop('/saitek/RP/upknobhstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),true,true);
+      </script>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+
+  <!-- LOWER COMMS DECREASE BY FULL STEP -->
+  <event>
+    <desc>LOWER-SBY-DEC-10</desc>
+    <name>button-task</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        adjustvalue(getprop('/saitek/RP/lowknobb'),-1*getprop('/saitek/RP/lowknobfstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),true,false);
+      </script>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+  <!-- LOWER COMMS INCREASE BY FULL STEP -->
+  <event>
+    <desc>LOWER-SBY-INC-10</desc>
+    <name>button-back</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        adjustvalue(getprop('/saitek/RP/lowknobb'),getprop('/saitek/RP/lowknobfstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),true,false);
+      </script>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+  <!-- LOWE COMMS DECREASE BY HALF STEP -->
+  <event>
+    <desc>LOWER-SBY-DEC-025</desc>
+    <name>button-forward</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        adjustvalue(getprop('/saitek/RP/lowknobb'),-1*getprop('/saitek/RP/lowknobhstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),true,false);
+      </script>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+
+  </event>
+  <!-- LOWER COMMS INCREASE BY HALF STEP -->
+  <event>
+    <desc>LOWER-SBY-INC-025</desc>
+    <name>button-extra</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        adjustvalue(getprop('/saitek/RP/lowknobb'),getprop('/saitek/RP/lowknobhstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),true,false);
+      </script>
+    </binding>
+    <binding>
+      <command>nasal</command>
+      <script>refreshPanels();</script>
+    </binding>
+  </event>
+
+
+  <!-- UL PANEL -->
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-0</name>
+    <setting>
+      <property>/saitek/RP/ULpanel/digit1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-1</name>
+    <setting>
+      <property>/saitek/RP/ULpanel/digit2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-2</name>
+    <setting>
+      <property>/saitek/RP/ULpanel/digit3</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>joystick</name>
+    <setting>
+      <property>/saitek/RP/ULpanel/digit4</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-3</name>
+    <setting>
+      <property>/saitek/RP/ULpanel/digit5</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-4</name>
+    <setting>
+      <property>/saitek/RP/URpanel/digit1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-5</name>
+    <setting>
+      <property>/saitek/RP/URpanel/digit2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-6</name>
+    <setting>
+      <property>/saitek/RP/URpanel/digit3</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-7</name>
+    <setting>
+      <property>/saitek/RP/URpanel/digit4</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-8</name>
+    <setting>
+      <property>/saitek/RP/URpanel/digit5</property>
+    </setting>
+  </event>
+  <!-- LL PANEL -->
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-9</name>
+    <setting>
+      <property>/saitek/RP/LLpanel/digit1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-10</name>
+    <setting>
+      <property>/saitek/RP/LLpanel/digit2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-11</name>
+    <setting>
+      <property>/saitek/RP/LLpanel/digit3</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-12</name>
+    <setting>
+      <property>/saitek/RP/LLpanel/digit4</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-13</name>
+    <setting>
+      <property>/saitek/RP/LLpanel/digit5</property>
+    </setting>
+  </event>
+  <!-- LR panel -->
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-14</name>
+    <setting>
+      <property>/saitek/RP/LRpanel/digit1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-15</name>
+    <setting>
+      <property>/saitek/RP/LRpanel/digit2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-16</name>
+    <setting>
+      <property>/saitek/RP/LRpanel/digit3</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-17</name>
+    <setting>
+      <property>/saitek/RP/LRpanel/digit4</property>
+    </setting>
+  </event>
+  <event>
+    <desc>RADIO INDICATORS</desc>
+    <name>unknown-18</name>
+    <setting>
+      <property>/saitek/RP/LRpanel/digit5</property>
+    </setting>
+  </event>
+</PropertyList>
