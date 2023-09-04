@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <name type="string">Honeycomb Aeronautical Alpha Flight Controls</name>
+  <debug-events type="bool">false</debug-events>
+  <event>
+    <desc>LEFT Magnetos switch</desc>
+    <name>button-720</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/engines/engine/magnetos</property>
+      <value type="string">2</value>
+    </binding>
+  </event>
+  <event>
+    <desc>BOTH Magnetos switch</desc>
+    <name>button-721</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/engines/engine/magnetos</property>
+      <value type="string">3</value>
+    </binding>
+  </event>
+  <event>
+    <desc>STARTER</desc>
+    <name>button-722</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/engines/engine/starter_cmd</property>
+      <value type="string">true</value>
+    </binding>
+    <mod-up>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/engines/engine/starter_cmd</property>
+      <value type="string">false</value>
+    </binding>
+  </mod-up>
+  </event>
+</PropertyList>
