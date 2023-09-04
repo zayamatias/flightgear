@@ -1,0 +1,7 @@
+SUBSYSTEM=="input", ENV{ID_INPUT_JOYSTICK}!="?*", IMPORT{program}="input_id %p"
+SUBSYSTEM=="hidraw", ENV{ID_SERIAL}!="?*", IMPORT{program}="usb_id --export %p"
+SUBSYSTEM=="hidraw", SYMLINK+="input/hidraw/%E{ID_SERIAL}"
+SUBSYSTEM=="hidraw", ENV{ID_INPUT_JOYSTICK}!="0", GROUP:="js"
+SUBSYSTEM=="input", ATTRS{idVendor}=="06a3", ATTRS{idProduct}=="0d05", ENV{ID_INPUT_JOYSTICK}="1",ENV{ID_INPUT_MOUSE}="0", TAG+="uaccess"
+KERNEL=="hidraw*", ATTRS{idVendor}=="06a3", ATTRS{idProduct}=="0d05", MODE="0660", TAG+="uaccess"
+
