@@ -1,0 +1,1210 @@
+﻿<?xml version="1.0"?>
+<PropertyList>
+  <name type="string">Honeycomb Aeronautical Bravo Throttle Quadrant</name>
+  <debug-events type="bool">false</debug-events>
+  <nasal>
+    <open>
+      <![CDATA[
+        for (var i=0; i < 28; i+=1) {
+          var n = props.globals.getNode('/input/bravo/vendor-' ~ i ~ '', 1); 
+          n.setBoolValue(0);
+        }
+        ]]>
+    </open>
+  </nasal>
+  <!-- CONFIGURATION:
+
+    AXIS ARE HANDLED IN THE JOYSTICK XML, I'VE FOUND EVENT XML TO BE UNRELIABLE FOR AXIS
+
+    LEFT KNOB SELECTOR:
+    ALT-> Selects QNH knob to be operated by incr/decr knob
+    VS-> Selects VOR Degree knob to be operated by incr/decr knob
+    HDG-> Selects Heading BUG Degree knob to be operated by incr/decr knob
+    CRS-> Selects COMM STDBY FREQ  knob to be operated by incr/decr knob
+    IAS-> Selects NAV STDBY FREQ  knob to be operated by incr/decr knob
+   
+    SQR BUTTONS ROW
+
+    HDG BUTTON -> Swap COMM FREQS
+    NAV BUTTON -> Swap NAV FREQS
+    APR BUTTON -> TRANSPONDER First Digit cycle (from left to right, values 0-7)
+    REV BUTTON -> TRANSPONDER Second Digit Cycle
+    ALT BUTTON -> TRANSPONDER Third Digit Cycle
+    VS BUTTON -> TRANSPONDER Foruth Digit Cycle
+    IAS BUTTON -> TRANSPONDER IDENT BUTTON
+    AUTOPILOT -> Select increase ratio of right knob (1/10 steps or 1/0.025 mhz)
+    
+    GEAR LEVER -> PARKING BRAKE (UP=ON) [GEAR LEDS TURN RED IF PARKING BREAK ON / GREEN IF OFF]
+    
+    SWITCHES :
+
+    1ST -> SELECT FUEL PUMP (UP=ON)
+    2ND -> SELECT CENTER FUEL TANK (UP SELECTS CENTER , DOWN DOES NOTHING)
+    3RD -> CARBURATOR HEAT (UP=ON)
+    4TH -> COMMS/NAV ON/OFF (UP=ON)
+    5TH -> ADF ON/OFF (UP=ON)
+    6TH -> TRANSPONDER ON/OFF (UP=ON)
+    7TH -> UNASIGNED (button-733 & button-734)
+
+  -->
+
+  <!-- APR CYCLES THRU VALUES FOR FIRST DIGIT OF TRANSPONDER ID-CODE -->
+  <event>
+    <desc>APR Button</desc>
+    <name>button-thumb2</name>
+    <binding>
+      <command>property-cycle</command>
+      <property>/instrumentation/transponder/inputs/digit[3]</property>
+      <value>0</value>
+      <value>1</value>
+      <value>2</value>
+      <value>3</value>
+      <value>4</value>
+      <value>5</value>
+      <value>6</value>
+      <value>7</value>
+    </binding>
+  </event>
+  <!-- REV CYCLES THRU VALUES FOR SECOND DIGIT OF TRANSPONDER ID-CODE -->
+  <event>
+    <desc>APR Button</desc>
+    <name>button-top</name>
+    <binding>
+      <command>property-cycle</command>
+      <property>/instrumentation/transponder/inputs/digit[2]</property>
+      <value>0</value>
+      <value>1</value>
+      <value>2</value>
+      <value>3</value>
+      <value>4</value>
+      <value>5</value>
+      <value>6</value>
+      <value>7</value>
+    </binding>
+  </event>
+  <!-- ALT CYCLES THRU VALUES FOR THIRD DIGIT OF TRANSPONDER ID-CODE -->
+  <event>
+    <desc>APR Button</desc>
+    <name>button-top2</name>
+    <binding>
+      <command>property-cycle</command>
+      <property>/instrumentation/transponder/inputs/digit[1]</property>
+      <value>0</value>
+      <value>1</value>
+      <value>2</value>
+      <value>3</value>
+      <value>4</value>
+      <value>5</value>
+      <value>6</value>
+      <value>7</value>
+    </binding>
+  </event>
+  <!-- VS CYCLES THRU VALUES FOR FIRST DIGIT OF TRANSPONDER ID-CODE -->
+  <event>
+    <desc>APR Button</desc>
+    <name>button-pinkie</name>
+    <binding>
+      <command>property-cycle</command>
+      <property>/instrumentation/transponder/inputs/digit</property>
+      <value>0</value>
+      <value>1</value>
+      <value>2</value>
+      <value>3</value>
+      <value>4</value>
+      <value>5</value>
+      <value>6</value>
+      <value>7</value>
+    </binding>
+  </event>
+
+  <!-- IAS BUTTON BECOMES IDENT BUTTON -->
+  <event>
+    <desc>IAS Button</desc>
+    <name>button-base</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/instrumentation/transponder/ident</property>
+      <value>true</value>
+    </binding>
+    <mod-up>
+      <binding>
+        <command>property-assign</command>
+        <property>/instrumentation/transponder/ident</property>
+        <value>false</value>
+      </binding>
+    </mod-up>
+  </event>
+  <!-- HEADING BUTTON BECOMES COMM FREQ SWAPPER -->
+  <event>
+    <desc>HEADING Button</desc>
+    <name>button-trigger</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/instrumentation/comm/frq-swap-btn</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-swap</command>
+      <property>/instrumentation/comm/frequencies/selected-mhz</property>
+      <property>/instrumentation/comm/frequencies/standby-mhz</property>
+    </binding>
+    <mod-up>
+      <binding>
+        <command>property-assign</command>
+        <property>/instrumentation/comm/frq-swap-btn</property>
+        <value>0</value>
+      </binding>
+    </mod-up>
+  </event>
+  <!-- NAV BUTTON BECOMES NAV FREQ SWAPPER -->
+  <event>
+    <desc>HEADING Button</desc>
+    <name>button-thumb</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/instrumentation/nav/frq-swap-btn</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-swap</command>
+      <property>/instrumentation/nav/frequencies/selected-mhz</property>
+      <property>/instrumentation/nav/frequencies/standby-mhz</property>
+    </binding>
+    <mod-up>
+      <binding>
+        <command>property-assign</command>
+        <property>/instrumentation/nav/frq-swap-btn</property>
+        <value>0</value>
+      </binding>
+    </mod-up>
+  </event>
+  <!-- PARKING BREAK MANAGED BY GEAR POSTION (UP ON)-->
+  <event>
+    <desc>PARKING BRAKE ON</desc>
+    <name>button-718</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/gear/brake-parking</property>
+      <value>1</value>
+    </binding>
+  </event>
+  <event>
+    <desc>PARKING BRAKE OFF</desc>
+    <name>button-719</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/gear/brake-parking</property>
+      <value>0</value>
+    </binding>
+  </event>
+  <!-- CARB HEAT-->
+  <event>
+    <desc>CARB HEAT ON</desc>
+    <name>button-726</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/anti-ice/engine/carb-heat</property>
+      <value>false</value>
+    </binding>
+  </event>
+  <event>
+    <desc>CARB HEAT OFF</desc>
+    <name>button-725</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/anti-ice/engine/carb-heat</property>
+      <value>true</value>
+    </binding>
+  </event>
+
+  <!-- RADIO COMMS/NAV ON/OFF -->
+  <event>
+    <desc>COMMS ON</desc>
+    <name>button-728</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/instrumentation/comm/power-btn</property>
+      <value>false</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/instrumentation/comm/volume</property>
+      <value>0.5</value>
+    </binding>
+  </event>
+  <event>
+    <desc>COMMS OFF</desc>
+    <name>button-727</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/instrumentation/comm/power-btn</property>
+      <value>true</value>
+    </binding>
+  </event>
+
+  <!-- ADF ON/OFF -->
+  <event>
+    <desc>ADF ON</desc>
+    <name>button-730</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/instrumentation/adf/power-btn</property>
+      <value>false</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/instrumentation/comm/volume</property>
+      <value>0.5</value>
+    </binding>
+  </event>
+  <event>
+    <desc>ADF OFF</desc>
+    <name>button-729</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/instrumentation/adf/power-btn</property>
+      <value>true</value>
+    </binding>
+  </event>
+
+  <!-- TRANSPONDER ON/OFF -->
+  <event>
+    <desc>TRANSPONDER ON</desc>
+    <name>button-732</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/instrumentation/transponder/inputs/knob-mode</property>
+      <value>0</value>
+    </binding>
+  </event>
+  <event>
+    <desc>TRANSPONDER OFF</desc>
+    <name>button-731</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/instrumentation/transponder/inputs/knob-mode</property>
+      <value>4</value>
+    </binding>
+  </event>
+
+  <!-- FUEL PUMP ON/OFF -->
+
+  <event>
+    <desc>FUEL PUMP ON</desc>
+    <name>button-721</name>
+    <binding>
+      <command>property-assign</command>
+      <property>controls/fuel/tank/boost-pump</property>
+      <value>true</value>
+    </binding>
+  </event>
+  <event>
+    <desc>FUEL PUMP OFF</desc>
+    <name>button-722</name>
+    <binding>
+      <command>property-assign</command>
+      <property>controls/fuel/tank/boost-pump</property>
+      <value>false</value>
+    </binding>
+  </event>
+  <!-- SELECTOR KNOB AS ALTITUDE [IN THIS PLANE IS THE QNH KNOB SELECTOR] -->
+  <event>
+    <desc>AP ALT SELECTOR Button</desc>
+    <name>button-708</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/autopilot/selector</property>
+      <value type="string">alt</value>
+    </binding>
+  </event>
+  <!-- SELECTOR KNOB AS VS [IN THIS PLANE IS THE NAV DEG KNOB SELECTOR] -->
+  <event>
+    <desc>AP VS SELECTOR Button</desc>
+    <name>button-707</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/autopilot/selector</property>
+      <value type="string">vs</value>
+    </binding>
+  </event>
+  <!-- SELECTOR KNOB AS HDG [IN THIS PLANE IS THE HDG BUG KNOB SELECTOR] -->
+  <event>
+    <desc>AP HDG SELECTOR Button</desc>
+    <name>button-706</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/autopilot/selector</property>
+      <value type="string">hdg</value>
+    </binding>
+  </event>
+  <!-- SELECTOR KNOB AS HDG [IN THIS PLANE IS THE RADIO/COMMS BACKUP KNOB SELECTOR] -->
+  <event>
+    <desc>AP CRS SELECTOR Button</desc>
+    <name>button-705</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/autopilot/selector</property>
+      <value type="string">crs</value>
+    </binding>
+  </event>
+  <!-- SELECTOR KNOB AS HDG [IN THIS PLANE IS THE RADIO/NAV BACKUP KNOB SELECTOR] -->
+  <event>
+    <desc>AP IAS SELECTOR Button</desc>
+    <name>button-704</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/autopilot/selector</property>
+      <value type="string">ias</value>
+    </binding>
+  </event>
+
+
+  <event>
+    <desc>ALTITUDE Button</desc>
+    <name>button-top2</name>
+    <binding>
+      <command>property-cycle</command>
+      <property>/autopilot/locks/altitude</property>
+      <value type="string">altitude-hold</value>
+      <value type="string"></value>
+    </binding>
+  </event>
+
+  <event>
+    <desc>CENTER FUEL PUMP</desc>
+    <name>button-723</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/fuel/selected-tank-pos</property>
+      <value >180</value>
+    </binding>
+  </event>
+  <event>
+    <desc>OFF FUEL PUMP</desc>
+    <name>button-724</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/fuel/selected-tank</property>
+      <value>0</value>
+    </binding>
+  </event>
+
+  <event>
+    <desc>FLAPS DOWN</desc>
+    <name>button-302</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/controls/flight/flaps</property>
+      <step>0.25</step>
+      <max>1</max>
+    </binding>
+  </event>
+  <event>
+    <desc>FLAPS UP</desc>
+    <name>button-dead</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/controls/flight/flaps</property>
+      <step>-0.25</step>
+      <min>0</min>
+    </binding>
+  </event>
+  <event>
+    <desc>AP INCR Button  </desc>
+    <name>button-300</name>
+    <!-- INCREASE ALTIMETER HPA -->
+    <binding>
+      <condition>
+        <equals>
+          <property>/autopilot/selector</property>
+          <value>alt</value>
+        </equals>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/altimeter/setting-hpa</property>
+      <step>1</step>
+      <max>3000</max>
+    </binding>
+    <!-- INCREASE NAV SELECTED DEG BY 1-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>vs</value>
+          </equals>
+          <not>
+            <equals>
+              <property>/instrumentation/knob/increment</property>
+              <value>1</value>
+            </equals>
+          </not>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/nav/radials/selected-deg</property>
+      <step>1</step>
+      <max>360</max>
+      <min>0</min>
+      <wrap>true</wrap>
+    </binding>
+    <!-- INCREASE NAV SELECTED DEG BY 10-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>vs</value>
+          </equals>
+          <equals>
+            <property>/instrumentation/knob/increment</property>
+            <value>1</value>
+          </equals>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/nav/radials/selected-deg</property>
+      <step>10</step>
+      <max>360</max>
+      <min>0</min>
+      <wrap>true</wrap>
+    </binding>
+    <!-- INCREASE HDG BUG BY 1 -->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>hdg</value>
+          </equals>
+          <not>
+            <equals>
+              <property>/instrumentation/knob/increment</property>
+              <value>1</value>
+            </equals>
+          </not>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/autopilot/settings/heading-bug-deg</property>
+      <step>1</step>
+      <max>360</max>
+      <min>0</min>
+      <wrap>true</wrap>
+    </binding>
+    <!-- INCREASE HDG BUG BY 10 -->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>hdg</value>
+          </equals>
+          <equals>
+            <property>/instrumentation/knob/increment</property>
+            <value>1</value>
+          </equals>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/autopilot/settings/heading-bug-deg</property>
+      <step>10</step>
+      <max>360</max>
+      <min>0</min>
+      <wrap>true</wrap>
+    </binding>
+    <!-- INCREASE RADIO COMM STDBY FREQ BY 0.025-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>crs</value>
+          </equals>
+          <not>
+            <equals>
+              <property>/instrumentation/knob/increment</property>
+              <value>1</value>
+            </equals>
+          </not>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/comm/frequencies/standby-mhz</property>
+      <step>0.025</step>
+    </binding>
+    <!-- INCREASE RADIO COMM STDBY FREQ BY 1-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>crs</value>
+          </equals>
+          <equals>
+            <property>/instrumentation/knob/increment</property>
+            <value>1</value>
+          </equals>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/comm/frequencies/standby-mhz</property>
+      <step>1</step>
+    </binding>
+    <!-- INCREASE RADIO NAV STDBY FREQ BY 0.025-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>ias</value>
+          </equals>
+          <not>
+            <equals>
+              <property>/instrumentation/knob/increment</property>
+              <value>1</value>
+            </equals>
+          </not>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/nav/frequencies/standby-mhz</property>
+      <step>0.025</step>
+    </binding>
+    <!-- INCREASE RADIO NAV STDBY FREQ BY 1-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>ias</value>
+          </equals>
+          <equals>
+            <property>/instrumentation/knob/increment</property>
+            <value>1</value>
+          </equals>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/nav/frequencies/standby-mhz</property>
+      <step>1</step>
+    </binding>
+  </event>
+  <event>
+    <desc>APR DECR Button</desc>
+    <name>button-301</name>
+    <!-- DECREASE ALTIMETER -->
+    <binding>
+      <condition>
+        <equals>
+          <property>/autopilot/selector</property>
+          <value>alt</value>
+        </equals>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/altimeter/setting-hpa</property>
+      <step>-1</step>
+      <min>0</min>
+    </binding>
+    <!-- DECREASE NAV SELECTED DEG BY 1-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>vs</value>
+          </equals>
+          <not>
+            <equals>
+              <property>/instrumentation/knob/increment</property>
+              <value>1</value>
+            </equals>
+          </not>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/nav/radials/selected-deg</property>
+      <step>-1</step>
+      <min>0</min>
+      <max>360</max>
+      <wrap>true</wrap>
+    </binding>
+    <!-- DECREASE NAV SELECTED DEG BY 10-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>vs</value>
+          </equals>
+          <equals>
+            <property>/instrumentation/knob/increment</property>
+            <value>1</value>
+          </equals>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/nav/radials/selected-deg</property>
+      <step>-10</step>
+      <min>0</min>
+      <max>360</max>
+      <wrap>true</wrap>
+    </binding>
+    <!-- DECREASE HEADING BUG BY 1-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>hdg</value>
+          </equals>
+          <not>
+            <equals>
+              <property>/instrumentation/knob/increment</property>
+              <value>1</value>
+            </equals>
+          </not>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/autopilot/settings/heading-bug-deg</property>
+      <step>-1</step>
+      <max>360</max>
+      <min>0</min>
+      <wrap>true</wrap>
+    </binding>
+    <!-- DECREASE HEADING BUG BY 10-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>hdg</value>
+          </equals>
+          <equals>
+            <property>/instrumentation/knob/increment</property>
+            <value>1</value>
+          </equals>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/autopilot/settings/heading-bug-deg</property>
+      <step>-10</step>
+      <max>359</max>
+      <min>0</min>
+      <wrap>true</wrap>
+    </binding>
+    <!-- DECREASE RADIO COMM STDBY FREQ BY 0.025-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>crs</value>
+          </equals>
+          <not>
+            <equals>
+              <property>/instrumentation/knob/increment</property>
+              <value>1</value>
+            </equals>
+          </not>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/comm/frequencies/standby-mhz</property>
+      <step>-0.025</step>
+    </binding>
+    <!-- DECREASE RADIO COMM STDBY FREQ BY 1-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>crs</value>
+          </equals>
+          <equals>
+            <property>/instrumentation/knob/increment</property>
+            <value>1</value>
+          </equals>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/comm/frequencies/standby-mhz</property>
+      <step>-1</step>
+    </binding>
+    <!-- DECREASE RADIO NAV STDBY FREQ BY 0.025-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>ias</value>
+          </equals>
+          <not>
+            <equals>
+              <property>/instrumentation/knob/increment</property>
+              <value>1</value>
+            </equals>
+          </not>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/nav/frequencies/standby-mhz</property>
+      <step>-0.025</step>
+    </binding>
+    <!-- DECREASE RADIO NAV STDBY FREQ BY 1-->
+    <binding>
+      <condition>
+        <and>
+          <equals>
+            <property>/autopilot/selector</property>
+            <value>ias</value>
+          </equals>
+          <equals>
+            <property>/instrumentation/knob/increment</property>
+            <value>1</value>
+          </equals>
+        </and>
+      </condition>
+      <command>property-adjust</command>
+      <property>/instrumentation/nav/frequencies/standby-mhz</property>
+      <step>-1</step>
+    </binding>
+  </event>
+
+
+
+  <event>
+    <desc>HEADING LED</desc>
+    <name>vendor-0</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <not>
+          <equals>
+            <property>/autopilot/locks/heading</property>
+            <value></value>
+          </equals>
+        </not>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/autopilot/locks/heading</property>
+          <value></value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>ALTITUDE LED</desc>
+    <name>vendor-4</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/autopilot/locks/altitude</property>
+          <value type="string">altitude-hold</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/autopilot/locks/altitude</property>
+          <value></value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>VS LED</desc>
+    <name>vendor-5</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/autopilot/locks/altitude</property>
+          <value type="string">vertical-speed-hold</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <not>
+          <equals>
+            <property>/autopilot/locks/altitude</property>
+            <value>vertical-speed-hold</value>
+          </equals>
+        </not>
+      </condition>
+    </setting>
+  </event>
+  <!-- AUTOPILOT BUTTON, SELECT FREQUENCY STEP (AFTER DOT/ BEFORE DOT)-->
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base2</name>
+    <binding>
+      <command>property-cycle</command>
+      <property>/instrumentation/knob/increment</property>
+      <value type="string">1</value>
+      <value type="string">0</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT LED</desc>
+    <name>vendor-7</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/instrumentation/knob/increment</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <not>
+          <equals>
+            <property>/instrumentation/knob/increment</property>
+            <value>1</value>
+          </equals>
+        </not>
+      </condition>
+    </setting>
+  </event>
+  <!-- TURN GEAR LEDS ACCORDING TO PARKING BRAKE POSITION - RED, PARKING BRAKE IS ON -->
+  <event>
+    <desc>PARKING BRAKE ANNUNCIATOR</desc>
+    <name>vendor-25</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>LEFT GEAR LED RED</desc>
+    <name>vendor-9</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>LEFT GEAR LED GREEN</desc>
+    <name>vendor-8</name>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>NOSE GEAR LED RED</desc>
+    <name>vendor-11</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>NOSE GEAR LED GREEN</desc>
+    <name>vendor-10</name>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>RIGHT GEAR LED RED</desc>
+    <name>vendor-13</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>RIGHT GEAR LED GREEN</desc>
+    <name>vendor-12</name>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/controls/gear/brake-parking</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <!-- GEARS LED END -->
+  <event>
+    <desc>OIL PRESSURE LED</desc>
+    <name type="string">vendor-16</name>
+    <setting>
+      <property>/input/bravo/vendor-16</property>
+      <value>1</value>
+      <condition>
+        <and>
+          <less-than>
+            <property>/engines/engine/oil-pressure-psi</property>
+            <value>14</value>
+          </less-than>
+          <equals>
+            <property>/controls/electric/battery-switch</property>
+            <value>true</value>
+          </equals>
+        </and>
+      </condition>
+    </setting>
+    <setting>
+      <property>/input/bravo/vendor-16</property>
+      <value>0</value>
+      <condition>
+        <or>
+          <greater-than-equals>
+            <property>/engines/engine/oil-pressure-psi</property>
+            <value>14</value>
+          </greater-than-equals>
+          <equals>
+            <property>/controls/electric/battery-switch</property>
+            <value>false</value>
+          </equals>
+        </or>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>FUEL PRESSURE LED</desc>
+    <name >vendor-17</name>
+    <setting>
+      <property>/input/bravo/vendor-17</property>
+      <value>1</value>
+      <condition>
+        <and>
+          <less-than>
+            <property>/engines/engine/fuel-pressure-psi</property>
+            <value>1</value>
+          </less-than>
+          <equals>
+            <property>/controls/electric/battery-switch</property>
+            <value>true</value>
+          </equals>
+        </and>
+      </condition>
+    </setting>
+    <setting>
+      <property>/input/bravo/vendor-17</property>
+      <value>0</value>
+      <condition>
+        <or>
+          <greater-than-equals>
+            <property>/engines/engine/fuel-pressure-psi</property>
+            <value>1</value>
+          </greater-than-equals>
+          <equals>
+            <property>/controls/electric/battery-switch</property>
+            <value>false</value>
+          </equals>
+        </or>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>CARB-HEAT (ANTI-ICE) LED</desc>
+    <name>vendor-18</name>
+    <setting>
+      <value>0</value>
+      <condition>
+        <not>
+          <equals>
+            <property>/controls/anti-ice/engine/carb-heat</property>
+            <value>true</value>
+          </equals>
+        </not>
+      </condition>
+    </setting>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/controls/anti-ice/engine/carb-heat</property>
+          <value>true</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>LOW VOLT LED</desc>
+    <name>vendor-26</name>
+    <setting>
+      <value>0</value>
+      <condition>
+        <greater-than-equals>
+          <property>/systems/electrical/volts</property>
+          <value>24</value>
+        </greater-than-equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>1</value>
+      <condition>
+        <less-than>
+          <property>/systems/electrical/volts</property>
+          <value>24</value>
+        </less-than>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>STARTER ENG LED</desc>
+    <name type="string">vendor-19</name>
+    <setting>
+      <property>/input/bravo/vendor-19</property>
+      <value>1</value>
+      <condition>
+        <and>
+          <equals>
+            <property>/controls/engines/engine/starter_cmd</property>
+            <value>true</value>
+          </equals>
+          <equals>
+            <property>/controls/electric/battery-switch</property>
+            <value>true</value>
+          </equals>
+        </and>
+      </condition>
+    </setting>
+    <setting>
+      <property>/input/bravo/vendor-18</property>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/controls/engines/engine/starter_cmd</property>
+          <value>false</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>CANOPY OPEN LED (DOOR OPEN)</desc>
+    <name>vendor-27</name>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/canopy/position-norm</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>1</value>
+      <condition>
+        <not>
+          <equals>
+            <property>/canopy/position-norm</property>
+            <value>0</value>
+          </equals>
+        </not>
+      </condition>
+    </setting>
+  </event>
+</PropertyList>
