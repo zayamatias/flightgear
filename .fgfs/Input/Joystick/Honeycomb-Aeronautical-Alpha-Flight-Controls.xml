@@ -1,0 +1,339 @@
+<?xml version="1.0"?>
+<PropertyList>
+  <name >Honeycomb Aeronautical Alpha Flight Controls</name>
+  <!-- Regular aileron/elevator controls with the yoke -->
+  <axis>
+    <desc >Aileron</desc>
+    <binding>
+      <command >property-scale</command>
+      <property >/controls/flight/aileron</property>
+      <factor type="double">1</factor>
+      <offset type="double">0</offset>
+      <power type="double">1</power>
+    </binding>
+  </axis>
+  <axis n="1">
+    <desc >Elevator</desc>
+    <binding>
+      <command >property-scale</command>
+      <property >/controls/flight/elevator</property>
+      <factor type="double">-1</factor>
+      <offset type="double">0</offset>
+      <power type="double">1</power>
+    </binding>
+  </axis>
+  <!-- Look around with the leftthumb stick (rubber one) -->
+  <axis n="2">
+    <desc >View (horizontal)</desc>
+    <low>
+      <binding>
+        <command >nasal</command>
+        <script >setprop("/sim/current-view/goal-heading-offset-deg", getprop("/sim/current-view/goal-heading-offset-deg") + 2);</script>
+      </binding>
+      <repeatable type="bool">true</repeatable>
+    </low>
+    <high>
+      <binding>
+        <command >nasal</command>
+        <script >setprop("/sim/current-view/goal-heading-offset-deg", getprop("/sim/current-view/goal-heading-offset-deg") - 2);</script>
+      </binding>
+      <repeatable type="bool">true</repeatable>
+    </high>
+  </axis>
+  <axis n="3">
+    <desc >View (vertical)</desc>
+    <low>
+      <binding>
+        <command >nasal</command>
+        <script >setprop("/sim/current-view/goal-pitch-offset-deg", getprop("/sim/current-view/goal-pitch-offset-deg") + 1);</script>
+      </binding>
+      <repeatable type="bool">true</repeatable>
+    </low>
+    <high>
+      <binding>
+        <command >nasal</command>
+        <script >setprop("/sim/current-view/goal-pitch-offset-deg", getprop("/sim/current-view/goal-pitch-offset-deg") - 1);</script>
+      </binding>
+      <repeatable type="bool">true</repeatable>
+    </high>
+  </axis>
+  <!-- PAUSE/RESUME WITH LEFT THUMB RED BUTTON -->
+  <button n="3">
+    <desc >PAUSE</desc>
+    <repeatable>false</repeatable>
+    <binding>
+      <command>pause</command>
+    </binding>
+  </button>
+  <!-- CONTROL FIELD OF VIEW FROM THE YOKE LEFT THUMB RIGHT TOGGLE -->
+  <button n="7">
+    <desc >FOV DECREASE</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/field-of-view</property>
+      <step>-2</step>
+    </binding>
+  </button>
+  <button n="6">
+    <desc >FOV INCREASE</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/field-of-view</property>
+      <step>2</step>
+    </binding>
+  </button>
+  <!-- CONTROL HEIGHT OFFSET (SEAT UP/DOWN) FROM THE YOKE LEFT THUMB LEFT TOGGLE -->
+  <button n="4">
+    <desc >Y OFFSET DECREASE</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/y-offset-m</property>
+      <step>-0.01</step>
+    </binding>
+  </button>
+  <button n="5">
+    <desc >Y OFFSET INCREASE</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/y-offset-m</property>
+      <step>0.01</step>
+    </binding>
+  </button>
+  <!-- CONTROL SIDE OFFSET (SET RIGHT/LEFT) FROM THE YOKE RIGHT THUMB UPPER TOGGLE -->
+  <button n="8">
+    <desc >X OFFSET DECREASE</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/x-offset-m</property>
+      <step>-0.01</step>
+    </binding>
+  </button>
+  <button n="9">
+    <desc >X OFFSET INCREASE</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/x-offset-m</property>
+      <step>0.01</step>
+    </binding>
+  </button>
+  <!-- CONTROL LEFT/RIGHT BRAKES WITH WHIT TRIGGERS ABOVE LEFT/RIGHT THUMB IN YOKE -->
+  <!-- LEFT BRAKE -->
+  <button n="1">
+    <desc >LEFT BRAKE</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/gear/brake-left</property>
+      <value>1</value>
+    </binding>
+    <mod-up>
+      <binding>
+        <command >property-assign</command>
+        <property >/controls/gear/brake-left</property>
+        <value>0</value>
+      </binding>
+    </mod-up>
+  </button>
+  <!-- RIGHT BRAKE -->
+  <button n="2">
+    <desc >RIGHT BRAKE</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/gear/brake-right</property>
+      <value>1</value>
+    </binding>
+    <mod-up>
+      <binding>
+        <command >property-assign</command>
+        <property >/controls/gear/brake-right</property>
+        <value>0</value>
+      </binding>
+    </mod-up>
+  </button>
+  <!-- ALTERNATOR -->
+  <button n="12">
+    <desc >ALTERNATOR ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/engines/engine/master-alt</property>
+      <value >1</value>
+    </binding>
+  </button>
+  <button n="13">
+    <desc >ALTERNATOR OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/engines/engine/master-alt</property>
+      <value >0</value>
+      <offset type="double">1</offset>
+    </binding>
+  </button>
+  <!-- BATTERY -->
+  <button n="14">
+    <desc >BATTERY ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/electric/battery-switch</property>
+      <value >1</value>
+    </binding>
+  </button>
+  <button n="15">
+    <desc >BATTERY OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/electric/battery-switch</property>
+      <value >0</value>
+      <offset type="double">1</offset>
+    </binding>
+  </button>
+  <!-- MASTER AVIONICS -->
+  <button n="16">
+    <desc >MASTER AVIONICS ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/switches/master-avionics</property>
+      <value >true</value>
+    </binding>
+  </button>
+  <button n="17">
+    <desc >MASTER AVIONICS OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/switches/master-avionics</property>
+      <value>false</value>
+    </binding>
+  </button>
+  <!-- LIGHTS -->
+  <!-- BEACON -->
+  <button n="20">
+    <desc >Beacon ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/lighting/beacon</property>
+      <value >1</value>
+      <offset type="double">1</offset>
+    </binding>
+  </button>
+  <button n="21">
+    <desc >Beacon OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/lighting/beacon</property>
+      <value >0</value>
+      <offset type="double">1</offset>
+    </binding>
+  </button>
+  <!-- LANDING LIGHTS -->
+  <button n="22">
+    <desc >Landing Lights ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/lighting/landing-lights</property>
+      <value >1</value>
+      <offset type="double">1</offset>
+    </binding>
+  </button>
+  <button n="23">
+    <desc >Landing Lights OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/lighting/landing-lights</property>
+      <value >0</value>
+      <offset type="double">1</offset>
+    </binding>
+  </button>
+  <!-- TAXI LIGHTS -->
+  <button n="22">
+    <desc >Taxi Lights ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/lighting/taxi-lights</property>
+      <value>true</value>
+    </binding>
+  </button>
+  <button n="23">
+    <desc >Taxi Lights OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/lighting/taxi-lights</property>
+      <value >false</value>
+    </binding>
+  </button>
+  <!-- NAV LIGHTS -->
+  <button n="26">
+    <desc >Nav Lights ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/lighting/nav-lights</property>
+      <value>true</value>
+    </binding>
+  </button>
+  <button n="27">
+    <desc >Nav Lights OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/lighting/nav-lights</property>
+      <value >false</value>
+    </binding>
+  </button>
+  <!-- STROBE LIGHTS -->
+  <button n="28">
+    <desc >Strobe Lights ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/lighting/strobe-lights</property>
+      <value>true</value>
+    </binding>
+  </button>
+  <button n="29">
+    <desc >Strobe Lights OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property >/controls/lighting/strobe-lights</property>
+      <value >false</value>
+    </binding>
+  </button>
+  <!-- MAGNETOS  -->
+  <!-- OFF -->
+  <button n="30">
+    <desc>Magnetos OFF</desc>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/engines/engine/magnetos</property>
+      <value >0</value>
+    </binding>
+  </button>
+  <!-- RIGHT -->
+  <button n="31">
+    <desc>Magnetos RIGHT</desc>
+    <binding>
+      <command>property-assign</command>
+      <property>/controls/engines/engine/magnetos</property>
+      <value >1</value>
+    </binding>
+  </button>
+  <!-- BUTTONS 32 + 33 ARE NOT HANDLED IN THIS FILE DUE TO LIMITATIONS, THESE ARE LOCATED IN THE EVENT FILE -->
+</PropertyList>
