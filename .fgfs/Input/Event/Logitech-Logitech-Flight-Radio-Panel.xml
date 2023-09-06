@@ -400,7 +400,9 @@
       ## THIS FUNCTION IS USED WHEN STARTING UP THE AIRPLANE, TO MAKE SURE THAT OK CONDITIONS ARE MET TO INITIALIZE PANEL
       
       var waitabit = func(){
-        initPanel();
+        if (!activatepanels()){
+          initPanel();
+        }
         settimer(refreshPanels,1.5);
       }
 
@@ -410,9 +412,9 @@
       ## SET LISTENERS, SO PANEL GETS UPDATED EVEN IF CHANGES ARE DONE DIECTLY IN THE SIM
       initPanel();
       setdefault();
-      var lis1 = setlistener('/instrumentation/comm/power-btn',waitabit);
-      var lis16 = setlistener('/controls/switches/master-avionics',waitabit);
-      var lis17 = setlistener('/controls/switches/master',waitabit);
+      var lis1 = setlistener('/instrumentation/comm/power-btn',waitabit,runtime=0);
+      var lis16 = setlistener('/controls/switches/master-avionics',waitabit,runtime=0);
+      var lis17 = setlistener('/controls/switches/master',waitabit,runtime=0);
       var lis2 = setlistener('/instrumentation/comm/frequencies/selected-mhz',refreshPanels);
       var lis3 = setlistener('/instrumentation/comm/frequencies/standby-mhz',refreshPanels);
       var lis4 = setlistener('/instrumentation/nav/frequencies/standby-mhz',refreshPanels);
@@ -427,7 +429,7 @@
       var lis11 = setlistener('/instrumentation/adf/frequencies/standby-khz',refreshPanels);
       var lis13 = setlistener('/instrumentation/adf/frequencies/selected-khz',refreshPanels);
       var lis14 = setlistener('/instrumentation/transponder/id-code',refreshPanels);
-      var lis15 = setlistener("/sim/signals/exit", initPanel);
+      var lis15 = setlistener("/sim/signals/exit", initPanel,runtime=0);
     ]]>
     </open>
   </nasal>
@@ -1091,7 +1093,7 @@
     <binding>
       <command>nasal</command>
       <!-- TRUE Denotes UPPER button -->
-      <script>switchbtn(true);</script>
+      <script>switchbtn(1);</script>
     </binding>
   </event>
   <!-- LOWER SWAP BUTTON -->
@@ -1101,7 +1103,7 @@
     <binding>
       <command>nasal</command>
       <!-- TRUE Denotes UPPER button -->
-      <script>switchbtn(false);</script>
+      <script>switchbtn(0);</script>
     </binding>
   </event>
   <!-- UPPER COMMS DECREASE BY FULL STEP -->
@@ -1111,7 +1113,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(getprop('/saitek/RP/upknobb'),-1*getprop('/saitek/RP/upknobfstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),true,true);
+        adjustvalue(getprop('/saitek/RP/upknobb'),-1*getprop('/saitek/RP/upknobfstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),1,1);
       </script>
     </binding>
     <binding>
@@ -1126,7 +1128,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(getprop('/saitek/RP/upknobb'),getprop('/saitek/RP/upknobfstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),true,true);
+        adjustvalue(getprop('/saitek/RP/upknobb'),getprop('/saitek/RP/upknobfstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),1,1);
       </script>
     </binding>
     <binding>
@@ -1141,7 +1143,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(getprop('/saitek/RP/upknobb'),-1*getprop('/saitek/RP/upknobhstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),true,true);
+        adjustvalue(getprop('/saitek/RP/upknobb'),-1*getprop('/saitek/RP/upknobhstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),1,1);
       </script>
     </binding>
     <binding>
@@ -1157,7 +1159,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(getprop('/saitek/RP/upknobb'),getprop('/saitek/RP/upknobhstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),true,true);
+        adjustvalue(getprop('/saitek/RP/upknobb'),getprop('/saitek/RP/upknobhstep'),getprop('/saitek/RP/upknobmax'),getprop('/saitek/RP/upknobmin'),1,1);
       </script>
     </binding>
     <binding>
@@ -1173,7 +1175,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(getprop('/saitek/RP/lowknobb'),-1*getprop('/saitek/RP/lowknobfstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),true,false);
+        adjustvalue(getprop('/saitek/RP/lowknobb'),-1*getprop('/saitek/RP/lowknobfstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),1,0);
       </script>
     </binding>
     <binding>
@@ -1188,7 +1190,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(getprop('/saitek/RP/lowknobb'),getprop('/saitek/RP/lowknobfstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),true,false);
+        adjustvalue(getprop('/saitek/RP/lowknobb'),getprop('/saitek/RP/lowknobfstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),1,0);
       </script>
     </binding>
     <binding>
@@ -1203,7 +1205,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(getprop('/saitek/RP/lowknobb'),-1*getprop('/saitek/RP/lowknobhstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),true,false);
+        adjustvalue(getprop('/saitek/RP/lowknobb'),-1*getprop('/saitek/RP/lowknobhstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),1,0);
       </script>
     </binding>
     <binding>
@@ -1219,7 +1221,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(getprop('/saitek/RP/lowknobb'),getprop('/saitek/RP/lowknobhstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),true,false);
+        adjustvalue(getprop('/saitek/RP/lowknobb'),getprop('/saitek/RP/lowknobhstep'),getprop('/saitek/RP/lowknobmax'),getprop('/saitek/RP/lowknobmin'),1,0);
       </script>
     </binding>
     <binding>
