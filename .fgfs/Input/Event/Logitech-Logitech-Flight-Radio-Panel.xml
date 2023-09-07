@@ -749,6 +749,16 @@
       <property>/saitek/RP/upknobsw</property>
       <value>XPDR</value>
     </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobfstep</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobhstep</property>
+      <value>1</value>
+    </binding>
 
     <binding>
       <command>nasal</command>
@@ -1077,6 +1087,17 @@
       <property>/saitek/RP/lowknobsw</property>
       <value>XPDR</value>
     </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobfstep</property>
+      <value>1</value>
+    </binding>
+    <binding>
+      <command>property-assign</command>
+      <property>/saitek/RP/lowknobhstep</property>
+      <value>0.05</value>
+    </binding>
+
     <binding>
       <command>nasal</command>
       <script>setLRPanel('/saitek/RP/lowknobb');
