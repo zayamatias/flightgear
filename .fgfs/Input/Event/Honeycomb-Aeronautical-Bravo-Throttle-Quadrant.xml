@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <PropertyList>
   <name type="string">Honeycomb Aeronautical Bravo Throttle Quadrant</name>
-  <debug-events type="bool">false</debug-events>
+  <debug-events type="bool">debug</debug-events>
   <nasal>
     <open>
             <![CDATA[
@@ -147,6 +147,7 @@
                 setprop('/honeycomb/bravo/hdgbtn/prop/logic','equal'); # Both this values have the HDG ON
                 setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/on','wing-leveler'); # Both this values have the HDG ON
                 setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[1]/on','dg-heading-hold'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/off',''); # Both this values have the HDG ON
                 setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[1]/off',''); # Both this values have the HDG ON
                 ## HEADING KNOB (TARGET PROPERTY AND STEP VALUE)
                 setprop('/honeycomb/bravo/selknob/hdgprop','');
@@ -197,14 +198,15 @@
               if (apmodel =='boeing1'){
 
                 ## HEADING BUTTON
-                setprop('/honeycomb/bravo/hdgbtn/prop[0]','/autopilot/locks/heading');
-                setprop('/honeycomb/bravo/hdgbtn/prop/logic','equal'); # Both this values have the HDG ON
-                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/on','wing-leveler'); # Both this values have the HDG ON
-                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[1]/on','dg-heading-hold'); # Both this values have the HDG ON
-                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[1]/off',''); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]','/controls/autoflight/autopilot/hdg-sel');
+                setprop('/honeycomb/bravo/hdgbtn/prop/logic','equal'); 
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/on',true); 
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/off',false); 
                 ## HEADING KNOB (TARGET PROPERTY AND STEP VALUE)
-                setprop('/honeycomb/bravo/selknob/hdgprop','');
-                setprop('/honeycomb/bravo/selknob/hdgvalue','');
+                setprop('/honeycomb/bravo/selknob/hdgprop','/autopilot/settings/heading-bug-deg');
+                setprop('/honeycomb/bravo/selknob/hdgvalue','1');
+                setprop('/honeycomb/bravo/selknob/hdgprop/max','360');
+                setprop('/honeycomb/bravo/selknob/hdgprop/min','0');
 
                 ## NAVIGATION BUTTON
                 setprop('/honeycomb/bravo/navbtn/prop[0]','/autopilot/lockss/heading');
@@ -213,16 +215,16 @@
                 setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/off',''); # Both this values have the HDG ON
 
                 ## APR BUTTON
-                setprop('/honeycomb/bravo/aprbtn/prop[0]','/autopilot/locks/altitude');
+                setprop('/honeycomb/bravo/aprbtn/prop[0]','/controls/autoflight/autopilot/alt-hld');
                 setprop('/honeycomb/bravo/aprbtn/prop/logic','equal');
-                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/on','gs1-hold'); # Both this values have the HDG ON
-                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/off',''); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/on',true);
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/off',false); 
 
                 ## REV BUTTON
                 setprop('/honeycomb/bravo/revbtn/prop[0]','');
 
                 ## ALT BUTTON
-                setprop('/honeycomb/bravo/altbtn/prop[0]','/controls/autoflight/autopilot/alt-hold');
+                setprop('/honeycomb/bravo/altbtn/prop[0]','/controls/autoflight/autopilot/alt-hld');
                 setprop('/honeycomb/bravo/altbtn/prop/logic','equal');
                 setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/on',true);
                 setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/off',false); # Both this values have the HDG ON
@@ -380,7 +382,11 @@
                   valhash = [sw,thisval];
                 }
               }
-              print ('TOTAL VALUES',size(values));
+              ###REMOVE
+              var idx =0;
+              foreach(var myval;values){
+                idx = idx +1;
+              }
               return values;
             }
 
@@ -394,7 +400,6 @@
                 idx = idx +1;
                 propvalname = prop~'['~idx~']';
                 thisval = getprop(propvalname);
-                print ('THIS VAL ',thisval);
               }
               return props;
             }
@@ -746,8 +751,24 @@
               if (typeof(getprop(prop))=='nil' or typeof(increment)=='nil'){
                 return;
               }
-              var currvalue = getprop(prop);
-              setprop (prop,currvalue+increment);
+              var proptoupdate = getprop(prop);
+              var currvalue = getprop(proptoupdate);
+              var maxvalue = getprop(prop~'/max');
+              if (typeof(maxvalue)=='nil'){
+                maxvalue = 99999999;
+              }
+              var minvalue = getprop(prop~'/min');
+              if (typeof(minvalue)=='nil'){
+                minvalue = -99999999;
+              }
+              var newvalue = currvalue + increment;
+              if (newvalue>maxvalue){
+                newvalue = minvalue;
+              }
+              if (newvalue<minvalue){
+                newvalue = maxvalue;
+              }
+              setprop (proptoupdate,newvalue);
               return;
             }
 
@@ -898,7 +919,6 @@
     <binding>
       <command>nasal</command>
       <script>
-        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 720');
         updatePropValue('/honeycomb/bravo/button1-up/prop');
       </script>
     </binding>
@@ -910,7 +930,6 @@
     <binding>
       <command>nasal</command>
       <script>
-        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 721');
         updatePropValue('/honeycomb/bravo/button1-low/prop');
       </script>
     </binding>
@@ -1047,31 +1066,47 @@
 
   <!-- SELECTOR KNOB AS HDG [IN THIS PLANE IS THE HDG BUG KNOB SELECTOR] -->
   <event>
+    <desc>AP ALT SELECTOR Button</desc>
+    <name>button-708</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/honeycomb/bravo/selknob</property>
+      <value>alt</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AP VS SELECTOR Button</desc>
+    <name>button-707</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/honeycomb/bravo/selknob</property>
+      <value>vs</value>
+    </binding>
+  </event>
+  <event>
     <desc>AP HDG SELECTOR Button</desc>
     <name>button-706</name>
     <binding>
       <command>property-assign</command>
-      <property>/honeycomb/bravo/selknob/</property>
+      <property>/honeycomb/bravo/selknob</property>
       <value>hdg</value>
     </binding>
   </event>
-  <!-- SELECTOR KNOB AS HDG [IN THIS PLANE IS THE RADIO/COMMS BACKUP KNOB SELECTOR] -->
   <event>
     <desc>AP CRS SELECTOR Button</desc>
     <name>button-705</name>
     <binding>
       <command>property-assign</command>
-      <property>/honeycomb/bravo/selknob/</property>
+      <property>/honeycomb/bravo/selknob</property>
       <value>crs</value>
     </binding>
     </event>
-  <!-- SELECTOR KNOB AS HDG [IN THIS PLANE IS THE RADIO/NAV BACKUP KNOB SELECTOR] -->
   <event>
     <desc>AP IAS SELECTOR Button</desc>
     <name>button-704</name>
     <binding>
       <command>property-assign</command>
-      <property>/honeycomb/bravo/selknob/</property>
+      <property>/honeycomb/bravo/selknob</property>
       <value>ias</value>
     </binding>
     </event>
@@ -1119,7 +1154,7 @@
         </equals>
       </condition>
       <command>nasal</command>
-      <script>updateValue(getprop('/honeycomb/bravo/selknob/altprop'),getprop('/honeycomb/bravo/selknob/altvalue'));</script>
+      <script>updateValue('/honeycomb/bravo/selknob/altprop',getprop('/honeycomb/bravo/selknob/altvalue'));</script>
     </binding>
     <!-- INCREASE CLIMB RATE-->
     <binding>
@@ -1130,7 +1165,7 @@
         </equals>
       </condition>
       <command>nasal</command>
-      <script>updateValue(getprop('/honeycomb/bravo/selknob/vsprop'),getprop('/honeycomb/bravo/selknob/vsvalue'));</script>
+      <script>updateValue('/honeycomb/bravo/selknob/vsprop',getprop('/honeycomb/bravo/selknob/vsvalue'));</script>
     </binding>
     <!-- INCREASE HDG-->
     <binding>
@@ -1141,7 +1176,7 @@
         </equals>
       </condition>
       <command>nasal</command>
-      <script>updateValue(getprop('/honeycomb/bravo/selknob/hdgprop'),getprop('/honeycomb/bravo/selknob/hdgvalue'));</script>
+      <script>updateValue('/honeycomb/bravo/selknob/hdgprop',getprop('/honeycomb/bravo/selknob/hdgvalue'));</script>
     </binding>
     <!-- INCREASE CRS-->
     <binding>
@@ -1152,7 +1187,7 @@
         </equals>
       </condition>
       <command>nasal</command>
-      <script>updateValue(getprop('/honeycomb/bravo/selknob/crsprop'),getprop('/honeycomb/bravo/selknob/crsvalue'));</script>
+      <script>updateValue('/honeycomb/bravo/selknob/crsprop',getprop('/honeycomb/bravo/selknob/crsvalue'));</script>
     </binding>
     <!-- INCREASE IAS-->
     <binding>
@@ -1163,7 +1198,7 @@
         </equals>
       </condition>
       <command>nasal</command>
-      <script>updateValue(getprop('/honeycomb/bravo/selknob/iasprop'),getprop('/honeycomb/bravo/selknob/iasvalue'));</script>
+      <script>updateValue('/honeycomb/bravo/selknob/iasprop',getprop('/honeycomb/bravo/selknob/iasvalue'));</script>
     </binding>
   </event>
   <event>
@@ -1178,7 +1213,7 @@
         </equals>
       </condition>
       <command>nasal</command>
-      <script>updateValue(getprop('/honeycomb/bravo/selknob/altprop'),-1*getprop('/honeycomb/bravo/selknob/altvalue'));</script>
+      <script>updateValue('/honeycomb/bravo/selknob/altprop',-1*getprop('/honeycomb/bravo/selknob/altvalue'));</script>
     </binding>
     <!-- DECREASE CLIMB RATE-->
     <binding>
@@ -1189,7 +1224,7 @@
         </equals>
       </condition>
       <command>nasal</command>
-      <script>updateValue(getprop('/honeycomb/bravo/selknob/vsprop'),-1*getprop('/honeycomb/bravo/selknob/vsvalue'));</script>
+      <script>updateValue('/honeycomb/bravo/selknob/vsprop',-1*getprop('/honeycomb/bravo/selknob/vsvalue'));</script>
     </binding>
     <!-- DECREASE HDG-->
     <binding>
@@ -1200,7 +1235,7 @@
         </equals>
       </condition>
       <command>nasal</command>
-      <script>updateValue(getprop('/honeycomb/bravo/selknob/hdgprop'),-1*getprop('/honeycomb/bravo/selknob/hdgvalue'));</script>
+      <script>updateValue('/honeycomb/bravo/selknob/hdgprop',-1*getprop('/honeycomb/bravo/selknob/hdgvalue'));</script>
     </binding>
     <!-- DECREASE CRS-->
     <binding>
@@ -1211,7 +1246,7 @@
         </equals>
       </condition>
       <command>nasal</command>
-      <script>updateValue(getprop('/honeycomb/bravo/selknob/crsprop'),-1*getprop('/honeycomb/bravo/selknob/crsvalue'));</script>
+      <script>updateValue('/honeycomb/bravo/selknob/crsprop')-1*getprop('/honeycomb/bravo/selknob/crsvalue'));</script>
     </binding>
     <!-- DECREASE IAS-->
     <binding>
@@ -1222,7 +1257,7 @@
         </equals>
       </condition>
       <command>nasal</command>
-      <script>updateValue(getprop('/honeycomb/bravo/selknob/iasprop'),-1*getprop('/honeycomb/bravo/selknob/iasvalue'));</script>
+      <script>updateValue('/honeycomb/bravo/selknob/iasprop',-1*getprop('/honeycomb/bravo/selknob/iasvalue'));</script>
     </binding>
 </event>
     <!-- LEDS SECTION -->
