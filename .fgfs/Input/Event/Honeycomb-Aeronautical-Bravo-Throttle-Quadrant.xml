@@ -1,340 +1,1058 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <PropertyList>
   <name type="string">Honeycomb Aeronautical Bravo Throttle Quadrant</name>
   <debug-events type="bool">false</debug-events>
   <nasal>
     <open>
-      <![CDATA[
-        for (var i=0; i < 28; i+=1) {
-          var n = props.globals.getNode('/input/bravo/vendor-' ~ i ~ '', 1); 
-          n.setBoolValue(0);
-        }
-        ]]>
+            <![CDATA[
+            var initProps= func(){
+
+              ## DISCOVER AUTOPILOT TYPE
+              var apmodel='';
+              if (typeof(getprop('/autopilot/kap140/panel/state'))!='nil'){
+                apmodel ='kap140';
+              }
+              if (typeof(getprop('/autopilot/kfc225/panel/state'))!='nil'){
+                apmodel ='kfc225';
+              }
+              if (getprop('/sim/aero')=='c172r'){
+                apmodel='generic1';
+              }
+              if (getprop('/sim/aero')=='738'){
+                apmodel='boeing1';
+              }
+             
+              ### PANEL BUTTONS
+              ## EACH BUTTON HAS A DIFFERENT EVET FOR THE UP AND LOW POSITION
+              ## BUTTON 1
+              setprop('/honeycomb/bravo/button1-up/prop','/controls/anti-ice/pitot-heat');
+              setprop('/honeycomb/bravo/button1-up/prop/value/on',1);
+              setprop('/honeycomb/bravo/button1-low/prop','/controls/anti-ice/pitot-heat');
+              setprop('/honeycomb/bravo/button1-low/prop/value/on',0);
+              
+              ## BUTTON 2
+              setprop('/honeycomb/bravo/button2-up/prop','');
+              setprop('/honeycomb/bravo/button2-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button2-low/prop','');
+              setprop('/honeycomb/bravo/button2-low/prop/value/on',false);
+              
+              ## BUTTON 3
+              setprop('/honeycomb/bravo/button3-up/prop','');
+              setprop('/honeycomb/bravo/button3-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button3-low/prop','');
+              setprop('/honeycomb/bravo/button3-low/prop/value/on',false);
+              
+              ## BUTTON 4
+              setprop('/honeycomb/bravo/button4-up/prop','');
+              setprop('/honeycomb/bravo/button4-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button4-low/prop','');
+              setprop('/honeycomb/bravo/button4-low/prop/value/on',false);
+              
+              ## BUTTON 5
+              setprop('/honeycomb/bravo/button5-up/prop','');
+              setprop('/honeycomb/bravo/button5-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button5-low/prop','');
+              setprop('/honeycomb/bravo/button5-low/prop/value/on',false);
+              
+              ## BUTTON 6
+              setprop('/honeycomb/bravo/button6-up/prop','');
+              setprop('/honeycomb/bravo/button6-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button6-low/prop','');
+              setprop('/honeycomb/bravo/button6-low/prop/value/on',false);
+              
+              ## BUTTON 7
+              setprop('/honeycomb/bravo/button7-up/prop','');
+              setprop('/honeycomb/bravo/button7-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button7-low/prop','');
+              setprop('/honeycomb/bravo/button7-low/prop/value/on',false);
+              
+
+              ### GEARS
+              setprop('/honeycomb/bravo/gearup/prop[0]','/controls/gear/brake-parking');
+              setprop('/honeycomb/bravo/gearup/prop[0]/value[0]/on',1);
+              setprop('/honeycomb/bravo/geardown/prop[0]','/controls/gear/brake-parking');
+              setprop('/honeycomb/bravo/geardown/prop[0]/value[0]/on',0);
+
+              ## DEFINE PROPERTIES FOR AUTOPILOT CONFIG
+              ## FIIRST ONE DEFINES WHICH PROPERTY IS MODIFIED (TARGET) WHEN PRESSING THE BUTTON
+              ## CONSECUTIVES ONES ARE THE POSSIBLE
+
+              ## KAP 140 & KFC 225 AUTOPILOTS
+
+              if (apmodel =='kap140' or apmodel =='kfc225'){
+
+                ## HEADING BUTTON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]','/autopilot/'~apmodel~'/settings/lateral-mode');
+                setprop('/honeycomb/bravo/hdgbtn/prop/logic','equal'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/on',1); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[1]/on',2); # Both this values have the HDG ON
+                ## HEADING KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/hdgprop','');
+                setprop('/honeycomb/bravo/selknob/hdgvalue','');
+
+                ## NAVIGATION BUTTON
+                setprop('/honeycomb/bravo/navbtn/prop[0]','/autopilot/'~apmodel~'/settings/lateral-arm');
+                setprop('/honeycomb/bravo/navbtn/prop/logic','equal'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/on',3); # Both this values have the HDG ON
+
+                ## APR BUTTON
+                setprop('/honeycomb/bravo/aprbtn/prop[0]','/autopilot/'~apmodel~'/settings/lateral-arm');
+                setprop('/honeycomb/bravo/aprbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/on',4); # Both this values have the HDG ON
+
+                ## REV BUTTON
+                setprop('/honeycomb/bravo/revbtn/prop[0]','/autopilot/'~apmodel~'/settings/lateral-arm');
+                setprop('/honeycomb/bravo/revbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/revbtn/prop[0]/value[0]/on',5); # Both this values have the HDG ON
+
+                ## ALT BUTTON
+                setprop('/honeycomb/bravo/altbtn/prop[0]','/autopilot/'~apmodel~'/settings/vertical-mode');
+                setprop('/honeycomb/bravo/altbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/on',2); # Both this values have the HDG ON
+                ## ALTITUDE KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/altprop','/autopilot/internal/target-altitude');
+                setprop('/honeycomb/bravo/selknob/altvalue',100); ## ALTITUD PROPERTIES AND INCREASE AMOUNT
+
+
+                ## VS BUTTON
+                setprop('/honeycomb/bravo/vsbtn/prop[0]','/autopilot/'~apmodel~'/settings/vertical-mode');
+                setprop('/honeycomb/bravo/vsbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/vsbtn/prop[0]/value[0]/on',1); # Both this values have the HDG ON
+                ## VERTICAL SPEED KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/vsprop','/autopilot/internal/target-climb-rate');
+                setprop('/honeycomb/bravo/selknob/vsvalue',100);
+
+                ## IAS BUTTON
+                setprop('/honeycomb/bravo/iasbtn/prop[0]','');
+                setprop('/honeycomb/bravo/iasbtn/prop[0]/value[0]','');
+                ## IAS  KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/iasprop','');
+                setprop('/honeycomb/bravo/selknob/iasvalue','');
+
+                ## AUTOPILOT BUTTON
+                setprop('/honeycomb/bravo/apbtn/prop[0]','/autopilot/'~apmodel~'/panel/state');
+                setprop('/honeycomb/bravo/apbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/on',6); ## WHEN STATUS IS 6 AP IS ACTIVATED
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/off',5); ## WHEN STATUS IS 5 AP IS DEACTIVATED
+
+                ## CRS  KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/crsprop','');
+                setprop('/honeycomb/bravo/selknob/crsvalue','');
+              }
+              
+              if (apmodel =='generic1'){
+
+                ## HEADING BUTTON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]','/autopilot/locks/heading');
+                setprop('/honeycomb/bravo/hdgbtn/prop/logic','equal'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/on','wing-leveler'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[1]/on','dg-heading-hold'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[1]/off',''); # Both this values have the HDG ON
+                ## HEADING KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/hdgprop','');
+                setprop('/honeycomb/bravo/selknob/hdgvalue','');
+
+                ## NAVIGATION BUTTON
+                setprop('/honeycomb/bravo/navbtn/prop[0]','/autopilot/locks/heading');
+                setprop('/honeycomb/bravo/navbtn/prop/logic','equal'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/on','nav-1-hold'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/off',''); # Both this values have the HDG ON
+
+                ## APR BUTTON
+                setprop('/honeycomb/bravo/aprbtn/prop[0]','/autopilot/locks/altitude');
+                setprop('/honeycomb/bravo/aprbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/on','gs1-hold'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/off',''); # Both this values have the HDG ON
+
+                ## REV BUTTON
+                setprop('/honeycomb/bravo/revbtn/prop[0]','');
+
+                ## ALT BUTTON
+                setprop('/honeycomb/bravo/altbtn/prop[0]','/autopilot/locks/altitude');
+                setprop('/honeycomb/bravo/altbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/on','altitude-hold'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/off',''); # Both this values have the HDG ON
+                ## ALTITUDE KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/altprop','/autopilot/settings/target-altitude-ft');
+                setprop('/honeycomb/bravo/selknob/altvalue',100); ## ALTITUD PROPERTIES AND INCREASE AMOUNT
+
+
+                ## VS BUTTON
+                setprop('/honeycomb/bravo/vsbtn/prop[0]','');
+
+                ## IAS BUTTON
+                setprop('/honeycomb/bravo/iasbtn/prop[0]','');
+
+                ## AUTOPILOT BUTTON
+                setprop('/honeycomb/bravo/apbtn/prop[0]','/autopilot/panel/state');
+                setprop('/honeycomb/bravo/apbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/on',6); ## WHEN STATUS IS 6 AP IS ACTIVATED
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/off',5); ## WHEN STATUS IS 5 AP IS DEACTIVATED
+
+                ## CRS  KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/crsprop','');
+                setprop('/honeycomb/bravo/selknob/crsvalue','');
+              }
+
+              if (apmodel =='boeing1'){
+
+                ## HEADING BUTTON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]','/autopilot/locks/heading');
+                setprop('/honeycomb/bravo/hdgbtn/prop/logic','equal'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/on','wing-leveler'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[1]/on','dg-heading-hold'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[1]/off',''); # Both this values have the HDG ON
+                ## HEADING KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/hdgprop','');
+                setprop('/honeycomb/bravo/selknob/hdgvalue','');
+
+                ## NAVIGATION BUTTON
+                setprop('/honeycomb/bravo/navbtn/prop[0]','/autopilot/lockss/heading');
+                setprop('/honeycomb/bravo/navbtn/prop/logic','equal'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/on','nav-1-hold'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/off',''); # Both this values have the HDG ON
+
+                ## APR BUTTON
+                setprop('/honeycomb/bravo/aprbtn/prop[0]','/autopilot/locks/altitude');
+                setprop('/honeycomb/bravo/aprbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/on','gs1-hold'); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/off',''); # Both this values have the HDG ON
+
+                ## REV BUTTON
+                setprop('/honeycomb/bravo/revbtn/prop[0]','');
+
+                ## ALT BUTTON
+                setprop('/honeycomb/bravo/altbtn/prop[0]','/controls/autoflight/autopilot/alt-hold');
+                setprop('/honeycomb/bravo/altbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/on',true);
+                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/off',false); # Both this values have the HDG ON
+                ## ALTITUDE KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/altprop','/autopilot/settings/target-altitude-ft');
+                setprop('/honeycomb/bravo/selknob/altvalue',100); ## ALTITUD PROPERTIES AND INCREASE AMOUNT
+
+
+                ## VS BUTTON
+                setprop('/honeycomb/bravo/vsbtn/prop[0]','');
+
+                ## IAS BUTTON
+                setprop('/honeycomb/bravo/iasbtn/prop[0]','');
+
+                ## AUTOPILOT BUTTON
+                setprop('/honeycomb/bravo/apbtn/prop[0]','/controls/autoflight/autopilot/engage');
+                setprop('/honeycomb/bravo/apbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/on',true); 
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/off',false);
+
+                ## CRS  KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/crsprop','');
+                setprop('/honeycomb/bravo/selknob/crsvalue','');
+              }
+
+              ##GEAR LEDS 
+              setprop('/honeycomb/bravo/leftgear/prop[0]','/controls/gear/brake-parking');
+              setprop('/honeycomb/bravo/leftgear/prop/logic','equal');
+              setprop('/honeycomb/bravo/leftgear/prop[0]/value[0]/on',1);
+              setprop('/honeycomb/bravo/leftgear/prop[0]/value[0]/off',0);
+              setprop('/honeycomb/bravo/nosegear/prop[0]','/controls/gear/brake-parking');
+              setprop('/honeycomb/bravo/nosegear/prop/logic','equal');
+              setprop('/honeycomb/bravo/nosegear/prop[0]/value[0]/on',1);
+              setprop('/honeycomb/bravo/nosegear/prop[0]/value[0]/off',0);
+              setprop('/honeycomb/bravo/rightgear/prop[0]','/controls/gear/brake-parking');
+              setprop('/honeycomb/bravo/rightgear/prop/logic','equal');
+              setprop('/honeycomb/bravo/rightgear/prop[0]/value[0]/on',1);
+              setprop('/honeycomb/bravo/rightgear/prop[0]/value[0]/off',0);
+
+
+              ## PROPERTIES TO ASSIGN TO EACH LED
+
+              #MASTER  WARNING
+              setprop('/honeycomb/bravo/masterwarning/prop[0]','');
+              setprop('/honeycomb/bravo/masterwarning/prop/logic','equal');
+              setprop('/honeycomb/bravo/masterwarning/prop[0]/value[0]/on',1);
+
+              #ENGINE FIRE
+              setprop('/honeycomb/bravo/enginefire/prop[0]','');
+              setprop('/honeycomb/bravo/enginefire/prop/logic','equal');
+              setprop('/honeycomb/bravo/enginefire/prop[0]/value/on',1);
+
+              #LOW OIL
+              setprop('/honeycomb/bravo/lowoilpressure/prop[0]','/engines/engine/indicated-oil-pressure-psi');
+              setprop('/honeycomb/bravo/lowoilpressure/prop/logic','less');
+              setprop('/honeycomb/bravo/lowoilpressure/prop[0]/value[0]/on',21);
+              
+              #LOW FUELv
+              setprop('/honeycomb/bravo/lowfuelpressure/prop[0]','/consumables/fuel/tank[1]/indicated-level-gal_us');
+              setprop('/honeycomb/bravo/lowfuelpressure/prop[1]','/consumables/fuel/tank[0]/indicated-level-gal_us');
+              setprop('/honeycomb/bravo/lowfuelpressure/prop/logic','less');
+              setprop('/honeycomb/bravo/lowfuelpressure/prop/condition','and');
+              setprop('/honeycomb/bravo/lowfuelpressure/prop[0]/value[0]/on',8);
+              setprop('/honeycomb/bravo/lowfuelpressure/prop[1]/value[1]/on',8);
+
+              #ANTI ICE
+              setprop('/honeycomb/bravo/antiice/prop[0]','/controls/anti-ice/pitot-heat');
+              setprop('/honeycomb/bravo/antiice/prop/logic','equal');
+              setprop('/honeycomb/bravo/antiice/prop[0]/value[0]/on',1);
+
+              #STARTER
+              setprop('/honeycomb/bravo/starterengaged/prop[0]','');
+              setprop('/honeycomb/bravo/starterengaged/prop/logic','equal');
+              setprop('/honeycomb/bravo/starterengaged/prop[0]/value[0]/on',1);
+
+              #APU
+              setprop('/honeycomb/bravo/apu/prop[0]','');
+              setprop('/honeycomb/bravo/apu/prop/logic','equal');
+              setprop('/honeycomb/bravo/apu/prop[0]/value[0]/on',1);
+
+              #MASTER CAUTION
+              setprop('/honeycomb/bravo/mastercaution/prop[0]','');
+              setprop('/honeycomb/bravo/mastercaution/prop/logic','equal');
+              setprop('/honeycomb/bravo/mastercaution/prop[0]/value[0]',1);
+
+              #VACUUM
+              setprop('/honeycomb/bravo/vacuum/prop[0]','/systems/vacuum[0]/suction-inhg');
+              setprop('/honeycomb/bravo/vacuum/prop[1]','/systems/vacuum[1]/suction-inhg');
+              setprop('/honeycomb/bravo/vacuum/prop/logic','less');
+              setprop('/honeycomb/bravo/vacuum/prop[0]/value[0]/on',3);
+              setprop('/honeycomb/bravo/vacuum/prop[1]/value[0]/on',3);
+
+              #LOW HYDRAULIC PRESSURE
+              setprop('/honeycomb/bravo/lowhydpressure/prop[0]','');
+              setprop('/honeycomb/bravo/lowhydpressure/prop/logic','equal');
+              setprop('/honeycomb/bravo/lowhydpressure/prop[0]/value[0]',1);
+
+              #AUX FUEL PUMP
+              setprop('/honeycomb/bravo/auxfuelpump/prop[0]','');
+              setprop('/honeycomb/bravo/auxfuelpump/prop/logic','equal');
+              setprop('/honeycomb/bravo/auxfuelpump/prop[0]/value[0]',1);
+
+              #PARKING BRAKE
+              setprop('/honeycomb/bravo/parkingbrake/prop[0]','/controls/gear/brake-parking');
+              setprop('/honeycomb/bravo/parkingbrake/prop/logic','equal');
+              setprop('/honeycomb/bravo/parkingbrake/prop[0]/value[0]/on',1);
+              setprop('/honeycomb/bravo/parkingbrake/prop[0]/value[1]/off',0);
+
+              #LOW VOLTS
+              setprop('/honeycomb/bravo/lowvolts/prop[0]','/systems/electrical/volts');
+              setprop('/honeycomb/bravo/lowvolts/prop/logic','less');
+              setprop('/honeycomb/bravo/lowvolts/prop[0]/value[0]/on',24.5);
+
+              #DOOR
+              setprop('/honeycomb/bravo/door/prop[0]','/sim/model/door-positions/leftDoor/opened');
+              setprop('/honeycomb/bravo/door/prop[1]','/sim/model/door-positions/rightDoor/opened');
+              setprop('/honeycomb/bravo/door/prop[2]','/sim/model/door-positions/bagaggeDoor/opened');
+              setprop('/honeycomb/bravo/door/prop/logic','equal');
+              setprop('/honeycomb/bravo/door/prop[0]/value[0]/on',1);
+              setprop('/honeycomb/bravo/door/prop[1]/value[0]/on',1);
+              setprop('/honeycomb/bravo/door/prop[2]/value[0]/on',1);
+
+             
+            }
+
+            ########################################################
+            ### NORMALLY YOU DO NOT NEED TO TOUCH ANYTHING BELOW ###
+            ########################################################
+
+
+            ## CLEAR ALL ANNUNCIATORS
+            var initAnnunciators = func(){
+              for (var i=0; i < 28; i+=1) {
+                var n = props.globals.getNode('/input/bravo/vendor-' ~ i ~ '', 1); 
+                n.setBoolValue(0);
+              }
+              initProps();
+            }
+
+            ## FUNCTION CALLED WHEN AP STATUS IS CHANGED
+
+            var getPropValues=func(prop){
+              var values =[];
+              var sws = ['on','off'];
+              foreach (var sw;sws){
+                var idx = 0;
+                var propvalname = prop~'/value['~idx~']/'~sw;
+                var thisval = getprop(propvalname);
+                var valhash = [sw,thisval];
+                while (typeof(thisval)!='nil'){
+                  append (values,valhash);
+                  idx = idx +1;
+                  propvalname = prop~'/value['~idx~']/'~sw;
+                  thisval = getprop(propvalname);
+                  valhash = [sw,thisval];
+                }
+              }
+              print ('TOTAL VALUES',size(values));
+              return values;
+            }
+
+            var getProps=func(prop){
+              var idx = 0;
+              var props =[];
+              var propvalname = prop~'['~idx~']';
+              var thisval = getprop(propvalname);
+              while (typeof(thisval)!='nil'){
+                append (props,thisval);
+                idx = idx +1;
+                propvalname = prop~'['~idx~']';
+                thisval = getprop(propvalname);
+                print ('THIS VAL ',thisval);
+              }
+              return props;
+            }
+
+            var genericLedUpdate=func(prop,led){
+              if (typeof(prop)=='nil' or prop==''){
+                return;
+              }
+              var props=getProps(prop);
+              var values=getPropValues(prop);
+              var logic=getprop(prop~'/logic');
+              if (logic==''){
+                logic='equal';
+              }
+              var cond=getprop(prop~'/condition');
+              if (cond=='' or typeof(cond)=='nil'){
+                cond='or';
+              }
+              var lightit = 0;
+              var matches =[];
+              foreach (var myprop;props){
+                state=getprop(myprop);
+                if (typeof(state)=='nil'){
+                  state=0;
+                }
+                for (n=0;n<size(values);n+=1){
+                  if (logic=='equal'){
+                    if (values[n][1]==state){
+                      if (values[n][0]=='on'){
+                        append (matches,1);
+                      }else{
+                        append (matches,0);
+                      }
+                    }
+                  }
+                  if (logic=='less'){
+                    if (values[n][1]>state){
+                      if (values[n][0]=='on'){
+                        append (matches,1);
+                      }else{
+                        append (matches,0);
+                      }
+                    }
+                  }
+                }
+              }
+              foreach (var match;matches){
+                if (cond=='or' and match){
+                  setprop(led,1);
+                  return;
+                }
+                if (cond=='and'){
+                  if (!match){
+                    setprop(led,0);
+                    return;
+                  }else{
+                    lightit=1;
+                  }
+                }
+              }
+              setprop(led,lightit);
+              return;
+            }
+
+            var apStateUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/apbtn/prop','/honeycomb/bravo/leds/ap');
+              return
+            }
+
+            ## FUNCTION CALLED WHEN THE HEADING STATS IS UPDATED
+
+            var hdgUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/hdgbtn/prop','/honeycomb/bravo/leds/ap/hdg');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE NAVIGATION STATS IS UPDATED
+
+            var navUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/navbtn/prop','/honeycomb/bravo/leds/ap/nav');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE APR STATS IS UPDATED
+
+            var aprUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/aprbtn/prop','/honeycomb/bravo/leds/ap/apr');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE REV STATS IS UPDATED
+
+            var revUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/revbtn/prop','/honeycomb/bravo/leds/ap/rev');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE ALT STATS IS UPDATED
+
+            var altUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/altbtn/prop','/honeycomb/bravo/leds/ap/alt');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE VS STATS IS UPDATED
+
+            var vsUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/vsbtn/prop','/honeycomb/bravo/leds/ap/vs');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE VS STATS IS UPDATED
+
+            var iasUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/iasbtn/prop','/honeycomb/bravo/leds/ap/ias');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE MASTER WARNING STATE IS UPDATED
+
+            var mwUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/masterwarning/prop','/honeycomb/bravo/masterwarning/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE ENGINE FIRE STATE IS UPDATED
+
+            var efUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/enginefire/prop','/honeycomb/bravo/enginefire/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE LOW OIL PRESSURE STATE IS UPDATED
+
+            var efUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/lowoilpressure/prop','/honeycomb/bravo/lowoilpressure/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE LOW OIL PRESSURE STATE IS UPDATED
+
+            var lopUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/lowoilpressure/prop','/honeycomb/bravo/lowoilpressure/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE LOW FUEL PRESSURE STATE IS UPDATED
+
+            var lfpUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/lowfuelpressure/prop','/honeycomb/bravo/lowfuelpressure/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE ANTI ICE STATE IS UPDATED
+
+            var aiUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/antiice/prop','/honeycomb/bravo/antiice/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE ANTI STARTER IS ENGAGED 
+
+            var seUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/starterengaged/prop','/honeycomb/bravo/starterengaged/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE APU IS ENGAGED 
+
+            var apuUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/apu/prop','/honeycomb/bravo/apu/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE MASTER CAUTION STATE IS UPDATED
+
+
+            var mcUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/mastercaution/prop','/honeycomb/bravo/mastercaution/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE VACUUM STATE IS UPDATED
+
+            var vacUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/vacuum/prop','/honeycomb/bravo/vacuum/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE LOW HYDRAULIC PRESSURE STATE IS UPDATED
+
+            var lhpUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/lowhydpressure/prop','/honeycomb/bravo/lowhydpressure/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE AUXILIARY FUEL PUMP IS ENGAGED
+
+            var afpUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/auxfuelpump/prop','/honeycomb/bravo/auxfuelpump/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE PARKING BRAKE IS ENGAGED
+
+            var pkbUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/parkingbrake/prop','/honeycomb/bravo/parkingbrake/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE LOW VOLTS STATE IS UPDATED
+
+            var voltsUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/lowvolts/prop','/honeycomb/bravo/lowvolts/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE DOORS STATE IS UPDATED
+
+            var doorsUpdated = func(){
+              genericLedUpdate('/honeycomb/bravo/door/prop','/honeycomb/bravo/door/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE LEFT GEAR STATE IS UPDATED
+
+            var lfgearupdated = func(){
+              genericLedUpdate('/honeycomb/bravo/leftgear/prop','/honeycomb/bravo/leftgear/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE NOSE GEAR STATE IS UPDATED
+
+            var nsgearupdated = func(){
+              genericLedUpdate('/honeycomb/bravo/nosegear/prop','/honeycomb/bravo/nosegear/led');
+              return;
+            }
+
+            ## FUNCTION CALLED WHEN THE NOSE GEAR STATE IS UPDATED
+
+            var rggearupdated = func(){
+              genericLedUpdate('/honeycomb/bravo/rightgear/prop','/honeycomb/bravo/rightgear/led');
+              return;
+            }
+
+            var initLeds=func(){
+
+              ## DEFINE LEDS (DO NOT TOUCH BELOW HERE)
+              setprop('/honeycomb/bravo/enginefire/led',0);
+              setprop('/honeycomb/bravo/lowoilpressure/led',0);
+              setprop('/honeycomb/bravo/lowfuelpressure/led',0);
+              setprop('/honeycomb/bravo/antiice/led',0);
+              setprop('/honeycomb/bravo/starterengaged/led',0);
+              setprop('/honeycomb/bravo/apu/led',0);
+              setprop('/honeycomb/bravo/mastercaution/led',0);
+              setprop('/honeycomb/bravo/vacuum/led',0);
+              setprop('/honeycomb/bravo/lowhydpressure/led',0);
+              setprop('/honeycomb/bravo/auxfuelpump/led',0);
+              setprop('/honeycomb/bravo/parkingbrake/led',0);
+              setprop('/honeycomb/bravo/lowvolts/led',0);
+              setprop('/honeycomb/bravo/door/led',0);
+              setprop('/honeycomb/bravo/leds/ap/hdg',0);
+              setprop('/honeycomb/bravo/leds/ap/nav',0);
+              setprop('/honeycomb/bravo/leds/ap/apr',0);
+              setprop('/honeycomb/bravo/leds/ap/rev',0);
+              setprop('/honeycomb/bravo/leds/ap/alt',0);
+              setprop('/honeycomb/bravo/leds/ap/vs',0);
+              setprop('/honeycomb/bravo/leds/ap/ias',0);
+              setprop('/honeycomb/bravo/leds/ap',0);
+              setprop('/honeycomb/bravo/gears/led',0); ## SINGLE GEAR OR INDEPENDENTLY BELOW
+              setprop('/honeycomb/bravo/leftgear/led',0);
+              setprop('/honeycomb/bravo/nosegear/led',0);
+              setprop('/honeycomb/bravo/rightgear/led',0);
+              ## ANNUNCIATOR LEDS
+              setprop('/honeycomb/bravo/masterwarning/led',0);
+              setprop('/honeycomb/bravo/enginefire/led',0);
+              setprop('/honeycomb/bravo/lowoilpressure/led',0);
+              setprop('/honeycomb/bravo/lowfuelpressure/led',0);
+              setprop('/honeycomb/bravo/antiice/led',0);
+              setprop('/honeycomb/bravo/starterengaged/led',0);
+              setprop('/honeycomb/bravo/apu/led',0);
+              setprop('/honeycomb/bravo/mastercaution/led',0);
+              setprop('/honeycomb/bravo/vacuum/led',0);
+              setprop('/honeycomb/bravo/lowhydpressure/led',0);
+              setprop('/honeycomb/bravo/auxfuelpump/led',0);
+              setprop('/honeycomb/bravo/parkingbrake/led',0);
+              setprop('/honeycomb/bravo/lowvolts/led',0);
+              setprop('/honeycomb/bravo/door/led',0);
+              
+              setprop('/honeycomb/bravo/masterwarning/led',0);
+
+
+              ## SET LISTENERS FOR LEDS
+
+              var listenerparams=[
+              ['masterwarning',mwUpdated],
+              ['enginefire',efUpdated],
+              ['lowoilpressure',lopUpdated],
+              ['lowfuelpressure',lfpUpdated],
+              ['antiice',aiUpdated],
+              ['starterengaged',seUpdated],
+              ['apu',apuUpdated],
+              ['mastercaution',mcUpdated],
+              ['vacuum',vacUpdated],
+              ['lowhydpressure',lhpUpdated],
+              ['auxfuelpump',afpUpdated],
+              ['parkingbrake',pkbUpdated],
+              ['lowvolts',voltsUpdated],
+              ['door',doorsUpdated],
+              ['hdgbtn',hdgUpdated],
+              ['navbtn',navUpdated],
+              ['aprbtn',aprUpdated],
+              ['revbtn',revUpdated],
+              ['altbtn',altUpdated],
+              ['vsbtn',vsUpdated],
+              ['iasbtn',iasUpdated],
+              ['apbtn',apStateUpdated],
+              ['leftgear',lfgearupdated],
+              ['nosegear',nsgearupdated],
+              ['rightgear',rggearupdated]
+              ];
+
+              var globallisteners=[];
+              var listento ='';
+              var idx = 0;
+              var proproot ='';
+
+              foreach (var listparam;listenerparams){
+                proproot = '/honeycomb/bravo/'~listparam[0]~'/prop';
+                listento = getprop(proproot~'['~idx~']');
+                while (listento !='' and typeof(listento)!='nil'){
+                  append (globallisteners,setlistener(listento,listparam[1],runtime=0));
+                  idx = idx + 1;
+                  listento = getprop(proproot~'['~idx~']');
+                }
+                idx = 0;
+              }
+
+              ## INITIALIZE AP AS OFF
+              setprop('/honeycomb/bravo/autopilot/ap',0);
+              ## WHEN PRESSING HEADING, IT SHOULD BE ALWAYS ON
+              ## SELECTOR KNOB STATUS ('ALT BY DEFAULT')
+              setprop('/honeycomb/bravo/selknob/','alt');
+
+            }
+            
+            
+            var updateValue=func(prop,increment){
+              if (typeof(getprop(prop))=='nil' or typeof(increment)=='nil'){
+                return;
+              }
+              var currvalue = getprop(prop);
+              setprop (prop,currvalue+increment);
+              return;
+            }
+
+            var getNextValue = func (values,valueprop){
+              var valsize=size(values);
+              var chkvalue=getprop(valueprop);
+              if (valsize==1){
+                return values[0][1];
+              }
+              for (var n=0;n<valsize;n+=1){
+                if (values[n][1]==chkvalue){
+                  if (n==valsize-1){
+                    return values[0][1];
+                  }else{
+                    return values[n+1][1];
+                  }
+                }
+              }
+              return values[0][1];
+            }
+
+            var updatePropValue = func(prop){
+              var propvalues=getPropValues(prop);
+              propvalue = getNextValue(propvalues,getprop(prop));
+              setprop(getprop(prop),propvalue);
+            }
+
+            initAnnunciators();
+            initLeds();
+
+            ]]>
     </open>
   </nasal>
-  <!-- CONFIGURATION:
-
-    AXIS ARE HANDLED IN THE JOYSTICK XML, I'VE FOUND EVENT XML TO BE UNRELIABLE FOR AXIS
-
-    LEFT KNOB SELECTOR:
-    ALT-> Selects QNH knob to be operated by incr/decr knob
-    VS-> Selects VOR Degree knob to be operated by incr/decr knob
-    HDG-> Selects Heading BUG Degree knob to be operated by incr/decr knob
-    CRS-> Selects COMM STDBY FREQ  knob to be operated by incr/decr knob
-    IAS-> Selects NAV STDBY FREQ  knob to be operated by incr/decr knob
-   
-    SQR BUTTONS ROW
-
-    HDG BUTTON -> Swap COMM FREQS
-    NAV BUTTON -> Swap NAV FREQS
-    APR BUTTON -> TRANSPONDER First Digit cycle (from left to right, values 0-7)
-    REV BUTTON -> TRANSPONDER Second Digit Cycle
-    ALT BUTTON -> TRANSPONDER Third Digit Cycle
-    VS BUTTON -> TRANSPONDER Foruth Digit Cycle
-    IAS BUTTON -> TRANSPONDER IDENT BUTTON
-    AUTOPILOT -> Select increase ratio of right knob (1/10 steps or 1/0.025 mhz)
-    
-    GEAR LEVER -> PARKING BRAKE (UP=ON) [GEAR LEDS TURN RED IF PARKING BREAK ON / GREEN IF OFF]
-    
-    SWITCHES :
-
-    1ST -> SELECT FUEL PUMP (UP=ON)
-    2ND -> SELECT CENTER FUEL TANK (UP SELECTS CENTER , DOWN DOES NOTHING)
-    3RD -> CARBURATOR HEAT (UP=ON)
-    4TH -> COMMS/NAV ON/OFF (UP=ON)
-    5TH -> ADF ON/OFF (UP=ON)
-    6TH -> TRANSPONDER ON/OFF (UP=ON)
-    7TH -> UNASIGNED (button-733 & button-734)
-
-  -->
-
-  <!-- APR CYCLES THRU VALUES FOR FIRST DIGIT OF TRANSPONDER ID-CODE -->
-  <event>
-    <desc>APR Button</desc>
-    <name>button-thumb2</name>
-    <binding>
-      <command>property-cycle</command>
-      <property>/instrumentation/transponder/inputs/digit[3]</property>
-      <value>0</value>
-      <value>1</value>
-      <value>2</value>
-      <value>3</value>
-      <value>4</value>
-      <value>5</value>
-      <value>6</value>
-      <value>7</value>
-    </binding>
-  </event>
-  <!-- REV CYCLES THRU VALUES FOR SECOND DIGIT OF TRANSPONDER ID-CODE -->
-  <event>
-    <desc>APR Button</desc>
-    <name>button-top</name>
-    <binding>
-      <command>property-cycle</command>
-      <property>/instrumentation/transponder/inputs/digit[2]</property>
-      <value>0</value>
-      <value>1</value>
-      <value>2</value>
-      <value>3</value>
-      <value>4</value>
-      <value>5</value>
-      <value>6</value>
-      <value>7</value>
-    </binding>
-  </event>
-  <!-- ALT CYCLES THRU VALUES FOR THIRD DIGIT OF TRANSPONDER ID-CODE -->
-  <event>
-    <desc>APR Button</desc>
-    <name>button-top2</name>
-    <binding>
-      <command>property-cycle</command>
-      <property>/instrumentation/transponder/inputs/digit[1]</property>
-      <value>0</value>
-      <value>1</value>
-      <value>2</value>
-      <value>3</value>
-      <value>4</value>
-      <value>5</value>
-      <value>6</value>
-      <value>7</value>
-    </binding>
-  </event>
-  <!-- VS CYCLES THRU VALUES FOR FIRST DIGIT OF TRANSPONDER ID-CODE -->
-  <event>
-    <desc>APR Button</desc>
-    <name>button-pinkie</name>
-    <binding>
-      <command>property-cycle</command>
-      <property>/instrumentation/transponder/inputs/digit</property>
-      <value>0</value>
-      <value>1</value>
-      <value>2</value>
-      <value>3</value>
-      <value>4</value>
-      <value>5</value>
-      <value>6</value>
-      <value>7</value>
-    </binding>
-  </event>
-
-  <!-- IAS BUTTON BECOMES IDENT BUTTON -->
-  <event>
-    <desc>IAS Button</desc>
-    <name>button-base</name>
-    <binding>
-      <command>property-assign</command>
-      <property>/instrumentation/transponder/ident</property>
-      <value>true</value>
-    </binding>
-    <mod-up>
+      <!-- AUTOPILOT BUTTON, SELECT FREQUENCY STEP (AFTER DOT/ BEFORE DOT)-->
+    <event>
+      <desc>AUTOPILOT BTN</desc>
+      <name>button-base2</name>
       <binding>
-        <command>property-assign</command>
-        <property>/instrumentation/transponder/ident</property>
-        <value>false</value>
-      </binding>
-    </mod-up>
-  </event>
-  <!-- HEADING BUTTON BECOMES COMM FREQ SWAPPER -->
+        <command>nasal</command>
+        <script>
+          updatePropValue('/honeycomb/bravo/apbtn/prop');
+        </script>
+      </binding> 
+    </event>
+    
+  <!-- HEADING BUTTON  -->
   <event>
     <desc>HEADING Button</desc>
     <name>button-trigger</name>
     <binding>
-      <command>property-assign</command>
-      <property>/instrumentation/comm/frq-swap-btn</property>
-      <value>1</value>
-    </binding>
-    <binding>
-      <command>property-swap</command>
-      <property>/instrumentation/comm/frequencies/selected-mhz</property>
-      <property>/instrumentation/comm/frequencies/standby-mhz</property>
-    </binding>
-    <mod-up>
-      <binding>
-        <command>property-assign</command>
-        <property>/instrumentation/comm/frq-swap-btn</property>
-        <value>0</value>
-      </binding>
-    </mod-up>
-  </event>
-  <!-- NAV BUTTON BECOMES NAV FREQ SWAPPER -->
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/hdgbtn/prop');
+      </script>
+    </binding> 
+   </event>
+  <!-- NAV BUTTON  -->
   <event>
-    <desc>HEADING Button</desc>
+    <desc>NAV Button</desc>
     <name>button-thumb</name>
     <binding>
-      <command>property-assign</command>
-      <property>/instrumentation/nav/frq-swap-btn</property>
-      <value>1</value>
-    </binding>
-    <binding>
-      <command>property-swap</command>
-      <property>/instrumentation/nav/frequencies/selected-mhz</property>
-      <property>/instrumentation/nav/frequencies/standby-mhz</property>
-    </binding>
-    <mod-up>
-      <binding>
-        <command>property-assign</command>
-        <property>/instrumentation/nav/frq-swap-btn</property>
-        <value>0</value>
-      </binding>
-    </mod-up>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/navbtn/prop');
+      </script>
+    </binding> 
   </event>
-  <!-- PARKING BREAK MANAGED BY GEAR POSTION (UP ON)-->
+  <!-- APR BUTTON -->
   <event>
-    <desc>PARKING BRAKE ON</desc>
+    <desc>APR Button</desc>
+    <name>button-thumb2</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/aprbtn/prop');
+      </script>
+    </binding> 
+  </event>
+  <!-- REV BUTTON -->
+  <event>
+    <desc>REV Button</desc>
+    <name>button-top</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/revbtn/prop');
+      </script>
+    </binding> 
+  </event>
+  <!-- ALT BUTTON -->
+  <event>
+    <desc>ALT Button</desc>
+    <name>button-top2</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/altbtn/prop');
+      </script>
+    </binding> 
+  </event>
+  <!-- VS BUTTON -->
+  <event>
+    <desc>VS Button</desc>
+    <name>button-pinkie</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/vsbtn/prop');
+      </script>
+    </binding> 
+  </event>
+  <!-- IAS BUTTON-->
+  <event>
+    <desc>IAS Button</desc>
+    <name>button-base</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/iasbtn/prop');
+      </script>
+    </binding> 
+  </event>
+  <!-- GEAR SWITCH -->
+  <event>
+    <desc>GEAR UP SWITCH</desc>
     <name>button-718</name>
     <binding>
-      <command>property-assign</command>
-      <property>/controls/gear/brake-parking</property>
-      <value>1</value>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/gearup/prop');
+      </script>
     </binding>
   </event>
   <event>
-    <desc>PARKING BRAKE OFF</desc>
+    <desc>GEAR DOWN SWITCH</desc>
     <name>button-719</name>
     <binding>
-      <command>property-assign</command>
-      <property>/controls/gear/brake-parking</property>
-      <value>0</value>
-    </binding>
-  </event>
-  <!-- CARB HEAT-->
-  <event>
-    <desc>CARB HEAT ON</desc>
-    <name>button-726</name>
-    <binding>
-      <command>property-assign</command>
-      <property>/controls/anti-ice/engine/carb-heat</property>
-      <value>false</value>
-    </binding>
-  </event>
-  <event>
-    <desc>CARB HEAT OFF</desc>
-    <name>button-725</name>
-    <binding>
-      <command>property-assign</command>
-      <property>/controls/anti-ice/engine/carb-heat</property>
-      <value>true</value>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/geardown/prop');
+      </script>
     </binding>
   </event>
 
-  <!-- RADIO COMMS/NAV ON/OFF -->
   <event>
-    <desc>COMMS ON</desc>
-    <name>button-728</name>
+    <desc>PANEL FIRST SWITCH UP</desc>
+    <name>button-720</name>
     <binding>
-      <command>property-assign</command>
-      <property>/instrumentation/comm/power-btn</property>
-      <value>false</value>
-    </binding>
-    <binding>
-      <command>property-assign</command>
-      <property>/instrumentation/comm/volume</property>
-      <value>0.5</value>
-    </binding>
-  </event>
-  <event>
-    <desc>COMMS OFF</desc>
-    <name>button-727</name>
-    <binding>
-      <command>property-assign</command>
-      <property>/instrumentation/comm/power-btn</property>
-      <value>true</value>
+      <command>nasal</command>
+      <script>
+        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 720');
+        updatePropValue('/honeycomb/bravo/button1-up/prop');
+      </script>
     </binding>
   </event>
 
-  <!-- ADF ON/OFF -->
   <event>
-    <desc>ADF ON</desc>
-    <name>button-730</name>
-    <binding>
-      <command>property-assign</command>
-      <property>/instrumentation/adf/power-btn</property>
-      <value>false</value>
-    </binding>
-    <binding>
-      <command>property-assign</command>
-      <property>/instrumentation/comm/volume</property>
-      <value>0.5</value>
-    </binding>
-  </event>
-  <event>
-    <desc>ADF OFF</desc>
-    <name>button-729</name>
-    <binding>
-      <command>property-assign</command>
-      <property>/instrumentation/adf/power-btn</property>
-      <value>true</value>
-    </binding>
-  </event>
-
-  <!-- TRANSPONDER ON/OFF -->
-  <event>
-    <desc>TRANSPONDER ON</desc>
-    <name>button-732</name>
-    <binding>
-      <command>property-assign</command>
-      <property>/instrumentation/transponder/inputs/knob-mode</property>
-      <value>0</value>
-    </binding>
-  </event>
-  <event>
-    <desc>TRANSPONDER OFF</desc>
-    <name>button-731</name>
-    <binding>
-      <command>property-assign</command>
-      <property>/instrumentation/transponder/inputs/knob-mode</property>
-      <value>4</value>
-    </binding>
-  </event>
-
-  <!-- FUEL PUMP ON/OFF -->
-
-  <event>
-    <desc>FUEL PUMP ON</desc>
+    <desc>PANEL FIRST  SWITCH DOWN</desc>
     <name>button-721</name>
     <binding>
-      <command>property-assign</command>
-      <property>controls/fuel/tank/boost-pump</property>
-      <value>true</value>
+      <command>nasal</command>
+      <script>
+        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 721');
+        updatePropValue('/honeycomb/bravo/button1-low/prop');
+      </script>
     </binding>
   </event>
+
   <event>
-    <desc>FUEL PUMP OFF</desc>
+    <desc>PANEL SECOND SWITCH UP</desc>
     <name>button-722</name>
     <binding>
-      <command>property-assign</command>
-      <property>controls/fuel/tank/boost-pump</property>
-      <value>false</value>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button2-up/prop');
+      </script>
     </binding>
   </event>
-  <!-- SELECTOR KNOB AS ALTITUDE [IN THIS PLANE IS THE QNH KNOB SELECTOR] -->
+
   <event>
-    <desc>AP ALT SELECTOR Button</desc>
-    <name>button-708</name>
+    <desc>PANEL SECOND  SWITCH DOWN</desc>
+    <name>button-723</name>
     <binding>
-      <command>property-assign</command>
-      <property>/autopilot/selector</property>
-      <value type="string">alt</value>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button2-low/prop');
+      </script>
     </binding>
   </event>
-  <!-- SELECTOR KNOB AS VS [IN THIS PLANE IS THE NAV DEG KNOB SELECTOR] -->
   <event>
-    <desc>AP VS SELECTOR Button</desc>
-    <name>button-707</name>
+    <desc>PANEL THIRD SWITCH UP</desc>
+    <name>button-724</name>
     <binding>
-      <command>property-assign</command>
-      <property>/autopilot/selector</property>
-      <value type="string">vs</value>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button3-up/prop');
+      </script>
     </binding>
   </event>
+
+  <event>
+    <desc>PANEL THIRD  SWITCH DOWN</desc>
+    <name>button-725</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button3-low/prop');
+      </script>
+    </binding>
+  </event>
+  <event>
+    <desc>PANEL FOURTH SWITCH UP</desc>
+    <name>button-726</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button4-up/prop');
+      </script>
+    </binding>
+  </event>
+
+  <event>
+    <desc>PANEL FOURTH SWITCH DOWN</desc>
+    <name>button-727</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button4-low/prop');
+      </script>
+    </binding>
+  </event>
+  <event>
+    <desc>PANEL FIFTH SWITCH UP</desc>
+    <name>button-728</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button5-up/prop');
+      </script>
+    </binding>
+  </event>
+
+  <event>
+    <desc>PANEL FIFTH  SWITCH DOWN</desc>
+    <name>button-728</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button5-low/prop');
+      </script>
+    </binding>
+  </event>
+  <event>
+    <desc>PANEL SIXTH SWITCH UP</desc>
+    <name>button-729</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button6-up/prop');
+      </script>
+    </binding>
+  </event>
+
+  <event>
+    <desc>PANEL SIXTH  SWITCH DOWN</desc>
+    <name>button-730</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button6-low/prop');
+      </script>
+    </binding>
+  </event>
+  <event>
+    <desc>PANEL SEVENTH SWITCH UP</desc>
+    <name>button-731</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button7-up/prop');
+      </script>
+    </binding>
+  </event>
+
+  <event>
+    <desc>PANEL SEVENTH  SWITCH DOWN</desc>
+    <name>button-732</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/button7-low/prop');
+      </script>
+    </binding>
+  </event>
+
+
+
   <!-- SELECTOR KNOB AS HDG [IN THIS PLANE IS THE HDG BUG KNOB SELECTOR] -->
   <event>
     <desc>AP HDG SELECTOR Button</desc>
     <name>button-706</name>
     <binding>
       <command>property-assign</command>
-      <property>/autopilot/selector</property>
-      <value type="string">hdg</value>
+      <property>/honeycomb/bravo/selknob/</property>
+      <value>hdg</value>
     </binding>
   </event>
   <!-- SELECTOR KNOB AS HDG [IN THIS PLANE IS THE RADIO/COMMS BACKUP KNOB SELECTOR] -->
@@ -343,20 +1061,20 @@
     <name>button-705</name>
     <binding>
       <command>property-assign</command>
-      <property>/autopilot/selector</property>
-      <value type="string">crs</value>
+      <property>/honeycomb/bravo/selknob/</property>
+      <value>crs</value>
     </binding>
-  </event>
+    </event>
   <!-- SELECTOR KNOB AS HDG [IN THIS PLANE IS THE RADIO/NAV BACKUP KNOB SELECTOR] -->
   <event>
     <desc>AP IAS SELECTOR Button</desc>
     <name>button-704</name>
     <binding>
       <command>property-assign</command>
-      <property>/autopilot/selector</property>
-      <value type="string">ias</value>
+      <property>/honeycomb/bravo/selknob/</property>
+      <value>ias</value>
     </binding>
-  </event>
+    </event>
 
 
   <event>
@@ -369,33 +1087,13 @@
       <value type="string"></value>
     </binding>
   </event>
-
-  <event>
-    <desc>CENTER FUEL PUMP</desc>
-    <name>button-723</name>
-    <binding>
-      <command>property-assign</command>
-      <property>/controls/fuel/selected-tank-pos</property>
-      <value >180</value>
-    </binding>
-  </event>
-  <event>
-    <desc>OFF FUEL PUMP</desc>
-    <name>button-724</name>
-    <binding>
-      <command>property-assign</command>
-      <property>/controls/fuel/selected-tank</property>
-      <value>0</value>
-    </binding>
-  </event>
-
   <event>
     <desc>FLAPS DOWN</desc>
     <name>button-302</name>
     <binding>
       <command>property-adjust</command>
       <property>/controls/flight/flaps</property>
-      <step>0.25</step>
+      <step>0.05</step>
       <max>1</max>
     </binding>
   </event>
@@ -405,375 +1103,129 @@
     <binding>
       <command>property-adjust</command>
       <property>/controls/flight/flaps</property>
-      <step>-0.25</step>
+      <step>-0.05</step>
       <min>0</min>
     </binding>
   </event>
   <event>
     <desc>AP INCR Button  </desc>
     <name>button-300</name>
-    <!-- INCREASE ALTIMETER HPA -->
+    <!-- INCREASE AUTOPILOT ALT-->
     <binding>
       <condition>
         <equals>
-          <property>/autopilot/selector</property>
+          <property>/honeycomb/bravo/selknob/</property>
           <value>alt</value>
         </equals>
       </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/altimeter/setting-hpa</property>
-      <step>1</step>
-      <max>3000</max>
+      <command>nasal</command>
+      <script>updateValue(getprop('/honeycomb/bravo/selknob/altprop'),getprop('/honeycomb/bravo/selknob/altvalue'));</script>
     </binding>
-    <!-- INCREASE NAV SELECTED DEG BY 1-->
+    <!-- INCREASE CLIMB RATE-->
     <binding>
       <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>vs</value>
-          </equals>
-          <not>
-            <equals>
-              <property>/instrumentation/knob/increment</property>
-              <value>1</value>
-            </equals>
-          </not>
-        </and>
+        <equals>
+          <property>/honeycomb/bravo/selknob/</property>
+          <value>vs</value>
+        </equals>
       </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/nav/radials/selected-deg</property>
-      <step>1</step>
-      <max>360</max>
-      <min>0</min>
-      <wrap>true</wrap>
+      <command>nasal</command>
+      <script>updateValue(getprop('/honeycomb/bravo/selknob/vsprop'),getprop('/honeycomb/bravo/selknob/vsvalue'));</script>
     </binding>
-    <!-- INCREASE NAV SELECTED DEG BY 10-->
+    <!-- INCREASE HDG-->
     <binding>
       <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>vs</value>
-          </equals>
-          <equals>
-            <property>/instrumentation/knob/increment</property>
-            <value>1</value>
-          </equals>
-        </and>
+        <equals>
+          <property>/honeycomb/bravo/selknob/</property>
+          <value>hdg</value>
+        </equals>
       </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/nav/radials/selected-deg</property>
-      <step>10</step>
-      <max>360</max>
-      <min>0</min>
-      <wrap>true</wrap>
+      <command>nasal</command>
+      <script>updateValue(getprop('/honeycomb/bravo/selknob/hdgprop'),getprop('/honeycomb/bravo/selknob/hdgvalue'));</script>
     </binding>
-    <!-- INCREASE HDG BUG BY 1 -->
+    <!-- INCREASE CRS-->
     <binding>
       <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>hdg</value>
-          </equals>
-          <not>
-            <equals>
-              <property>/instrumentation/knob/increment</property>
-              <value>1</value>
-            </equals>
-          </not>
-        </and>
+        <equals>
+          <property>/honeycomb/bravo/selknob/</property>
+          <value>crs</value>
+        </equals>
       </condition>
-      <command>property-adjust</command>
-      <property>/autopilot/settings/heading-bug-deg</property>
-      <step>1</step>
-      <max>360</max>
-      <min>0</min>
-      <wrap>true</wrap>
+      <command>nasal</command>
+      <script>updateValue(getprop('/honeycomb/bravo/selknob/crsprop'),getprop('/honeycomb/bravo/selknob/crsvalue'));</script>
     </binding>
-    <!-- INCREASE HDG BUG BY 10 -->
+    <!-- INCREASE IAS-->
     <binding>
       <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>hdg</value>
-          </equals>
-          <equals>
-            <property>/instrumentation/knob/increment</property>
-            <value>1</value>
-          </equals>
-        </and>
+        <equals>
+          <property>/honeycomb/bravo/selknob/</property>
+          <value>ias</value>
+        </equals>
       </condition>
-      <command>property-adjust</command>
-      <property>/autopilot/settings/heading-bug-deg</property>
-      <step>10</step>
-      <max>360</max>
-      <min>0</min>
-      <wrap>true</wrap>
-    </binding>
-    <!-- INCREASE RADIO COMM STDBY FREQ BY 0.025-->
-    <binding>
-      <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>crs</value>
-          </equals>
-          <not>
-            <equals>
-              <property>/instrumentation/knob/increment</property>
-              <value>1</value>
-            </equals>
-          </not>
-        </and>
-      </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/comm/frequencies/standby-mhz</property>
-      <step>0.025</step>
-    </binding>
-    <!-- INCREASE RADIO COMM STDBY FREQ BY 1-->
-    <binding>
-      <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>crs</value>
-          </equals>
-          <equals>
-            <property>/instrumentation/knob/increment</property>
-            <value>1</value>
-          </equals>
-        </and>
-      </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/comm/frequencies/standby-mhz</property>
-      <step>1</step>
-    </binding>
-    <!-- INCREASE RADIO NAV STDBY FREQ BY 0.025-->
-    <binding>
-      <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>ias</value>
-          </equals>
-          <not>
-            <equals>
-              <property>/instrumentation/knob/increment</property>
-              <value>1</value>
-            </equals>
-          </not>
-        </and>
-      </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/nav/frequencies/standby-mhz</property>
-      <step>0.025</step>
-    </binding>
-    <!-- INCREASE RADIO NAV STDBY FREQ BY 1-->
-    <binding>
-      <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>ias</value>
-          </equals>
-          <equals>
-            <property>/instrumentation/knob/increment</property>
-            <value>1</value>
-          </equals>
-        </and>
-      </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/nav/frequencies/standby-mhz</property>
-      <step>1</step>
+      <command>nasal</command>
+      <script>updateValue(getprop('/honeycomb/bravo/selknob/iasprop'),getprop('/honeycomb/bravo/selknob/iasvalue'));</script>
     </binding>
   </event>
   <event>
     <desc>APR DECR Button</desc>
     <name>button-301</name>
-    <!-- DECREASE ALTIMETER -->
+    <!-- DECREASE AUTOPILOT ALT-->
     <binding>
       <condition>
         <equals>
-          <property>/autopilot/selector</property>
+          <property>/honeycomb/bravo/selknob/</property>
           <value>alt</value>
         </equals>
       </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/altimeter/setting-hpa</property>
-      <step>-1</step>
-      <min>0</min>
+      <command>nasal</command>
+      <script>updateValue(getprop('/honeycomb/bravo/selknob/altprop'),-1*getprop('/honeycomb/bravo/selknob/altvalue'));</script>
     </binding>
-    <!-- DECREASE NAV SELECTED DEG BY 1-->
+    <!-- DECREASE CLIMB RATE-->
     <binding>
       <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>vs</value>
-          </equals>
-          <not>
-            <equals>
-              <property>/instrumentation/knob/increment</property>
-              <value>1</value>
-            </equals>
-          </not>
-        </and>
+        <equals>
+          <property>/honeycomb/bravo/selknob/</property>
+          <value>vs</value>
+        </equals>
       </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/nav/radials/selected-deg</property>
-      <step>-1</step>
-      <min>0</min>
-      <max>360</max>
-      <wrap>true</wrap>
+      <command>nasal</command>
+      <script>updateValue(getprop('/honeycomb/bravo/selknob/vsprop'),-1*getprop('/honeycomb/bravo/selknob/vsvalue'));</script>
     </binding>
-    <!-- DECREASE NAV SELECTED DEG BY 10-->
+    <!-- DECREASE HDG-->
     <binding>
       <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>vs</value>
-          </equals>
-          <equals>
-            <property>/instrumentation/knob/increment</property>
-            <value>1</value>
-          </equals>
-        </and>
+        <equals>
+          <property>/honeycomb/bravo/selknob/</property>
+          <value>hdg</value>
+        </equals>
       </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/nav/radials/selected-deg</property>
-      <step>-10</step>
-      <min>0</min>
-      <max>360</max>
-      <wrap>true</wrap>
+      <command>nasal</command>
+      <script>updateValue(getprop('/honeycomb/bravo/selknob/hdgprop'),-1*getprop('/honeycomb/bravo/selknob/hdgvalue'));</script>
     </binding>
-    <!-- DECREASE HEADING BUG BY 1-->
+    <!-- DECREASE CRS-->
     <binding>
       <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>hdg</value>
-          </equals>
-          <not>
-            <equals>
-              <property>/instrumentation/knob/increment</property>
-              <value>1</value>
-            </equals>
-          </not>
-        </and>
+        <equals>
+          <property>/honeycomb/bravo/selknob/</property>
+          <value>crs</value>
+        </equals>
       </condition>
-      <command>property-adjust</command>
-      <property>/autopilot/settings/heading-bug-deg</property>
-      <step>-1</step>
-      <max>360</max>
-      <min>0</min>
-      <wrap>true</wrap>
+      <command>nasal</command>
+      <script>updateValue(getprop('/honeycomb/bravo/selknob/crsprop'),-1*getprop('/honeycomb/bravo/selknob/crsvalue'));</script>
     </binding>
-    <!-- DECREASE HEADING BUG BY 10-->
+    <!-- DECREASE IAS-->
     <binding>
       <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>hdg</value>
-          </equals>
-          <equals>
-            <property>/instrumentation/knob/increment</property>
-            <value>1</value>
-          </equals>
-        </and>
+        <equals>
+          <property>/honeycomb/bravo/selknob/</property>
+          <value>ias</value>
+        </equals>
       </condition>
-      <command>property-adjust</command>
-      <property>/autopilot/settings/heading-bug-deg</property>
-      <step>-10</step>
-      <max>359</max>
-      <min>0</min>
-      <wrap>true</wrap>
+      <command>nasal</command>
+      <script>updateValue(getprop('/honeycomb/bravo/selknob/iasprop'),-1*getprop('/honeycomb/bravo/selknob/iasvalue'));</script>
     </binding>
-    <!-- DECREASE RADIO COMM STDBY FREQ BY 0.025-->
-    <binding>
-      <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>crs</value>
-          </equals>
-          <not>
-            <equals>
-              <property>/instrumentation/knob/increment</property>
-              <value>1</value>
-            </equals>
-          </not>
-        </and>
-      </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/comm/frequencies/standby-mhz</property>
-      <step>-0.025</step>
-    </binding>
-    <!-- DECREASE RADIO COMM STDBY FREQ BY 1-->
-    <binding>
-      <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>crs</value>
-          </equals>
-          <equals>
-            <property>/instrumentation/knob/increment</property>
-            <value>1</value>
-          </equals>
-        </and>
-      </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/comm/frequencies/standby-mhz</property>
-      <step>-1</step>
-    </binding>
-    <!-- DECREASE RADIO NAV STDBY FREQ BY 0.025-->
-    <binding>
-      <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>ias</value>
-          </equals>
-          <not>
-            <equals>
-              <property>/instrumentation/knob/increment</property>
-              <value>1</value>
-            </equals>
-          </not>
-        </and>
-      </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/nav/frequencies/standby-mhz</property>
-      <step>-0.025</step>
-    </binding>
-    <!-- DECREASE RADIO NAV STDBY FREQ BY 1-->
-    <binding>
-      <condition>
-        <and>
-          <equals>
-            <property>/autopilot/selector</property>
-            <value>ias</value>
-          </equals>
-          <equals>
-            <property>/instrumentation/knob/increment</property>
-            <value>1</value>
-          </equals>
-        </and>
-      </condition>
-      <command>property-adjust</command>
-      <property>/instrumentation/nav/frequencies/standby-mhz</property>
-      <step>-1</step>
-    </binding>
-  </event>
-
-
-
+</event>
+    <!-- LEDS SECTION -->
   <event>
     <desc>HEADING LED</desc>
     <name>vendor-0</name>
@@ -782,7 +1234,7 @@
       <condition>
         <not>
           <equals>
-            <property>/autopilot/locks/heading</property>
+            <property>/honeycomb/bravo/leds/ap/hdg</property>
             <value></value>
           </equals>
         </not>
@@ -792,29 +1244,103 @@
       <value>0</value>
       <condition>
         <equals>
-          <property>/autopilot/locks/heading</property>
+          <property>/honeycomb/bravo/leds/ap/hdg</property>
           <value></value>
         </equals>
       </condition>
     </setting>
   </event>
   <event>
-    <desc>ALTITUDE LED</desc>
-    <name>vendor-4</name>
+    <desc>NAV LED</desc>
+    <name>vendor-1</name>
     <setting>
       <value>1</value>
       <condition>
-        <equals>
-          <property>/autopilot/locks/altitude</property>
-          <value type="string">altitude-hold</value>
-        </equals>
+        <not>
+          <equals>
+            <property>/honeycomb/bravo/leds/ap/nav</property>
+            <value></value>
+          </equals>
+        </not>
       </condition>
     </setting>
     <setting>
       <value>0</value>
       <condition>
         <equals>
-          <property>/autopilot/locks/altitude</property>
+          <property>/honeycomb/bravo/leds/ap/nav</property>
+          <value></value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>APR LED</desc>
+    <name>vendor-2</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <not>
+          <equals>
+            <property>/honeycomb/bravo/leds/ap/apr</property>
+            <value></value>
+          </equals>
+        </not>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/leds/ap/apr</property>
+          <value></value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>REV LED</desc>
+    <name>vendor-3</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <not>
+          <equals>
+            <property>/honeycomb/bravo/leds/ap/rev</property>
+            <value></value>
+          </equals>
+        </not>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/leds/ap/rev</property>
+          <value></value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>ALT LED</desc>
+    <name>vendor-4</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <not>
+          <equals>
+            <property>/honeycomb/bravo/leds/ap/alt</property>
+            <value></value>
+          </equals>
+        </not>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/leds/ap/alt</property>
           <value></value>
         </equals>
       </condition>
@@ -826,34 +1352,47 @@
     <setting>
       <value>1</value>
       <condition>
-        <equals>
-          <property>/autopilot/locks/altitude</property>
-          <value type="string">vertical-speed-hold</value>
-        </equals>
+        <not>
+          <equals>
+            <property>/honeycomb/bravo/leds/ap/vs</property>
+            <value></value>
+          </equals>
+        </not>
       </condition>
     </setting>
     <setting>
       <value>0</value>
       <condition>
+        <equals>
+          <property>/honeycomb/bravo/leds/ap/vs</property>
+          <value></value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>IAS LED</desc>
+    <name>vendor-6</name>
+    <setting>
+      <value>1</value>
+      <condition>
         <not>
           <equals>
-            <property>/autopilot/locks/altitude</property>
-            <value>vertical-speed-hold</value>
+            <property>/honeycomb/bravo/leds/ap/ias</property>
+            <value></value>
           </equals>
         </not>
       </condition>
     </setting>
-  </event>
-  <!-- AUTOPILOT BUTTON, SELECT FREQUENCY STEP (AFTER DOT/ BEFORE DOT)-->
-  <event>
-    <desc>AUTOPILOT BTN</desc>
-    <name>button-base2</name>
-    <binding>
-      <command>property-cycle</command>
-      <property>/instrumentation/knob/increment</property>
-      <value type="string">1</value>
-      <value type="string">0</value>
-    </binding>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/leds/ap/ias</property>
+          <value></value>
+        </equals>
+      </condition>
+    </setting>
   </event>
   <event>
     <desc>AUTOPILOT LED</desc>
@@ -862,7 +1401,7 @@
       <value>1</value>
       <condition>
         <equals>
-          <property>/instrumentation/knob/increment</property>
+          <property>/honeycomb/bravo/leds/ap</property>
           <value>1</value>
         </equals>
       </condition>
@@ -872,31 +1411,30 @@
       <condition>
         <not>
           <equals>
-            <property>/instrumentation/knob/increment</property>
+            <property>/honeycomb/bravo/leds/ap</property>
             <value>1</value>
           </equals>
         </not>
       </condition>
     </setting>
   </event>
-  <!-- TURN GEAR LEDS ACCORDING TO PARKING BRAKE POSITION - RED, PARKING BRAKE IS ON -->
   <event>
-    <desc>PARKING BRAKE ANNUNCIATOR</desc>
-    <name>vendor-25</name>
+    <desc>LEFT GEAR LED GREEN</desc>
+    <name>vendor-8</name>
     <setting>
-      <value>1</value>
+      <value>0</value>
       <condition>
         <equals>
-          <property>/controls/gear/brake-parking</property>
+          <property>/honeycomb/bravo/leftgear/led</property>
           <value>1</value>
         </equals>
       </condition>
     </setting>
     <setting>
-      <value>0</value>
+      <value>1</value>
       <condition>
         <equals>
-          <property>/controls/gear/brake-parking</property>
+          <property>/honeycomb/bravo/nosegear/led</property>
           <value>0</value>
         </equals>
       </condition>
@@ -909,7 +1447,7 @@
       <value>1</value>
       <condition>
         <equals>
-          <property>/controls/gear/brake-parking</property>
+          <property>/honeycomb/bravo/leftgear/led</property>
           <value>1</value>
         </equals>
       </condition>
@@ -918,51 +1456,7 @@
       <value>0</value>
       <condition>
         <equals>
-          <property>/controls/gear/brake-parking</property>
-          <value>0</value>
-        </equals>
-      </condition>
-    </setting>
-  </event>
-  <event>
-    <desc>LEFT GEAR LED GREEN</desc>
-    <name>vendor-8</name>
-    <setting>
-      <value>0</value>
-      <condition>
-        <equals>
-          <property>/controls/gear/brake-parking</property>
-          <value>1</value>
-        </equals>
-      </condition>
-    </setting>
-    <setting>
-      <value>1</value>
-      <condition>
-        <equals>
-          <property>/controls/gear/brake-parking</property>
-          <value>0</value>
-        </equals>
-      </condition>
-    </setting>
-  </event>
-  <event>
-    <desc>NOSE GEAR LED RED</desc>
-    <name>vendor-11</name>
-    <setting>
-      <value>1</value>
-      <condition>
-        <equals>
-          <property>/controls/gear/brake-parking</property>
-          <value>1</value>
-        </equals>
-      </condition>
-    </setting>
-    <setting>
-      <value>0</value>
-      <condition>
-        <equals>
-          <property>/controls/gear/brake-parking</property>
+          <property>/honeycomb/bravo/leftgear/led</property>
           <value>0</value>
         </equals>
       </condition>
@@ -975,7 +1469,7 @@
       <value>0</value>
       <condition>
         <equals>
-          <property>/controls/gear/brake-parking</property>
+          <property>/honeycomb/bravo/nosegear/led</property>
           <value>1</value>
         </equals>
       </condition>
@@ -984,20 +1478,20 @@
       <value>1</value>
       <condition>
         <equals>
-          <property>/controls/gear/brake-parking</property>
+          <property>/honeycomb/bravo/nosegear/led</property>
           <value>0</value>
         </equals>
       </condition>
     </setting>
   </event>
   <event>
-    <desc>RIGHT GEAR LED RED</desc>
-    <name>vendor-13</name>
+    <desc>NOSE GEAR LED RED</desc>
+    <name>vendor-11</name>
     <setting>
       <value>1</value>
       <condition>
         <equals>
-          <property>/controls/gear/brake-parking</property>
+          <property>/honeycomb/bravo/nosegear/led</property>
           <value>1</value>
         </equals>
       </condition>
@@ -1006,7 +1500,7 @@
       <value>0</value>
       <condition>
         <equals>
-          <property>/controls/gear/brake-parking</property>
+          <property>/honeycomb/bravo/nosegear/led</property>
           <value>0</value>
         </equals>
       </condition>
@@ -1019,7 +1513,7 @@
       <value>0</value>
       <condition>
         <equals>
-          <property>/controls/gear/brake-parking</property>
+          <property>/honeycomb/bravo/rightgear/led</property>
           <value>1</value>
         </equals>
       </condition>
@@ -1028,183 +1522,343 @@
       <value>1</value>
       <condition>
         <equals>
-          <property>/controls/gear/brake-parking</property>
+          <property>/honeycomb/bravo/rightgear/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>RIGHT GEAR LED RED</desc>
+    <name>vendor-13</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/rightgear/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/rightgear/led</property>
           <value>0</value>
         </equals>
       </condition>
     </setting>
   </event>
   <!-- GEARS LED END -->
+  <!-- ANNUNCIATOR LEDS -->
   <event>
-    <desc>OIL PRESSURE LED</desc>
-    <name type="string">vendor-16</name>
-    <setting>
-      <property>/input/bravo/vendor-16</property>
-      <value>1</value>
-      <condition>
-        <and>
-          <less-than>
-            <property>/engines/engine/oil-pressure-psi</property>
-            <value>14</value>
-          </less-than>
-          <equals>
-            <property>/controls/electric/battery-switch</property>
-            <value>true</value>
-          </equals>
-        </and>
-      </condition>
-    </setting>
-    <setting>
-      <property>/input/bravo/vendor-16</property>
-      <value>0</value>
-      <condition>
-        <or>
-          <greater-than-equals>
-            <property>/engines/engine/oil-pressure-psi</property>
-            <value>14</value>
-          </greater-than-equals>
-          <equals>
-            <property>/controls/electric/battery-switch</property>
-            <value>false</value>
-          </equals>
-        </or>
-      </condition>
-    </setting>
-  </event>
-  <event>
-    <desc>FUEL PRESSURE LED</desc>
-    <name >vendor-17</name>
-    <setting>
-      <property>/input/bravo/vendor-17</property>
-      <value>1</value>
-      <condition>
-        <and>
-          <less-than>
-            <property>/engines/engine/fuel-pressure-psi</property>
-            <value>1</value>
-          </less-than>
-          <equals>
-            <property>/controls/electric/battery-switch</property>
-            <value>true</value>
-          </equals>
-        </and>
-      </condition>
-    </setting>
-    <setting>
-      <property>/input/bravo/vendor-17</property>
-      <value>0</value>
-      <condition>
-        <or>
-          <greater-than-equals>
-            <property>/engines/engine/fuel-pressure-psi</property>
-            <value>1</value>
-          </greater-than-equals>
-          <equals>
-            <property>/controls/electric/battery-switch</property>
-            <value>false</value>
-          </equals>
-        </or>
-      </condition>
-    </setting>
-  </event>
-  <event>
-    <desc>CARB-HEAT (ANTI-ICE) LED</desc>
-    <name>vendor-18</name>
-    <setting>
-      <value>0</value>
-      <condition>
-        <not>
-          <equals>
-            <property>/controls/anti-ice/engine/carb-heat</property>
-            <value>true</value>
-          </equals>
-        </not>
-      </condition>
-    </setting>
+    <desc>MASTER WARNING LED</desc>
+    <name>vendor-14</name>
     <setting>
       <value>1</value>
       <condition>
         <equals>
-          <property>/controls/anti-ice/engine/carb-heat</property>
-          <value>true</value>
+          <property>/honeycomb/bravo/masterwarning/led</property>
+          <value>1</value>
         </equals>
       </condition>
     </setting>
-  </event>
-  <event>
-    <desc>LOW VOLT LED</desc>
-    <name>vendor-26</name>
-    <setting>
-      <value>0</value>
-      <condition>
-        <greater-than-equals>
-          <property>/systems/electrical/volts</property>
-          <value>24</value>
-        </greater-than-equals>
-      </condition>
-    </setting>
-    <setting>
-      <value>1</value>
-      <condition>
-        <less-than>
-          <property>/systems/electrical/volts</property>
-          <value>24</value>
-        </less-than>
-      </condition>
-    </setting>
-  </event>
-  <event>
-    <desc>STARTER ENG LED</desc>
-    <name type="string">vendor-19</name>
-    <setting>
-      <property>/input/bravo/vendor-19</property>
-      <value>1</value>
-      <condition>
-        <and>
-          <equals>
-            <property>/controls/engines/engine/starter_cmd</property>
-            <value>true</value>
-          </equals>
-          <equals>
-            <property>/controls/electric/battery-switch</property>
-            <value>true</value>
-          </equals>
-        </and>
-      </condition>
-    </setting>
-    <setting>
-      <property>/input/bravo/vendor-18</property>
-      <value>0</value>
-      <condition>
-        <equals>
-          <property>/controls/engines/engine/starter_cmd</property>
-          <value>false</value>
-        </equals>
-      </condition>
-    </setting>
-  </event>
-  <event>
-    <desc>CANOPY OPEN LED (DOOR OPEN)</desc>
-    <name>vendor-27</name>
     <setting>
       <value>0</value>
       <condition>
         <equals>
-          <property>/canopy/position-norm</property>
+          <property>/honeycomb/bravo/masterwarning/led</property>
           <value>0</value>
         </equals>
       </condition>
     </setting>
+  </event>
+  <event>
+    <desc>ENGNE FIRE LED</desc>
+    <name>vendor-15</name>
     <setting>
       <value>1</value>
       <condition>
-        <not>
-          <equals>
-            <property>/canopy/position-norm</property>
-            <value>0</value>
-          </equals>
-        </not>
+        <equals>
+          <property>/honeycomb/bravo/enginefire/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/enginefire/led</property>
+          <value>0</value>
+        </equals>
       </condition>
     </setting>
   </event>
+  <event>
+    <desc>LOW OIL PRESSURE LED</desc>
+    <name>vendor-16</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/lowoilpressure/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/lowoilpressure/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>LOW FUEL PRESSURE LED</desc>
+    <name>vendor-17</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/lowfuelpressure/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/lowfuelpressure/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>ANTI ICE LED</desc>
+    <name>vendor-18</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/antiice/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/antiice/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>STARTER ENGAGED LED</desc>
+    <name>vendor-19</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/starterengaged/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/starterengaged/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>APU LED</desc>
+    <name>vendor-20</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/apu/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/apu/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>MASTER CAUTION LED</desc>
+    <name>vendor-21</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/mastercaution/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/mastercaution/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>VACUUM LED</desc>
+    <name>vendor-22</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/vacuum/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/vacuum/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>LOW HYD PRESSURE LED</desc>
+    <name>vendor-23</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/lowhydpressure/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/lowhydpressure/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>AUX FUEL PUMP LED</desc>
+    <name>vendor-24</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/auxfuelpump/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/auxfuelpump/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>PARKING BRAKE LED</desc>
+    <name>vendor-25</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/parkingbrake/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/parkingbrake/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>LOW VOLTS LED</desc>
+    <name>vendor-26</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/lowvolts/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/lowvolts/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+  <event>
+    <desc>DOOR LED</desc>
+    <name>vendor-27</name>
+    <setting>
+      <value>1</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/door/led</property>
+          <value>1</value>
+        </equals>
+      </condition>
+    </setting>
+    <setting>
+      <value>0</value>
+      <condition>
+        <equals>
+          <property>/honeycomb/bravo/door/led</property>
+          <value>0</value>
+        </equals>
+      </condition>
+    </setting>
+  </event>
+
 </PropertyList>
