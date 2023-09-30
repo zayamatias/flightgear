@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <PropertyList>
   <name type="string">Honeycomb Aeronautical Bravo Throttle Quadrant</name>
-  <debug-events type="bool">debug</debug-events>
+  <debug-events type="bool">true</debug-events>
   <nasal>
     <open>
             <![CDATA[
@@ -32,39 +32,39 @@
               
               ## BUTTON 2
               setprop('/honeycomb/bravo/button2-up/prop','');
-              setprop('/honeycomb/bravo/button2-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button2-up/prop/value/on',1);
               setprop('/honeycomb/bravo/button2-low/prop','');
-              setprop('/honeycomb/bravo/button2-low/prop/value/on',false);
+              setprop('/honeycomb/bravo/button2-low/prop/value/on',0);
               
               ## BUTTON 3
               setprop('/honeycomb/bravo/button3-up/prop','');
-              setprop('/honeycomb/bravo/button3-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button3-up/prop/value/on',1);
               setprop('/honeycomb/bravo/button3-low/prop','');
-              setprop('/honeycomb/bravo/button3-low/prop/value/on',false);
+              setprop('/honeycomb/bravo/button3-low/prop/value/on',0);
               
               ## BUTTON 4
               setprop('/honeycomb/bravo/button4-up/prop','');
-              setprop('/honeycomb/bravo/button4-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button4-up/prop/value/on',1);
               setprop('/honeycomb/bravo/button4-low/prop','');
-              setprop('/honeycomb/bravo/button4-low/prop/value/on',false);
+              setprop('/honeycomb/bravo/button4-low/prop/value/on',0);
               
               ## BUTTON 5
               setprop('/honeycomb/bravo/button5-up/prop','');
-              setprop('/honeycomb/bravo/button5-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button5-up/prop/value/on',1);
               setprop('/honeycomb/bravo/button5-low/prop','');
-              setprop('/honeycomb/bravo/button5-low/prop/value/on',false);
+              setprop('/honeycomb/bravo/button5-low/prop/value/on',0);
               
               ## BUTTON 6
               setprop('/honeycomb/bravo/button6-up/prop','');
-              setprop('/honeycomb/bravo/button6-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button6-up/prop/value/on',1);
               setprop('/honeycomb/bravo/button6-low/prop','');
-              setprop('/honeycomb/bravo/button6-low/prop/value/on',false);
+              setprop('/honeycomb/bravo/button6-low/prop/value/on',0);
               
               ## BUTTON 7
               setprop('/honeycomb/bravo/button7-up/prop','');
-              setprop('/honeycomb/bravo/button7-up/prop/value/on',true);
+              setprop('/honeycomb/bravo/button7-up/prop/value/on',1);
               setprop('/honeycomb/bravo/button7-low/prop','');
-              setprop('/honeycomb/bravo/button7-low/prop/value/on',false);
+              setprop('/honeycomb/bravo/button7-low/prop/value/on',0);
               
 
               ### GEARS
@@ -200,8 +200,8 @@
                 ## HEADING BUTTON
                 setprop('/honeycomb/bravo/hdgbtn/prop[0]','/controls/autoflight/autopilot/hdg-sel');
                 setprop('/honeycomb/bravo/hdgbtn/prop/logic','equal'); 
-                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/on',true); 
-                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/off',false); 
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/on',1); 
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/off',0); 
                 ## HEADING KNOB (TARGET PROPERTY AND STEP VALUE)
                 setprop('/honeycomb/bravo/selknob/hdgprop','/autopilot/settings/heading-bug-deg');
                 setprop('/honeycomb/bravo/selknob/hdgvalue','1');
@@ -209,16 +209,16 @@
                 setprop('/honeycomb/bravo/selknob/hdgprop/min','0');
 
                 ## NAVIGATION BUTTON
-                setprop('/honeycomb/bravo/navbtn/prop[0]','/autopilot/lockss/heading');
-                setprop('/honeycomb/bravo/navbtn/prop/logic','equal'); # Both this values have the HDG ON
-                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/on','nav-1-hold'); # Both this values have the HDG ON
-                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/off',''); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/navbtn/prop[0]','/autopilot/locks/heading');
+                setprop('/honeycomb/bravo/navbtn/prop/logic','equal'); 
+                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/on','nav-1-hold');
+                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/off',''); 
 
                 ## APR BUTTON
-                setprop('/honeycomb/bravo/aprbtn/prop[0]','/controls/autoflight/autopilot/alt-hld');
+                setprop('/honeycomb/bravo/aprbtn/prop[0]','/controls/autoflight/autopilot/apr');
                 setprop('/honeycomb/bravo/aprbtn/prop/logic','equal');
-                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/on',true);
-                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/off',false); 
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/on',1);
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/off',0); 
 
                 ## REV BUTTON
                 setprop('/honeycomb/bravo/revbtn/prop[0]','');
@@ -226,8 +226,8 @@
                 ## ALT BUTTON
                 setprop('/honeycomb/bravo/altbtn/prop[0]','/controls/autoflight/autopilot/alt-hld');
                 setprop('/honeycomb/bravo/altbtn/prop/logic','equal');
-                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/on',true);
-                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/off',false); # Both this values have the HDG ON
+                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/on',1);
+                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/off',0); # Both this values have the HDG ON
                 ## ALTITUDE KNOB (TARGET PROPERTY AND STEP VALUE)
                 setprop('/honeycomb/bravo/selknob/altprop','/autopilot/settings/target-altitude-ft');
                 setprop('/honeycomb/bravo/selknob/altvalue',100); ## ALTITUD PROPERTIES AND INCREASE AMOUNT
@@ -242,8 +242,8 @@
                 ## AUTOPILOT BUTTON
                 setprop('/honeycomb/bravo/apbtn/prop[0]','/controls/autoflight/autopilot/engage');
                 setprop('/honeycomb/bravo/apbtn/prop/logic','equal');
-                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/on',true); 
-                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/off',false);
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/on',1); 
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/off',0);
 
                 ## CRS  KNOB (TARGET PROPERTY AND STEP VALUE)
                 setprop('/honeycomb/bravo/selknob/crsprop','');
@@ -372,19 +372,25 @@
               foreach (var sw;sws){
                 var idx = 0;
                 var propvalname = prop~'/value['~idx~']/'~sw;
+                print ('PROPVALNAME ',propvalname);
                 var thisval = getprop(propvalname);
                 var valhash = [sw,thisval];
+                print ('THIS VAL ',thisval);
                 while (typeof(thisval)!='nil'){
                   append (values,valhash);
                   idx = idx +1;
                   propvalname = prop~'/value['~idx~']/'~sw;
+                  print ('PROPVALNAME ',propvalname);
                   thisval = getprop(propvalname);
                   valhash = [sw,thisval];
+                  print ('THIS VAL ',thisval);
                 }
               }
+              print ('TOTAL VALUES',size(values));
               ###REMOVE
               var idx =0;
               foreach(var myval;values){
+                print ('IDEX [',idx,'] -> 0 [',myval[0],'] 1[',myval[1],']'); 
                 idx = idx +1;
               }
               return values;
@@ -394,22 +400,32 @@
               var idx = 0;
               var props =[];
               var propvalname = prop~'['~idx~']';
+              print ('PROPVALNAME ',propvalname);
               var thisval = getprop(propvalname);
+              print ('THIS VAL ',thisval);
               while (typeof(thisval)!='nil'){
                 append (props,thisval);
                 idx = idx +1;
                 propvalname = prop~'['~idx~']';
+                print ('PROPVALNAME ',propvalname);
                 thisval = getprop(propvalname);
+                print ('THIS VAL ',thisval);
               }
+              print ('TOTAL PROPS',size(props));
               return props;
             }
 
             var genericLedUpdate=func(prop,led){
+              print ('^^^^^^^^^ CALLED ME WITH PROP [',prop,'] AND LED [',led,']');
               if (typeof(prop)=='nil' or prop==''){
+                print ('BUT IM EXITING');
                 return;
               }
+              print ('LED ',led);
+              print ('PROP ',prop);
               var props=getProps(prop);
               var values=getPropValues(prop);
+              print ('P,V [',size(props),'][',size(values),']');
               var logic=getprop(prop~'/logic');
               if (logic==''){
                 logic='equal';
@@ -418,28 +434,37 @@
               if (cond=='' or typeof(cond)=='nil'){
                 cond='or';
               }
+              print ('LOGIC ',logic);
               var lightit = 0;
               var matches =[];
               foreach (var myprop;props){
+                print ('MYPROP  ',myprop);
                 state=getprop(myprop);
+                print ('STATE  ',state);
                 if (typeof(state)=='nil'){
                   state=0;
                 }
                 for (n=0;n<size(values);n+=1){
                   if (logic=='equal'){
+                    print ('IS EQUAL LOGIC, VALUE ',values[n][0],' ',values[n][1]);
                     if (values[n][1]==state){
                       if (values[n][0]=='on'){
+                        print ('ADDING A MATCH');
                         append (matches,1);
                       }else{
+                        print ('ADDING A NO MATCH');
                         append (matches,0);
                       }
                     }
                   }
                   if (logic=='less'){
+                    print ('IS LESS LOGIC, VALUE ',values[n][0],values[n][1]);
                     if (values[n][1]>state){
                       if (values[n][0]=='on'){
+                        print ('ADDING A MATCH');
                         append (matches,1);
                       }else{
+                        print ('ADDING A NO MATCH');
                         append (matches,0);
                       }
                     }
@@ -447,19 +472,25 @@
                 }
               }
               foreach (var match;matches){
+                print ('TESTING MATCH [',match,'] UNDER CONDITION [',cond,']');
                 if (cond=='or' and match){
+                  print ('CONDITION IS OR AND IVE FOUND ONE MATCH, NO NEED TO CONTINUE');
                   setprop(led,1);
                   return;
                 }
                 if (cond=='and'){
+                  print ('CONDITION IS AND');
                   if (!match){
+                    print ('CONDITION IS AND AND THERES A NO MATCH, NO NEED TO CONTINUE');
                     setprop(led,0);
                     return;
                   }else{
+                    print ('CONDITION IS AND AND THERES A MATCH, CONTINUE CHECKING');
                     lightit=1;
                   }
                 }
               }
+              print ('AFTER THINKING IT OVER, I SEND A ',lightit,' TO THE LED ',led);
               setprop(led,lightit);
               return;
             }
@@ -731,6 +762,10 @@
                 proproot = '/honeycomb/bravo/'~listparam[0]~'/prop';
                 listento = getprop(proproot~'['~idx~']');
                 while (listento !='' and typeof(listento)!='nil'){
+                  print ('INDEX ',idx);
+                  print ('+++++++++++++++++++++++LISTENER [',listento,']');
+                  print ('+++++++++++++++++++++++LISTENER TYPE [',typeof(listento),']');
+                  print ('.....................................TYPE [',typeof(listparam[1]),']');
                   append (globallisteners,setlistener(listento,listparam[1],runtime=0));
                   idx = idx + 1;
                   listento = getprop(proproot~'['~idx~']');
@@ -748,11 +783,13 @@
             
             
             var updateValue=func(prop,increment){
+              print ('>>>>>>>>>>>>>>>>>>>>>>>>>>UPDATING ',prop,' BY ',increment);
               if (typeof(getprop(prop))=='nil' or typeof(increment)=='nil'){
                 return;
               }
               var proptoupdate = getprop(prop);
               var currvalue = getprop(proptoupdate);
+              print ('£££££££ SEARCHING ',getprop(prop~'/max'));
               var maxvalue = getprop(prop~'/max');
               if (typeof(maxvalue)=='nil'){
                 maxvalue = 99999999;
@@ -762,37 +799,48 @@
                 minvalue = -99999999;
               }
               var newvalue = currvalue + increment;
+              print ('PROP [',prop,'], OLDVALUE [',currvalue,'], INCREMENT [',increment,'], MAX VALUE [',maxvalue,'], MINVALUE [',minvalue,'], NEWVALUE [',newvalue,']');
               if (newvalue>maxvalue){
                 newvalue = minvalue;
               }
               if (newvalue<minvalue){
                 newvalue = maxvalue;
               }
-              setprop (proptoupdate,newvalue);
+              setprop (proptoupdate,sprintf(newvalue));
               return;
             }
 
             var getNextValue = func (values,valueprop){
               var valsize=size(values);
+              print ('SZIE OF VALUES = ',valsize);
               var chkvalue=getprop(valueprop);
               if (valsize==1){
+                print ('RETURNUNG ',values[0][1]);
                 return values[0][1];
               }
+              print ('RUNNING THEOUGH VALUES');
               for (var n=0;n<valsize;n+=1){
                 if (values[n][1]==chkvalue){
+                  print ('CECKINF ',chkvalue);
                   if (n==valsize-1){
+                    print ('GOING BACK TO START ',values[0][1]);
                     return values[0][1];
                   }else{
+                    print ('NEXT ',values[n+1][1]);
                     return values[n+1][1];
                   }
                 }
               }
+              print ('WHATEVR RETURNING ',values[0][1]);
               return values[0][1];
             }
 
             var updatePropValue = func(prop){
               var propvalues=getPropValues(prop);
+              print ('TYPE OF PROPVALUES = ',typeof(propvalues));
+              print ('SIZE OF PROPVALUES = ',size(propvalues));
               propvalue = getNextValue(propvalues,getprop(prop));
+              print ('######################### SETTING ',getprop(prop),' TO ',propvalue);
               setprop(getprop(prop),propvalue);
             }
 
@@ -919,6 +967,7 @@
     <binding>
       <command>nasal</command>
       <script>
+        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 720');
         updatePropValue('/honeycomb/bravo/button1-up/prop');
       </script>
     </binding>
@@ -930,6 +979,7 @@
     <binding>
       <command>nasal</command>
       <script>
+        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 721');
         updatePropValue('/honeycomb/bravo/button1-low/prop');
       </script>
     </binding>

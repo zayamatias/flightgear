@@ -1,0 +1,431 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <name type="string">Raspberry Pi Panels Board</name>
+  <debug-events type="bool">true</debug-events>
+  <nasal>
+    <open>
+            <![CDATA[
+            
+            setprop('/rpi/board/panel/hdg-1',0);
+            setprop('/rpi/board/panel/hdg-2',0);
+            setprop('/rpi/board/panel/hdg-3',0);
+            setprop('/rpi/board/panel/hdb-1',0);
+            setprop('/rpi/board/panel/hdb-2',0);
+            setprop('/rpi/board/panel/hdb-3',0);
+            setprop('/rpi/board/panel/alt-1',0);
+            setprop('/rpi/board/panel/alt-2',0);
+            setprop('/rpi/board/panel/alt-3',0);
+            setprop('/rpi/board/panel/alt-4',0);
+            setprop('/rpi/board/panel/alt-5',0);
+            setprop('/rpi/board/panel/vs-1',0);
+            setprop('/rpi/board/panel/vs-2',0);
+            setprop('/rpi/board/panel/vs-3',0);
+            setprop('/rpi/board/panel/vs-4',0);
+            setprop('/rpi/board/panel/vs-5',0);
+            setprop('/rpi/board/panel/hpa-1',0);
+            setprop('/rpi/board/panel/hpa-2',0);
+            setprop('/rpi/board/panel/hpa-3',0);
+            setprop('/rpi/board/panel/hpa-4',0);
+            setprop('/rpi/board/panel/airsp-1',0);
+            setprop('/rpi/board/panel/airsp-2',0);
+            setprop('/rpi/board/panel/airsp-3',0);
+            setprop('/rpi/board/panel/airsp-4',0);
+
+            var ascdict={};
+            for (var i=32;i<127;i=i+1){
+              var ch = sprintf('%c',i);
+              print ('INSERTING [',ch,'] at [',i,']'); 
+              ascdict[ch]=i;
+            }
+
+            var toAscii = func(myvalue,fullsize){
+              if (myvalue==nil){
+                return [0,0,0,0,0,0,0,0,0];
+              }
+              var retvect =[];
+              if (myvalue<0){
+                myvalue = myvalue*-1;
+                append(retvect,45);
+                fullsize=fullsize-1;
+              }
+              mystrvalue = sprintf("%i",myvalue);
+              var mysize = size(mystrvalue);
+              for (var i=0;i<(fullsize-mysize);i=i+1){
+                append (retvect,48);
+              }
+              for (var i=0;i<mysize;i=i+1){
+                var ch = substr(mystrvalue,i,1);
+                var c = ascdict[ch];
+                append (retvect,c);
+              }
+              return retvect;
+            }
+
+
+            var heading = func(){
+              var length = 3;
+              var valstr = toAscii(getprop('/instrumentation/heading-indicator/indicated-heading-deg'),length);
+              for (var i=0;i<length;i=i+1){
+                setprop('/rpi/board/panel/hdg-'~(i+1),valstr[i]);
+              }
+            }
+
+            var altitude = func(){
+              var length = 5;
+              var valstr = toAscii(getprop('/instrumentation/altimeter/indicated-altitude-ft'),length);
+              for (var i=0;i<length;i=i+1){
+                setprop('/rpi/board/panel/alt-'~(i+1),valstr[i]);
+              }
+            }
+
+            var vspeed = func(){
+              var length = 5;
+              var valstr = toAscii(getprop('/instrumentation/vertical-speed-indicator/indicated-speed-fpm'),length);
+              for (var i=0;i<length;i=i+1){
+                setprop('/rpi/board/panel/vs-'~(i+1),valstr[i]);
+              }
+            }
+
+            var hpa = func(){
+              var length = 4;
+              var valstr = toAscii(getprop('/instrumentation/altimeter/setting-hpa'),length);
+              for (var i=0;i<length;i=i+1){
+                setprop('/rpi/board/panel/hpa-'~(i+1),valstr[i]);
+              }
+            }
+
+            var hdgbug = func(){
+              var length = 3;
+              var valstr = toAscii(getprop('/autopilot/settings/heading-bug-deg'),length);
+              for (var i=0;i<length;i=i+1){
+                setprop('/rpi/board/panel/hdb-'~(i+1),valstr[i]);
+              }
+            }
+
+            var airsp = func(){
+              var length = 4;
+              var valstr = toAscii(getprop('/instrumentation/airspeed-indicator/indicated-speed-kt'),length);
+              for (var i=0;i<length;i=i+1){
+                setprop('/rpi/board/panel/airsp-'~(i+1),valstr[i]);
+              }
+            }
+
+            var hdglis = setlistener('/instrumentation/heading-indicator/indicated-heading-deg',heading,runtime=1);
+            var altlis = setlistener('/instrumentation/altimeter/indicated-altitude-ft',altitude,runtime=1);
+            var vslis = setlistener('/instrumentation/vertical-speed-indicator/indicated-speed-fpm',vspeed,runtime=1);
+            var hpalis = setlistener('/instrumentation/altimeter/setting-hpa',hpa,runtime=1);
+            var hdgbuglis = setlistener('/autopilot/settings/heading-bug-deg',hdgbug,runtime=1);
+            var airsplis = setlistener('/instrumentation/airspeed-indicator/indicated-speed-kt',airsp,runtime=1);
+
+            ]]>
+            </open>
+            </nasal>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-trigger</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/instrumentation/altimeter/setting-hpa</property>
+      <step>-1</step>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-thumb</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/instrumentation/altimeter/setting-hpa</property>
+      <step>1</step>
+    </binding>
+  </event>
+
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-thumb2</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/autopilot/settings/heading-bug-deg</property>
+      <step>-1</step>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-top</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/autopilot/settings/heading-bug-deg</property>
+      <step>1</step>
+    </binding>
+  </event>
+
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-top2</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/instrumentation/nav/radials/selected-deg</property>
+      <step>-1</step>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-pinkie</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/instrumentation/nav/radials/selected-deg</property>
+      <step>1</step>
+    </binding>
+  </event>
+
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/instrumentation/heading-indicator/offset-deg</property>
+      <step>-1</step>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base2</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/instrumentation/heading-indicator/offset-deg</property>
+      <step>1</step>
+    </binding>
+  </event>
+
+
+
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base3</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-bas3</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base4</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-base4</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base5</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-base5</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base6</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-base6</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-300</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-300</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-301</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-301</value>
+    </binding>
+  </event>
+  <event>
+    <desc>HDG DIGIT 1</desc>
+    <name>vendor-0</name>
+    <setting>
+      <property>/rpi/board/panel/hdg-1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HDG DIGIT 2</desc>
+    <name>vendor-1</name>
+    <setting>
+      <property>/rpi/board/panel/hdg-2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HDG DIGIT 3</desc>
+    <name>vendor-2</name>
+    <setting>
+      <property>/rpi/board/panel/hdg-3</property>
+    </setting>
+  </event>
+  
+  <event>
+    <desc>ALT DIGIT 1</desc>
+    <name>vendor-3</name>
+    <setting>
+      <property>/rpi/board/panel/alt-1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>ALT DIGIT 2</desc>
+    <name>vendor-4</name>
+    <setting>
+      <property>/rpi/board/panel/alt-2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>ALT DIGIT 3</desc>
+    <name>vendor-5</name>
+    <setting>
+      <property>/rpi/board/panel/alt-3</property>
+    </setting>
+  </event>
+  <event>
+    <desc>ALT DIGIT 4</desc>
+    <name>vendor-6</name>
+    <setting>
+      <property>/rpi/board/panel/alt-4</property>
+    </setting>
+  </event>
+  <event>
+    <desc>ALT DIGIT 5</desc>
+    <name>vendor-7</name>
+    <setting>
+      <property>/rpi/board/panel/alt-5</property>
+    </setting>
+  </event>
+  
+
+  <event>
+    <desc>VS DIGIT 1</desc>
+    <name>vendor-8</name>
+    <setting>
+      <property>/rpi/board/panel/vs-1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VS DIGIT 2</desc>
+    <name>vendor-9</name>
+    <setting>
+      <property>/rpi/board/panel/vs-2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VS DIGIT 3</desc>
+    <name>vendor-10</name>
+    <setting>
+      <property>/rpi/board/panel/vs-3</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VS DIGIT 4</desc>
+    <name>vendor-11</name>
+    <setting>
+      <property>/rpi/board/panel/vs-4</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VS DIGIT 5</desc>
+    <name>vendor-12</name>
+    <setting>
+      <property>/rpi/board/panel/vs-5</property>
+    </setting>
+  </event>
+
+  <event>
+    <desc>HPA DIGIT 1</desc>
+    <name>vendor-13</name>
+    <setting>
+      <property>/rpi/board/panel/hpa-1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HPA DIGIT 2</desc>
+    <name>vendor-14</name>
+    <setting>
+      <property>/rpi/board/panel/hpa-2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HPA DIGIT 3</desc>
+    <name>vendor-15</name>
+    <setting>
+      <property>/rpi/board/panel/hpa-3</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HPA DIGIT 4</desc>
+    <name>vendor-16</name>
+    <setting>
+      <property>/rpi/board/panel/hpa-4</property>
+    </setting>
+  </event>
+
+  <event>
+    <desc>AIRSP DIGIT 1</desc>
+    <name>vendor-17</name>
+    <setting>
+      <property>/rpi/board/panel/airsp-1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>AIRSP DIGIT 2</desc>
+    <name>vendor-18</name>
+    <setting>
+      <property>/rpi/board/panel/airsp-2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>AIRSP DIGIT 3</desc>
+    <name>vendor-19</name>
+    <setting>
+      <property>/rpi/board/panel/airsp-3</property>
+    </setting>
+  </event>
+  <event>
+    <desc>AIRSP DIGIT 4</desc>
+    <name>vendor-20</name>
+    <setting>
+      <property>/rpi/board/panel/airsp-4</property>
+    </setting>
+  </event>
+
+  <event>
+    <desc>HDB DIGIT 1</desc>
+    <name>vendor-21</name>
+    <setting>
+      <property>/rpi/board/panel/hdb-1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HDB DIGIT 2</desc>
+    <name>vendor-22</name>
+    <setting>
+      <property>/rpi/board/panel/hdb-2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HDB DIGIT 3</desc>
+    <name>vendor-23</name>
+    <setting>
+      <property>/rpi/board/panel/hdb-3</property>
+    </setting>
+  </event>
+
+</PropertyList>

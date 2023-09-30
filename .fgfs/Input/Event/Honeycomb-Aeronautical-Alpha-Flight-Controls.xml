@@ -16,16 +16,16 @@
         setprop('/honeycomb/alpha/button-722/prop[0]/value/on',4);
         setprop('/honeycomb/alpha/button-722/prop[0]/value/off',3);
         setprop('/honeycomb/alpha/button-722/prop[1]','/controls/engines/engine/starter');
-        setprop('/honeycomb/alpha/button-722/prop[1]/value/on',true);
-        setprop('/honeycomb/alpha/button-722/prop[1]/value/off',false);
+        setprop('/honeycomb/alpha/button-722/prop[1]/value/on',1);
+        setprop('/honeycomb/alpha/button-722/prop[1]/value/off',0);
       }else{
         setprop('/honeycomb/alpha/button-720/prop[0]','/controls/engines/engine/magnetos');
         setprop('/honeycomb/alpha/button-720/prop[0]/value/on','2');
         setprop('/honeycomb/alpha/button-721/prop[0]','/controls/engines/engine/magnetos');
         setprop('/honeycomb/alpha/button-721/prop[0]/value/on','3');
         setprop('/honeycomb/alpha/button-722/prop[0]','/controls/engines/engine/starter_cmd');
-        setprop('/honeycomb/alpha/button-722/prop[0]/value/on',true);
-        setprop('/honeycomb/alpha/button-722/prop[0]/value/off',false);
+        setprop('/honeycomb/alpha/button-722/prop[0]/value/on',1);
+        setprop('/honeycomb/alpha/button-722/prop[0]/value/off',0);
       }
       var getProps=func(prop){
         var idx = 0;
