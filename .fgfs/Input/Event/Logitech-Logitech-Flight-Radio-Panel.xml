@@ -288,7 +288,7 @@
       ## SETS THE VALUE OF A PROPERY
 
       var adjustvalue = func (prop,step,max,min,wrap,upper){
-        print ('STEP ',step);
+        #print ('STEP ',step);
         if (!activatepanels()){
           return;
         }
@@ -325,9 +325,9 @@
           return;
         }
         currval = sprintf('%.3f',getprop(prop));
-        print ('BEFORE ',currval);
+        #print ('BEFORE ',currval);
         currval = sprintf('%.3f',currval + step);
-        print ('AFTER ',currval);
+        #print ('AFTER ',currval);
         if (currval > max){
           if (wrap){
             currval = min;
@@ -412,7 +412,7 @@
       ## THIS FUNCTION IS USED BY LISTENERS TO UPDATE PANEL WHEN CHANGES IN THE SIM HAPPEN
       
       var shutPanel = func(){
-        print ('BYE BYE !');
+        #print ('BYE BYE !');
         initPanel();
       }
 

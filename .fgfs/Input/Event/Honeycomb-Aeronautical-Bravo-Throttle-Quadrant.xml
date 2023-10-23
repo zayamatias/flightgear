@@ -23,47 +23,47 @@
               }
              
               ### PANEL BUTTONS
-              ## EACH BUTTON HAS A DIFFERENT EVET FOR THE UP AND LOW POSITION
+              ## EACH BUTTON HAS A DIFFERENT EVENT FOR THE UP AND LOW POSITION
               ## BUTTON 1
-              setprop('/honeycomb/bravo/button1-up/prop','/controls/anti-ice/pitot-heat');
+              setprop('/honeycomb/bravo/button1-up/prop','/controls/anti-ice/engine/carb-heat');
               setprop('/honeycomb/bravo/button1-up/prop/value/on',1);
-              setprop('/honeycomb/bravo/button1-low/prop','/controls/anti-ice/pitot-heat');
+              setprop('/honeycomb/bravo/button1-low/prop','/controls/anti-ice/engine/carb-heat');
               setprop('/honeycomb/bravo/button1-low/prop/value/on',0);
               
               ## BUTTON 2
-              setprop('/honeycomb/bravo/button2-up/prop','');
+              setprop('/honeycomb/bravo/button2-up/prop','/controls/fuel/tank/boost-pump');
               setprop('/honeycomb/bravo/button2-up/prop/value/on',1);
-              setprop('/honeycomb/bravo/button2-low/prop','');
+              setprop('/honeycomb/bravo/button2-low/prop','/controls/fuel/tank/boost-pump');
               setprop('/honeycomb/bravo/button2-low/prop/value/on',0);
               
               ## BUTTON 3
-              setprop('/honeycomb/bravo/button3-up/prop','');
+              setprop('/honeycomb/bravo/button3-up/prop','/instrumentation/comm/power-btn');
               setprop('/honeycomb/bravo/button3-up/prop/value/on',1);
-              setprop('/honeycomb/bravo/button3-low/prop','');
+              setprop('/honeycomb/bravo/button3-low/prop','/instrumentation/comm/power-btn');
               setprop('/honeycomb/bravo/button3-low/prop/value/on',0);
               
               ## BUTTON 4
-              setprop('/honeycomb/bravo/button4-up/prop','');
+              setprop('/honeycomb/bravo/button4-up/prop','/instrumentation/adf/power-btn');
               setprop('/honeycomb/bravo/button4-up/prop/value/on',1);
-              setprop('/honeycomb/bravo/button4-low/prop','');
+              setprop('/honeycomb/bravo/button4-low/prop','/instrumentation/adf/power-btn');
               setprop('/honeycomb/bravo/button4-low/prop/value/on',0);
               
               ## BUTTON 5
-              setprop('/honeycomb/bravo/button5-up/prop','');
+              setprop('/honeycomb/bravo/button5-up/prop','/instrumentation/transponder/power-btn');
               setprop('/honeycomb/bravo/button5-up/prop/value/on',1);
-              setprop('/honeycomb/bravo/button5-low/prop','');
+              setprop('/honeycomb/bravo/button5-low/prop','/instrumentation/transponder/power-btn');
               setprop('/honeycomb/bravo/button5-low/prop/value/on',0);
               
               ## BUTTON 6
-              setprop('/honeycomb/bravo/button6-up/prop','');
+              setprop('/honeycomb/bravo/button6-up/prop','/instrumentation/transponder/ident');
               setprop('/honeycomb/bravo/button6-up/prop/value/on',1);
-              setprop('/honeycomb/bravo/button6-low/prop','');
+              setprop('/honeycomb/bravo/button6-low/prop','/instrumentation/transponder/ident');
               setprop('/honeycomb/bravo/button6-low/prop/value/on',0);
               
               ## BUTTON 7
-              setprop('/honeycomb/bravo/button7-up/prop','');
+              setprop('/honeycomb/bravo/button7-up/prop','/instrumentation/garmin196/status');
               setprop('/honeycomb/bravo/button7-up/prop/value/on',1);
-              setprop('/honeycomb/bravo/button7-low/prop','');
+              setprop('/honeycomb/bravo/button7-low/prop','/instrumentation/garmin196/status');
               setprop('/honeycomb/bravo/button7-low/prop/value/on',0);
               
 
@@ -291,7 +291,7 @@
               setprop('/honeycomb/bravo/lowfuelpressure/prop[1]/value[1]/on',8);
 
               #ANTI ICE
-              setprop('/honeycomb/bravo/antiice/prop[0]','/controls/anti-ice/pitot-heat');
+              setprop('/honeycomb/bravo/antiice/prop[0]','/controls/anti-ice/engine/carb-heat');
               setprop('/honeycomb/bravo/antiice/prop/logic','equal');
               setprop('/honeycomb/bravo/antiice/prop[0]/value[0]/on',1);
 
@@ -311,8 +311,8 @@
               setprop('/honeycomb/bravo/mastercaution/prop[0]/value[0]',1);
 
               #VACUUM
-              setprop('/honeycomb/bravo/vacuum/prop[0]','/systems/vacuum[0]/suction-inhg');
-              setprop('/honeycomb/bravo/vacuum/prop[1]','/systems/vacuum[1]/suction-inhg');
+              setprop('/honeycomb/bravo/vacuum/prop[0]','/systems/vacuum/suction-inhg');
+              setprop('/honeycomb/bravo/vacuum/prop[1]','/systems/vacuum/suction-inhg');
               setprop('/honeycomb/bravo/vacuum/prop/logic','less');
               setprop('/honeycomb/bravo/vacuum/prop[0]/value[0]/on',3);
               setprop('/honeycomb/bravo/vacuum/prop[1]/value[0]/on',3);
@@ -372,25 +372,25 @@
               foreach (var sw;sws){
                 var idx = 0;
                 var propvalname = prop~'/value['~idx~']/'~sw;
-                print ('PROPVALNAME ',propvalname);
+                #print ('PROPVALNAME ',propvalname);
                 var thisval = getprop(propvalname);
                 var valhash = [sw,thisval];
-                print ('THIS VAL ',thisval);
+                #print ('THIS VAL ',thisval);
                 while (typeof(thisval)!='nil'){
                   append (values,valhash);
                   idx = idx +1;
                   propvalname = prop~'/value['~idx~']/'~sw;
-                  print ('PROPVALNAME ',propvalname);
+                  #print ('PROPVALNAME ',propvalname);
                   thisval = getprop(propvalname);
                   valhash = [sw,thisval];
-                  print ('THIS VAL ',thisval);
+                  #print ('THIS VAL ',thisval);
                 }
               }
-              print ('TOTAL VALUES',size(values));
+              #print ('TOTAL VALUES',size(values));
               ###REMOVE
               var idx =0;
               foreach(var myval;values){
-                print ('IDEX [',idx,'] -> 0 [',myval[0],'] 1[',myval[1],']'); 
+                #print ('IDEX [',idx,'] -> 0 [',myval[0],'] 1[',myval[1],']'); 
                 idx = idx +1;
               }
               return values;
@@ -400,32 +400,32 @@
               var idx = 0;
               var props =[];
               var propvalname = prop~'['~idx~']';
-              print ('PROPVALNAME ',propvalname);
+              #print ('PROPVALNAME ',propvalname);
               var thisval = getprop(propvalname);
-              print ('THIS VAL ',thisval);
+              #print ('THIS VAL ',thisval);
               while (typeof(thisval)!='nil'){
                 append (props,thisval);
                 idx = idx +1;
                 propvalname = prop~'['~idx~']';
-                print ('PROPVALNAME ',propvalname);
+                #print ('PROPVALNAME ',propvalname);
                 thisval = getprop(propvalname);
-                print ('THIS VAL ',thisval);
+                #print ('THIS VAL ',thisval);
               }
-              print ('TOTAL PROPS',size(props));
+              #print ('TOTAL PROPS',size(props));
               return props;
             }
 
             var genericLedUpdate=func(prop,led){
-              print ('^^^^^^^^^ CALLED ME WITH PROP [',prop,'] AND LED [',led,']');
+              #print ('^^^^^^^^^ CALLED ME WITH PROP [',prop,'] AND LED [',led,']');
               if (typeof(prop)=='nil' or prop==''){
-                print ('BUT IM EXITING');
+                #print ('BUT IM EXITING');
                 return;
               }
-              print ('LED ',led);
-              print ('PROP ',prop);
+              #print ('LED ',led);
+              #print ('PROP ',prop);
               var props=getProps(prop);
               var values=getPropValues(prop);
-              print ('P,V [',size(props),'][',size(values),']');
+              #print ('P,V [',size(props),'][',size(values),']');
               var logic=getprop(prop~'/logic');
               if (logic==''){
                 logic='equal';
@@ -434,37 +434,37 @@
               if (cond=='' or typeof(cond)=='nil'){
                 cond='or';
               }
-              print ('LOGIC ',logic);
+              #print ('LOGIC ',logic);
               var lightit = 0;
               var matches =[];
               foreach (var myprop;props){
-                print ('MYPROP  ',myprop);
+                #print ('MYPROP  ',myprop);
                 state=getprop(myprop);
-                print ('STATE  ',state);
+                #print ('STATE  ',state);
                 if (typeof(state)=='nil'){
                   state=0;
                 }
                 for (n=0;n<size(values);n+=1){
                   if (logic=='equal'){
-                    print ('IS EQUAL LOGIC, VALUE ',values[n][0],' ',values[n][1]);
+                    #print ('IS EQUAL LOGIC, VALUE ',values[n][0],' ',values[n][1]);
                     if (values[n][1]==state){
                       if (values[n][0]=='on'){
-                        print ('ADDING A MATCH');
+                        #print ('ADDING A MATCH');
                         append (matches,1);
                       }else{
-                        print ('ADDING A NO MATCH');
+                        #print ('ADDING A NO MATCH');
                         append (matches,0);
                       }
                     }
                   }
                   if (logic=='less'){
-                    print ('IS LESS LOGIC, VALUE ',values[n][0],values[n][1]);
+                    #print ('IS LESS LOGIC, VALUE ',values[n][0],values[n][1]);
                     if (values[n][1]>state){
                       if (values[n][0]=='on'){
-                        print ('ADDING A MATCH');
+                        #print ('ADDING A MATCH');
                         append (matches,1);
                       }else{
-                        print ('ADDING A NO MATCH');
+                        #print ('ADDING A NO MATCH');
                         append (matches,0);
                       }
                     }
@@ -472,25 +472,25 @@
                 }
               }
               foreach (var match;matches){
-                print ('TESTING MATCH [',match,'] UNDER CONDITION [',cond,']');
+                #print ('TESTING MATCH [',match,'] UNDER CONDITION [',cond,']');
                 if (cond=='or' and match){
-                  print ('CONDITION IS OR AND IVE FOUND ONE MATCH, NO NEED TO CONTINUE');
+                  #print ('CONDITION IS OR AND IVE FOUND ONE MATCH, NO NEED TO CONTINUE');
                   setprop(led,1);
                   return;
                 }
                 if (cond=='and'){
-                  print ('CONDITION IS AND');
+                  #print ('CONDITION IS AND');
                   if (!match){
-                    print ('CONDITION IS AND AND THERES A NO MATCH, NO NEED TO CONTINUE');
+                    #print ('CONDITION IS AND AND THERES A NO MATCH, NO NEED TO CONTINUE');
                     setprop(led,0);
                     return;
                   }else{
-                    print ('CONDITION IS AND AND THERES A MATCH, CONTINUE CHECKING');
+                    #print ('CONDITION IS AND AND THERES A MATCH, CONTINUE CHECKING');
                     lightit=1;
                   }
                 }
               }
-              print ('AFTER THINKING IT OVER, I SEND A ',lightit,' TO THE LED ',led);
+              #print ('AFTER THINKING IT OVER, I SEND A ',lightit,' TO THE LED ',led);
               setprop(led,lightit);
               return;
             }
@@ -762,10 +762,10 @@
                 proproot = '/honeycomb/bravo/'~listparam[0]~'/prop';
                 listento = getprop(proproot~'['~idx~']');
                 while (listento !='' and typeof(listento)!='nil'){
-                  print ('INDEX ',idx);
-                  print ('+++++++++++++++++++++++LISTENER [',listento,']');
-                  print ('+++++++++++++++++++++++LISTENER TYPE [',typeof(listento),']');
-                  print ('.....................................TYPE [',typeof(listparam[1]),']');
+                  #print ('INDEX ',idx);
+                  #print ('+++++++++++++++++++++++LISTENER [',listento,']');
+                  #print ('+++++++++++++++++++++++LISTENER TYPE [',typeof(listento),']');
+                  #print ('.....................................TYPE [',typeof(listparam[1]),']');
                   append (globallisteners,setlistener(listento,listparam[1],runtime=0));
                   idx = idx + 1;
                   listento = getprop(proproot~'['~idx~']');
@@ -783,13 +783,13 @@
             
             
             var updateValue=func(prop,increment){
-              print ('>>>>>>>>>>>>>>>>>>>>>>>>>>UPDATING ',prop,' BY ',increment);
+              #print ('>>>>>>>>>>>>>>>>>>>>>>>>>>UPDATING ',prop,' BY ',increment);
               if (typeof(getprop(prop))=='nil' or typeof(increment)=='nil'){
                 return;
               }
               var proptoupdate = getprop(prop);
               var currvalue = getprop(proptoupdate);
-              print ('£££££££ SEARCHING ',getprop(prop~'/max'));
+              #print ('£££££££ SEARCHING ',getprop(prop~'/max'));
               var maxvalue = getprop(prop~'/max');
               if (typeof(maxvalue)=='nil'){
                 maxvalue = 99999999;
@@ -799,7 +799,7 @@
                 minvalue = -99999999;
               }
               var newvalue = currvalue + increment;
-              print ('PROP [',prop,'], OLDVALUE [',currvalue,'], INCREMENT [',increment,'], MAX VALUE [',maxvalue,'], MINVALUE [',minvalue,'], NEWVALUE [',newvalue,']');
+              #print ('PROP [',prop,'], OLDVALUE [',currvalue,'], INCREMENT [',increment,'], MAX VALUE [',maxvalue,'], MINVALUE [',minvalue,'], NEWVALUE [',newvalue,']');
               if (newvalue>maxvalue){
                 newvalue = minvalue;
               }
@@ -812,39 +812,40 @@
 
             var getNextValue = func (values,valueprop){
               var valsize=size(values);
-              print ('SZIE OF VALUES = ',valsize);
+              #print ('SZIE OF VALUES = ',valsize);
               var chkvalue=getprop(valueprop);
               if (valsize==1){
-                print ('RETURNUNG ',values[0][1]);
+                #print ('RETURNUNG ',values[0][1]);
                 return values[0][1];
               }
-              print ('RUNNING THEOUGH VALUES');
+              #print ('RUNNING THEOUGH VALUES');
               for (var n=0;n<valsize;n+=1){
                 if (values[n][1]==chkvalue){
-                  print ('CECKINF ',chkvalue);
+                  #print ('CECKINF ',chkvalue);
                   if (n==valsize-1){
                     print ('GOING BACK TO START ',values[0][1]);
                     return values[0][1];
                   }else{
-                    print ('NEXT ',values[n+1][1]);
+                    #print ('NEXT ',values[n+1][1]);
                     return values[n+1][1];
                   }
                 }
               }
-              print ('WHATEVR RETURNING ',values[0][1]);
+              #print ('WHATEVR RETURNING ',values[0][1]);
               return values[0][1];
             }
 
             var updatePropValue = func(prop){
               var propvalues=getPropValues(prop);
-              print ('TYPE OF PROPVALUES = ',typeof(propvalues));
-              print ('SIZE OF PROPVALUES = ',size(propvalues));
+              #print ('TYPE OF PROPVALUES = ',typeof(propvalues));
+              #print ('SIZE OF PROPVALUES = ',size(propvalues));
               propvalue = getNextValue(propvalues,getprop(prop));
-              print ('######################### SETTING ',getprop(prop),' TO ',propvalue);
+              #print ('######################### SETTING ',getprop(prop),' TO ',propvalue);
               setprop(getprop(prop),propvalue);
             }
 
             initAnnunciators();
+            #print ('CALLING INITLEDS');
             initLeds();
 
             ]]>
@@ -947,6 +948,8 @@
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/gearup/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 718');
+
       </script>
     </binding>
   </event>
@@ -957,17 +960,18 @@
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/geardown/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 719');
       </script>
     </binding>
   </event>
 
   <event>
     <desc>PANEL FIRST SWITCH UP</desc>
-    <name>button-720</name>
+    <name>button-721</name>
     <binding>
       <command>nasal</command>
       <script>
-        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 720');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 721');
         updatePropValue('/honeycomb/bravo/button1-up/prop');
       </script>
     </binding>
@@ -975,11 +979,11 @@
 
   <event>
     <desc>PANEL FIRST  SWITCH DOWN</desc>
-    <name>button-721</name>
+    <name>button-722</name>
     <binding>
       <command>nasal</command>
       <script>
-        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 721');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 722');
         updatePropValue('/honeycomb/bravo/button1-low/prop');
       </script>
     </binding>
@@ -987,10 +991,11 @@
 
   <event>
     <desc>PANEL SECOND SWITCH UP</desc>
-    <name>button-722</name>
+    <name>button-723</name>
     <binding>
       <command>nasal</command>
       <script>
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 723');
         updatePropValue('/honeycomb/bravo/button2-up/prop');
       </script>
     </binding>
@@ -998,116 +1003,135 @@
 
   <event>
     <desc>PANEL SECOND  SWITCH DOWN</desc>
-    <name>button-723</name>
+    <name>button-724</name>
     <binding>
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/button2-low/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 724');
       </script>
     </binding>
   </event>
   <event>
     <desc>PANEL THIRD SWITCH UP</desc>
-    <name>button-724</name>
+    <name>button-725</name>
     <binding>
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/button3-up/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 725');
+
       </script>
     </binding>
   </event>
 
   <event>
     <desc>PANEL THIRD  SWITCH DOWN</desc>
-    <name>button-725</name>
+    <name>button-726</name>
     <binding>
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/button3-low/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 726');
+
       </script>
     </binding>
   </event>
   <event>
     <desc>PANEL FOURTH SWITCH UP</desc>
-    <name>button-726</name>
+    <name>button-727</name>
     <binding>
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/button4-up/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 727');
+
       </script>
     </binding>
   </event>
 
   <event>
     <desc>PANEL FOURTH SWITCH DOWN</desc>
-    <name>button-727</name>
+    <name>button-728</name>
     <binding>
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/button4-low/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 728');
+
       </script>
     </binding>
   </event>
   <event>
     <desc>PANEL FIFTH SWITCH UP</desc>
-    <name>button-728</name>
+    <name>button-729</name>
     <binding>
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/button5-up/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 729');
+
       </script>
     </binding>
   </event>
 
   <event>
     <desc>PANEL FIFTH  SWITCH DOWN</desc>
-    <name>button-728</name>
+    <name>button-730</name>
     <binding>
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/button5-low/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 730');
+
       </script>
     </binding>
   </event>
   <event>
     <desc>PANEL SIXTH SWITCH UP</desc>
-    <name>button-729</name>
+    <name>button-731</name>
     <binding>
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/button6-up/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 731');
       </script>
     </binding>
   </event>
 
   <event>
     <desc>PANEL SIXTH  SWITCH DOWN</desc>
-    <name>button-730</name>
+    <name>button-732</name>
     <binding>
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/button6-low/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 732');
+
       </script>
     </binding>
   </event>
   <event>
     <desc>PANEL SEVENTH SWITCH UP</desc>
-    <name>button-731</name>
+    <name>button-733</name>
     <binding>
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/button7-up/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 733');
       </script>
     </binding>
   </event>
 
   <event>
     <desc>PANEL SEVENTH  SWITCH DOWN</desc>
-    <name>button-732</name>
+    <name>button-734</name>
     <binding>
       <command>nasal</command>
       <script>
         updatePropValue('/honeycomb/bravo/button7-low/prop');
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 734');
+
       </script>
     </binding>
   </event>

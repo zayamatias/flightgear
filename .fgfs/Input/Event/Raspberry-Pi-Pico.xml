@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <name type="string">Raspberry Pi Pico</name>
+  <debug-events type="bool">true</debug-events>
+  <nasal>
+    <open>
+            <![CDATA[
+              setprop('/testknob/value','waiting');
+            ]]>
+            </open>
+            </nasal>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-trigger</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-trigger</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-thumb</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-thumb</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-thumb2</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-thumb2</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-top</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-top</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-top2</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-top2</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-pinkie</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-pinkie</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-base</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base2</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-base2</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base3</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-bas3</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base4</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-base4</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base5</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-base5</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-base6</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-base6</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-300</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-300</value>
+    </binding>
+  </event>
+  <event>
+    <desc>AUTOPILOT BTN</desc>
+    <name>button-301</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/testknob/value</property>
+      <value>button-301</value>
+    </binding>
+  </event>
+
+  
+</PropertyList>
