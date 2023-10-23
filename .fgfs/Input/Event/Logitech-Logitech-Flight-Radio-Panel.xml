@@ -38,7 +38,7 @@
         setprop('/saitek/RP/upknobmax',137);
         setprop('/saitek/RP/upknobmin',118);
         setprop('/saitek/RP/upknobfstep',1);
-        setprop('/saitek/RP/upknobhstep',0.25);
+        setprop('/saitek/RP/upknobhstep',0.025);
         setprop('/saitek/RP/upknobsw','/instrumentation/comm/frq-swap-btn');
         setprop('/saitek/RP/lowknoba','/instrumentation/nav/frequencies/selected-mhz');
         setprop('/saitek/RP/lowknobb','/instrumentation/nav/frequencies/standby-mhz');
@@ -47,7 +47,7 @@
         setprop('/saitek/RP/lowknobmax',118);
         setprop('/saitek/RP/lowknobmin',108);
         setprop('/saitek/RP/lowknobfstep',1);
-        setprop('/saitek/RP/lowknobhstep',0.25);
+        setprop('/saitek/RP/lowknobhstep',0.025);
         setprop('/saitek/RP/lowknobsw','/instrumentation/nav/frq-swap-btn');
         setprop('/saitek/RP/tempu',0);
         setprop('/saitek/RP/templ',0);
@@ -172,9 +172,9 @@
         if (getprop(prop)!=''){
           if (!isxpdr){
             if (!isdme){
-              strvalue = sprintf('%.2f',getprop(getprop(prop)));
+              strvalue = sprintf('%.3f',getprop(getprop(prop)));
             }else{
-              strvalue = sprintf('%.2f',getprop(getprop(prop)));
+              strvalue = sprintf('%.3f',getprop(getprop(prop)));
             }
           }else{
             strvalue = convertxpdrvalue(getprop(getprop(prop)));
@@ -288,6 +288,7 @@
       ## SETS THE VALUE OF A PROPERY
 
       var adjustvalue = func (prop,step,max,min,wrap,upper){
+        print ('STEP ',step);
         if (!activatepanels()){
           return;
         }
@@ -323,8 +324,10 @@
         if (substr(prop,0,1) != '/'){
           return;
         }
-        currval = getprop(prop);
-        currval = currval + step;
+        currval = sprintf('%.3f',getprop(prop));
+        print ('BEFORE ',currval);
+        currval = sprintf('%.3f',currval + step);
+        print ('AFTER ',currval);
         if (currval > max){
           if (wrap){
             currval = min;
@@ -481,7 +484,7 @@
     <binding>
       <command>property-assign</command>
       <property>/saitek/RP/upknobhstep</property>
-      <value>0.25</value>
+      <value>0.025</value>
     </binding>
     <binding>
       <command>nasal</command>
@@ -530,7 +533,7 @@
     <binding>
       <command>property-assign</command>
       <property>/saitek/RP/upknobhstep</property>
-      <value>0.25</value>
+      <value>0.025</value>
     </binding>
 
     <binding>
@@ -580,7 +583,7 @@
     <binding>
       <command>property-assign</command>
       <property>/saitek/RP/upknobhstep</property>
-      <value>0.05</value>
+      <value>0.025</value>
     </binding>
     <binding>
       <command>nasal</command>
@@ -629,7 +632,7 @@
     <binding>
       <command>property-assign</command>
       <property>/saitek/RP/upknobhstep</property>
-      <value>0.05</value>
+      <value>0.025</value>
     </binding>
 
     <binding>
@@ -816,7 +819,7 @@
     <binding>
       <command>property-assign</command>
       <property>/saitek/RP/lowknobhstep</property>
-      <value>0.25</value>
+      <value>0.025</value>
     </binding>
     <binding>
       <command>nasal</command>
@@ -866,7 +869,7 @@
     <binding>
       <command>property-assign</command>
       <property>/saitek/RP/lowknobhstep</property>
-      <value>0.25</value>
+      <value>0.025</value>
     </binding>
     <binding>
       <command>nasal</command>
@@ -916,7 +919,7 @@
     <binding>
       <command>property-assign</command>
       <property>/saitek/RP/lowknobhstep</property>
-      <value>0.05</value>
+      <value>0.025</value>
     </binding>
     <binding>
       <command>nasal</command>
@@ -966,7 +969,7 @@
     <binding>
       <command>property-assign</command>
       <property>/saitek/RP/lowknobhstep</property>
-      <value>0.05</value>
+      <value>0.025</value>
     </binding>
     <binding>
       <command>nasal</command>
@@ -1100,7 +1103,7 @@
     <binding>
       <command>property-assign</command>
       <property>/saitek/RP/lowknobhstep</property>
-      <value>0.05</value>
+      <value>0.025</value>
     </binding>
 
     <binding>
