@@ -69,17 +69,52 @@
                 setprop('/honeycomb/bravo/axis2/prop','/controls/engines/engine[1]/mixture');
               }else{
                 ## A JET
+                setprop('/honeycomb/bravo/axis0/prop','/controls/flight/speedbrake');
+                setprop('/honeycomb/bravo/axis0/prop/rev',1);
                 setprop('/honeycomb/bravo/axis5/prop','/controls/engines/engine[0]/throttle');
                 setprop('/honeycomb/bravo/axis4/prop','/controls/engines/engine[1]/throttle');
+                setprop('/honeycomb/bravo/axis3/prop','/controls/flight/flaps');
+                setprop('/honeycomb/bravo/axis3/prop/rev',1);
+                setprop('/honeycomb/bravo/axis5-button-up/prop','/controls/engines/engine[0]/throttle-rev');
+                setprop('/honeycomb/bravo/axis5-button-up/prop/value/on',1);
+                setprop('/honeycomb/bravo/axis5-button-low/prop','/controls/engines/engine[0]/throttle-rev');
+                setprop('/honeycomb/bravo/axis5-button-low/prop/value/on',0);
+                setprop('/honeycomb/bravo/axis4-button-up/prop','/controls/engines/engine[1]/throttle-rev');
+                setprop('/honeycomb/bravo/axis4-button-up/prop/value/on',1);
+                setprop('/honeycomb/bravo/axis4-button-low/prop','/controls/engines/engine[1]/throttle-rev');
+                setprop('/honeycomb/bravo/axis4-button-low/prop/value/on',0);
+    
               }
             }
             if (airplanetype[0]==4){
               #### QUAD ENGINE
+              setprop('/honeycomb/bravo/axis1/prop','/controls/flight/speedbrakes');
+              setprop('/honeycomb/bravo/axis1/prop/rev',1);
+              setprop('/honeycomb/bravo/axis1/prop/mult',2);
+              setprop('/honeycomb/bravo/axis1/prop/int',1);
               setprop('/honeycomb/bravo/axis0/prop','/controls/engines/engine[0]/throttle');
               setprop('/honeycomb/bravo/axis5/prop','/controls/engines/engine[1]/throttle');
               setprop('/honeycomb/bravo/axis4/prop','/controls/engines/engine[2]/throttle');
               setprop('/honeycomb/bravo/axis3/prop','/controls/engines/engine[3]/throttle');
-        }            
+              setprop('/honeycomb/bravo/axis2/prop','/controls/flight/flaps');
+              setprop('/honeycomb/bravo/axis2/prop/rev',1);
+              setprop('/honeycomb/bravo/axis0-button-up/prop','/controls/engines/engine[0]/reverser');
+              setprop('/honeycomb/bravo/axis0-button-up/prop/value/on',1);
+              setprop('/honeycomb/bravo/axis0-button-low/prop','/controls/engines/engine[0]/reverser');
+              setprop('/honeycomb/bravo/axis0-button-low/prop/value/on',0);
+              setprop('/honeycomb/bravo/axis5-button-up/prop','/controls/engines/engine[1]/reverser');
+              setprop('/honeycomb/bravo/axis5-button-up/prop/value/on',1);
+              setprop('/honeycomb/bravo/axis5-button-low/prop','/controls/engines/engine[1]/reverser');
+              setprop('/honeycomb/bravo/axis5-button-low/prop/value/on',0);
+              setprop('/honeycomb/bravo/axis4-button-up/prop','/controls/engines/engine[2]/reverser');
+              setprop('/honeycomb/bravo/axis4-button-up/prop/value/on',1);
+              setprop('/honeycomb/bravo/axis4-button-low/prop','/controls/engines/engine[2]/reverser');
+              setprop('/honeycomb/bravo/axis4-button-low/prop/value/on',0);
+              setprop('/honeycomb/bravo/axis3-button-up/prop','/controls/engines/engine[3]/reverser');
+              setprop('/honeycomb/bravo/axis3-button-up/prop/value/on',1);
+              setprop('/honeycomb/bravo/axis3-button-low/prop','/controls/engines/engine[3]/reverser');
+              setprop('/honeycomb/bravo/axis3-button-low/prop/value/on',0);
+    }            
             var initProps= func(){
               ## DISCOVER AUTOPILOT TYPE
               var apmodel='';
@@ -156,7 +191,9 @@
               setprop('/honeycomb/bravo/button7-up/prop/value/on',1);
               setprop('/honeycomb/bravo/button7-low/prop','/instrumentation/garmin196/status');
               setprop('/honeycomb/bravo/button7-low/prop/value/on',0);
-              
+
+
+
 
               ### GEARS
               setprop('/honeycomb/bravo/gearup/prop[0]','/controls/gear/brake-parking');
@@ -1186,6 +1223,149 @@
     </binding>
   </event>
 
+  <event>
+    <desc>TRIM WHEEL / HADNLED IN JOYSTICK FILE</desc>
+    <name>button-709</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 709');
+      </script>
+    </binding>
+    
+  </event>
+  <event>
+    <desc>TRIM WHEEL / HADNLED IN JOYSTICK FILE</desc>
+    <name>button-710</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        #print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 710');
+      </script>
+    </binding>
+  </event>
+
+  /honeycomb/bravo/axis5/prop'
+  <event>
+    <desc>AXIS 1 BUTTON</desc>
+    <name>button-711</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 711 PRESSED');
+        updatePropValue('/honeycomb/bravo/axis1-button-up/prop');
+      </script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command>nasal</command>
+        <script>
+          print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 711 DEPRESSED');
+          updatePropValue('/honeycomb/bravo/axis1-button-low/prop');
+        </script>
+        </binding>
+    </mod-up>
+  </event>
+  <event>
+    <desc>AXIS 0 BUTTON</desc>
+    <name>button-712</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 712 PRESSED');
+        updatePropValue('/honeycomb/bravo/axis0-button-up/prop');
+      </script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command>nasal</command>
+        <script>
+          print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 712 DEPRESSED');
+          updatePropValue('/honeycomb/bravo/axis0-button-low/prop');
+        </script>
+        </binding>
+    </mod-up>
+  </event>
+  <event>
+    <desc>AXIS 5 BUTTON</desc>
+    <name>button-713</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        updatePropValue('/honeycomb/bravo/axis5-button-up/prop');
+        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 713 PRESSED');
+      </script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command>nasal</command>
+        <script>
+          print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 713 DEPRESSED');
+          updatePropValue('/honeycomb/bravo/axis5-button-low/prop');
+        </script>
+        </binding>
+    </mod-up>
+  </event>
+  <event>
+    <desc>AXIS 4 BUTTON</desc>
+    <name>button-714</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 714');
+        updatePropValue('/honeycomb/bravo/axis4-button-up/prop');
+      </script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command>nasal</command>
+        <script>
+          print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 714 DEPRESSED');
+          updatePropValue('/honeycomb/bravo/axis4-button-low/prop');
+        </script>
+        </binding>
+    </mod-up>
+  </event>
+  <event>
+    <desc>AXIS 3 BUTTON</desc>
+    <name>button-715</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 715');
+        updatePropValue('/honeycomb/bravo/axis3-button-up/prop');
+      </script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command>nasal</command>
+        <script>
+          print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 715 DEPRESSED');
+          updatePropValue('/honeycomb/bravo/axis3-button-low/prop');
+        </script>
+        </binding>
+    </mod-up>  
+  </event>
+  <event>
+    <desc>AXIS 2 BUTTON</desc>
+    <name>button-720</name>
+    <binding>
+      <command>nasal</command>
+      <script>
+        print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 720');
+        updatePropValue('/honeycomb/bravo/axis2-button-up/prop');
+      </script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command>nasal</command>
+        <script>
+          print ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-==--=-=- BUTTON 715 DEPRESSED');
+          updatePropValue('/honeycomb/bravo/axis2-button-low/prop');
+        </script>
+        </binding>
+    </mod-up>  
+  </event>
   <event>
     <desc>PANEL FIRST SWITCH UP</desc>
     <name>button-721</name>
