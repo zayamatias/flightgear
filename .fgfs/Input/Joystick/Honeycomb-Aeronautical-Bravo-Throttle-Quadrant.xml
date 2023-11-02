@@ -2,24 +2,86 @@
 
 <PropertyList>
   <name type="string">Honeycomb Aeronautical Bravo Throttle Quadrant</name>
-  <axis>
-    <desc type="string">Mixture All Engines</desc>
+  <nasal>
+    <script>
+      <![CDATA[
+      var getProps=func(prop){
+        var idx = 0;
+        var props =[];
+        var propvalname = prop~'['~idx~']';
+        var thisval = getprop(propvalname);
+        var values=[];
+        while (typeof(thisval)!='nil'){
+          values = getPropValues(prop,idx);
+          append (props,[thisval,values]);
+          idx = idx +1;
+          propvalname = prop~'['~idx~']';
+          thisval = getprop(propvalname);
+        }
+        return props;
+      }
+      var getPropValues=func(prop,idx){
+        var values =[];
+        var sws = ['on','off'];
+        foreach (var sw;sws){
+          var propvalname = prop~'['~idx~']/value/'~sw;
+          var thisval = getprop(propvalname);
+          var valhash = [sw,thisval];
+          append (values,valhash);
+        }
+        return values;
+      }
+      var assigntoaxis=func(prop,value){
+        myprop = getprop(prop);
+        if (typeof(myprop)=='nil'){
+          return;
+        }
+        var newvalue = (value+1)/2;
+        setprop(myprop,newvalue);
+      }
+    ]]>
+  </script>
+  </nasal>
+  <axis n="0">
+    <desc type="string">1st Axis from the left</desc>
     <binding>
-      <command type="string">property-scale</command>
-      <property type="string">/controls/engines/mixture-all</property>
-      <factor type="double">-1</factor>
-      <offset type="double">0</offset>
-      <power type="double">1</power>
+      <command>nasal</command>
+      <script>assigntoaxis('/honeycomb/bravo/axis0/prop',cmdarg().getNode("setting").getValue());</script>
     </binding>
   </axis>
   <axis n="1">
-    <desc type="string">Throttle All Engines</desc>
+    <desc type="string">2nd Axis from the left</desc>
     <binding>
-      <command type="string">property-scale</command>
-      <property type="string">/controls/engines/throttle-all</property>
-      <factor type="double">-1</factor>
-      <offset type="double">0</offset>
-      <power type="double">1</power>
+      <command>nasal</command>
+      <script>assigntoaxis('/honeycomb/bravo/axis1/prop',cmdarg().getNode("setting").getValue());</script>
+    </binding>
+  </axis>
+  <axis n="5">
+    <desc type="string">3rd Axis from the left</desc>
+    <binding>
+      <command>nasal</command>
+      <script>assigntoaxis('/honeycomb/bravo/axis5/prop',cmdarg().getNode("setting").getValue());</script>
+    </binding>
+  </axis>
+  <axis n="4">
+    <desc type="string">4th Axis from the left</desc>
+    <binding>
+      <command>nasal</command>
+      <script>assigntoaxis('/honeycomb/bravo/axis4/prop',cmdarg().getNode("setting").getValue());</script>
+    </binding>
+  </axis>
+  <axis n="3">
+    <desc type="string">5th Axis from the left</desc>
+    <binding>
+      <command>nasal</command>
+      <script>assigntoaxis('/honeycomb/bravo/axis3/prop',cmdarg().getNode("setting").getValue());</script>
+    </binding>
+  </axis>
+  <axis n="2">
+    <desc type="string">6th Axis from the left</desc>
+    <binding>
+      <command>nasal</command>
+      <script>assigntoaxis('/honeycomb/bravo/axis2/prop',cmdarg().getNode("setting").getValue());</script>
     </binding>
   </axis>
   <button n="21">
