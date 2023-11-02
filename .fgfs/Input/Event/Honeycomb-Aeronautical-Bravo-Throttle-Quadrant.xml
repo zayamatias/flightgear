@@ -5,8 +5,82 @@
   <nasal>
     <open>
             <![CDATA[
-            var initProps= func(){
 
+            var getAirplaneType=func(){
+              
+              ## Propeller types:
+              # 1 - Regular
+              # 2 - Turbo
+              # 3 - Jet
+              var engines = 1;  ## Default value
+              var propeller = 1; ## Default value
+              var idx = 0;
+              thisval = '';
+              while (typeof(thisval)!='nil'){
+                var tagname = '/sim/tags/tag['~idx~']';
+                #print ('TAGNAME ',tagname);
+                var thisval = getprop(tagname);
+                #print ('THIS VAL ',thisval);
+                if (thisval=='twin-engine'){
+                  engines=2;
+                }
+                if (thisval=='2-engine'){
+                  engines=2;
+                }
+                if (thisval=='3-engine'){
+                  engines=3;
+                }
+                if (thisval=='4-engine'){
+                  engines=4;
+                }
+                if (thisval=='four-engine'){
+                  engines=4;
+                }
+                if (thisval=='turbocharged'){
+                  propeller=2;
+                }
+                if (thisval=='turboprop'){
+                  propeller=2;
+                }
+                if (thisval=='jet'){
+                  propeller=3;
+                }
+                
+                idx = idx +1;
+              }
+              return [engines,propeller];
+            }
+
+            airplanetype = getAirplaneType();
+            if (airplanetype[0]==1){
+              #### SINGLE ENGINE
+              setprop('/honeycomb/bravo/axis0/prop','/controls/engines/engine[0]/mixture');
+              setprop('/honeycomb/bravo/axis1/prop','/controls/engines/engine[0]/throttle');
+            }
+            if (airplanetype[0]==2){
+              #### DOUBLE ENGINE
+              if (airplanetype[1]!=3){
+                ### NOT A JET
+                setprop('/honeycomb/bravo/axis1/prop','/controls/engines/engine[0]/throttle');
+                setprop('/honeycomb/bravo/axis0/prop','/controls/engines/engine[1]/throttle');
+                setprop('/honeycomb/bravo/axis5/prop','/controls/engines/engine[0]/propeller-pitch');
+                setprop('/honeycomb/bravo/axis4/prop','/controls/engines/engine[1]/propeller-pitch');
+                setprop('/honeycomb/bravo/axis3/prop','/controls/engines/engine[0]/mixture');
+                setprop('/honeycomb/bravo/axis2/prop','/controls/engines/engine[1]/mixture');
+              }else{
+                ## A JET
+                setprop('/honeycomb/bravo/axis5/prop','/controls/engines/engine[0]/throttle');
+                setprop('/honeycomb/bravo/axis4/prop','/controls/engines/engine[1]/throttle');
+              }
+            }
+            if (airplanetype[0]==4){
+              #### QUAD ENGINE
+              setprop('/honeycomb/bravo/axis0/prop','/controls/engines/engine[0]/throttle');
+              setprop('/honeycomb/bravo/axis5/prop','/controls/engines/engine[1]/throttle');
+              setprop('/honeycomb/bravo/axis4/prop','/controls/engines/engine[2]/throttle');
+              setprop('/honeycomb/bravo/axis3/prop','/controls/engines/engine[3]/throttle');
+        }            
+            var initProps= func(){
               ## DISCOVER AUTOPILOT TYPE
               var apmodel='';
               if (typeof(getprop('/autopilot/kap140/panel/state'))!='nil'){
@@ -21,7 +95,24 @@
               if (getprop('/sim/aero')=='738'){
                 apmodel='boeing1';
               }
+              if (getprop('/sim/aero')=='747-400'){
+                apmodel='boeing2';
+              }
+              if (getprop('/sim/aero')=='A320neo-PW' or getprop('/sim/aero')=='A320neo-CFM' or getprop('/sim/aero')=='A320-200-IAE' or getprop('/sim/aero')=='A320-100-CFM' or getprop('/sim/aero')=='A320-200-CFM'){
+                apmodel='airbus1';
+              }
+
+              if (getprop('/sim/aero')=='747-400'){
+                apmodel='boeing2';
+              }
+              
+              if (getprop('/sim/aero')=='747-400'){
+                apmodel='boeing2';
+              }
+
              
+              print ('-----------------------------------',getprop('/sim/aero'),'-----------------');
+
               ### PANEL BUTTONS
               ## EACH BUTTON HAS A DIFFERENT EVENT FOR THE UP AND LOW POSITION
               ## BUTTON 1
@@ -241,6 +332,132 @@
 
                 ## AUTOPILOT BUTTON
                 setprop('/honeycomb/bravo/apbtn/prop[0]','/controls/autoflight/autopilot/engage');
+                setprop('/honeycomb/bravo/apbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/on',1); 
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/off',0);
+
+                ## CRS  KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/crsprop','');
+                setprop('/honeycomb/bravo/selknob/crsvalue','');
+              }
+
+              if (apmodel =='boeing2'){
+
+                ## HEADING BUTTON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]','/controls/autoflight/autopilot/hdg-sel');
+                setprop('/honeycomb/bravo/hdgbtn/prop/logic','equal'); 
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/on',1); 
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/off',0); 
+                ## HEADING KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/hdgprop','/autopilot/settings/heading-bug-deg');
+                setprop('/honeycomb/bravo/selknob/hdgvalue','1');
+                setprop('/honeycomb/bravo/selknob/hdgprop/max','360');
+                setprop('/honeycomb/bravo/selknob/hdgprop/min','0');
+
+                ## NAVIGATION BUTTON
+                setprop('/honeycomb/bravo/navbtn/prop[0]','/autopilot/locks/heading');
+                setprop('/honeycomb/bravo/navbtn/prop/logic','equal'); 
+                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/on','nav-1-hold');
+                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/off',''); 
+
+                ## APR BUTTON
+                setprop('/honeycomb/bravo/aprbtn/prop[0]','/controls/autoflight/autopilot/apr');
+                setprop('/honeycomb/bravo/aprbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/on',1);
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/off',0); 
+
+                ## REV BUTTON
+                setprop('/honeycomb/bravo/revbtn/prop[0]','');
+
+                ## ALT BUTTON
+                setprop('/honeycomb/bravo/altbtn/prop[0]','/controls/autoflight/autopilot/alt-hld');
+                setprop('/honeycomb/bravo/altbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/on',1);
+                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/off',0); # Both this values have the HDG ON
+                ## ALTITUDE KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/altprop','/autopilot/settings/target-altitude-ft');
+                setprop('/honeycomb/bravo/selknob/altvalue',100); ## ALTITUD PROPERTIES AND INCREASE AMOUNT
+
+
+                ## VS BUTTON
+                setprop('/honeycomb/bravo/vsbtn/prop[0]','/autopilot/locks/altitude');
+                setprop('/honeycomb/bravo/vsbtn/prop[0]/value[0]/on','vertical-speed-hold');
+                setprop('/honeycomb/bravo/vsbtn/prop[0]/value[0]/off',''); # Both this values have the HDG ON
+                ## VERTICAL SPEED KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/vsprop','/autopilot/settings/vertical-speed-fpm');
+                setprop('/honeycomb/bravo/selknob/vsvalue',100);
+
+                ## IAS BUTTON
+                setprop('/honeycomb/bravo/iasbtn/prop[0]','');
+                ## IAS  KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/iasprop','/autopilot/settings/target-speed-kt');
+                setprop('/honeycomb/bravo/selknob/iasvalue',1);
+
+                ## AUTOPILOT BUTTON
+                setprop('/honeycomb/bravo/apbtn/prop[0]','/controls/autoflight/autopilot/engage');
+                setprop('/honeycomb/bravo/apbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/on',1); 
+                setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/off',0);
+
+                ## CRS  KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/crsprop','');
+                setprop('/honeycomb/bravo/selknob/crsvalue','');
+              }
+
+              if (apmodel =='airbus1'){
+
+                ## HEADING BUTTON
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]','/controls/autoflight/autopilot/hdg-sel');
+                setprop('/honeycomb/bravo/hdgbtn/prop/logic','equal'); 
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/on',1); 
+                setprop('/honeycomb/bravo/hdgbtn/prop[0]/value[0]/off',0); 
+                ## HEADING KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/hdgprop','/it-autoflight/input/hdg');
+                setprop('/honeycomb/bravo/selknob/hdgvalue','1');
+                setprop('/honeycomb/bravo/selknob/hdgprop/max','360');
+                setprop('/honeycomb/bravo/selknob/hdgprop/min','0');
+
+                ## NAVIGATION BUTTON
+                setprop('/honeycomb/bravo/navbtn/prop[0]','/autopilot/locks/heading');
+                setprop('/honeycomb/bravo/navbtn/prop/logic','equal'); 
+                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/on','nav-1-hold');
+                setprop('/honeycomb/bravo/navbtn/prop[0]/value[0]/off',''); 
+
+                ## APR BUTTON
+                setprop('/honeycomb/bravo/aprbtn/prop[0]','/controls/autoflight/autopilot/apr');
+                setprop('/honeycomb/bravo/aprbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/on',1);
+                setprop('/honeycomb/bravo/aprbtn/prop[0]/value[0]/off',0); 
+
+                ## REV BUTTON
+                setprop('/honeycomb/bravo/revbtn/prop[0]','');
+
+                ## ALT BUTTON
+                setprop('/honeycomb/bravo/altbtn/prop[0]','/controls/autoflight/autopilot/alt-hld');
+                setprop('/honeycomb/bravo/altbtn/prop/logic','equal');
+                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/on',1);
+                setprop('/honeycomb/bravo/altbtn/prop[0]/value[0]/off',0); # Both this values have the HDG ON
+                ## ALTITUDE KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/altprop','/it-autoflight/input/alt');
+                setprop('/honeycomb/bravo/selknob/altvalue',100); ## ALTITUD PROPERTIES AND INCREASE AMOUNT
+
+
+                ## VS BUTTON
+                setprop('/honeycomb/bravo/vsbtn/prop[0]','/autopilot/locks/altitude');
+                setprop('/honeycomb/bravo/vsbtn/prop[0]/value[0]/on','1');
+                setprop('/honeycomb/bravo/vsbtn/prop[0]/value[0]/off','0'); # Both this values have the HDG ON
+                ## VERTICAL SPEED KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/vsprop','/it-autoflight/input/vs');
+                setprop('/honeycomb/bravo/selknob/vsvalue',100);
+
+                ## IAS BUTTON
+                setprop('/honeycomb/bravo/iasbtn/prop[0]','');
+                ## IAS  KNOB (TARGET PROPERTY AND STEP VALUE)
+                setprop('/honeycomb/bravo/selknob/iasprop','/it-autoflight/input/kts');
+                setprop('/honeycomb/bravo/selknob/iasvalue',1);
+
+                ## AUTOPILOT BUTTON
+                setprop('/honeycomb/bravo/apbtn/prop[0]','/it-autoflight/input/ap1');
                 setprop('/honeycomb/bravo/apbtn/prop/logic','equal');
                 setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/on',1); 
                 setprop('/honeycomb/bravo/apbtn/prop[0]/value[0]/off',0);
@@ -789,6 +1006,10 @@
               }
               var proptoupdate = getprop(prop);
               var currvalue = getprop(proptoupdate);
+              if (currvalue=='' or typeof(currvalue)=='nil'){
+                currvalue = 0;
+              }
+              #print ('[[[[[[[',currvalue,']]]]]]]]');
               #print ('£££££££ SEARCHING ',getprop(prop~'/max'));
               var maxvalue = getprop(prop~'/max');
               if (typeof(maxvalue)=='nil'){
@@ -823,7 +1044,7 @@
                 if (values[n][1]==chkvalue){
                   #print ('CECKINF ',chkvalue);
                   if (n==valsize-1){
-                    print ('GOING BACK TO START ',values[0][1]);
+                    #print ('GOING BACK TO START ',values[0][1]);
                     return values[0][1];
                   }else{
                     #print ('NEXT ',values[n+1][1]);
