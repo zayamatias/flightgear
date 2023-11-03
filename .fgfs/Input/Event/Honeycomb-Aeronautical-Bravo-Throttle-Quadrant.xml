@@ -48,14 +48,21 @@
                 
                 idx = idx +1;
               }
+              print ('===========================================>>>>>>>>>>>> ENGINES:',engines,' PROPELLER:',propeller);
               return [engines,propeller];
             }
 
             airplanetype = getAirplaneType();
             if (airplanetype[0]==1){
               #### SINGLE ENGINE
-              setprop('/honeycomb/bravo/axis0/prop','/controls/engines/engine[0]/mixture');
-              setprop('/honeycomb/bravo/axis1/prop','/controls/engines/engine[0]/throttle');
+              if (getprop('/sim/aero')!='c182s' and getprop('/sim/aero')!='Cessna-208B' and getprop('/sim/aero')!='Systems/yak18t-yasim'){
+                setprop('/honeycomb/bravo/axis0/prop','/controls/engines/engine[0]/mixture');
+                setprop('/honeycomb/bravo/axis1/prop','/controls/engines/engine[0]/throttle');
+              }else{
+                setprop('/honeycomb/bravo/axis5/prop','/controls/engines/engine[0]/mixture');
+                setprop('/honeycomb/bravo/axis1/prop','/controls/engines/engine[0]/throttle');
+                setprop('/honeycomb/bravo/axis0/prop','/controls/engines/engine[0]/propeller-pitch');
+              }
             }
             if (airplanetype[0]==2){
               #### DOUBLE ENGINE
@@ -65,24 +72,48 @@
                 setprop('/honeycomb/bravo/axis0/prop','/controls/engines/engine[1]/throttle');
                 setprop('/honeycomb/bravo/axis5/prop','/controls/engines/engine[0]/propeller-pitch');
                 setprop('/honeycomb/bravo/axis4/prop','/controls/engines/engine[1]/propeller-pitch');
-                setprop('/honeycomb/bravo/axis3/prop','/controls/engines/engine[0]/mixture');
-                setprop('/honeycomb/bravo/axis2/prop','/controls/engines/engine[1]/mixture');
+                if (getprop('/sim/aero')!='b1900d'){
+                  setprop('/honeycomb/bravo/axis3/prop','/controls/engines/engine[0]/mixture');
+                  setprop('/honeycomb/bravo/axis2/prop','/controls/engines/engine[1]/mixture');
+                }else{
+                  setprop('/honeycomb/bravo/axis3/prop','/controls/engines/engine[0]/condition');
+                  setprop('/honeycomb/bravo/axis2/prop','/controls/engines/engine[1]/condition');
+                }
               }else{
                 ## A JET
-                setprop('/honeycomb/bravo/axis0/prop','/controls/flight/speedbrake');
+                if (getprop('/sim/aero')!='738'){
+                  setprop('/honeycomb/bravo/axis0/prop','/controls/flight/speedbrake');
+                }else{
+                  setprop('/honeycomb/bravo/axis0/prop','/controls/flight/speedbrake-lever');
+                  setprop('/honeycomb/bravo/axis0/prop/rev',1);
+                  setprop('/honeycomb/bravo/axis0/prop/mult',3);
+                  setprop('/honeycomb/bravo/axis0/prop/int',1);
+                    }
                 setprop('/honeycomb/bravo/axis0/prop/rev',1);
                 setprop('/honeycomb/bravo/axis5/prop','/controls/engines/engine[0]/throttle');
                 setprop('/honeycomb/bravo/axis4/prop','/controls/engines/engine[1]/throttle');
                 setprop('/honeycomb/bravo/axis3/prop','/controls/flight/flaps');
                 setprop('/honeycomb/bravo/axis3/prop/rev',1);
-                setprop('/honeycomb/bravo/axis5-button-up/prop','/controls/engines/engine[0]/throttle-rev');
-                setprop('/honeycomb/bravo/axis5-button-up/prop/value/on',1);
-                setprop('/honeycomb/bravo/axis5-button-low/prop','/controls/engines/engine[0]/throttle-rev');
-                setprop('/honeycomb/bravo/axis5-button-low/prop/value/on',0);
-                setprop('/honeycomb/bravo/axis4-button-up/prop','/controls/engines/engine[1]/throttle-rev');
-                setprop('/honeycomb/bravo/axis4-button-up/prop/value/on',1);
-                setprop('/honeycomb/bravo/axis4-button-low/prop','/controls/engines/engine[1]/throttle-rev');
-                setprop('/honeycomb/bravo/axis4-button-low/prop/value/on',0);
+                if (getprop('/sim/aero')!='738'){
+                  setprop('/honeycomb/bravo/axis5-button-up/prop','/controls/engines/engine[0]/throttle-rev');
+                  setprop('/honeycomb/bravo/axis5-button-up/prop/value/on',1);
+                  setprop('/honeycomb/bravo/axis5-button-low/prop','/controls/engines/engine[0]/throttle-rev');
+                  setprop('/honeycomb/bravo/axis5-button-low/prop/value/on',0);
+                  setprop('/honeycomb/bravo/axis4-button-up/prop','/controls/engines/engine[1]/throttle-rev');
+                  setprop('/honeycomb/bravo/axis4-button-up/prop/value/on',1);
+                  setprop('/honeycomb/bravo/axis4-button-low/prop','/controls/engines/engine[1]/throttle-rev');
+                  setprop('/honeycomb/bravo/axis4-button-low/prop/value/on',0);
+                }else{
+                  setprop('/honeycomb/bravo/axis5-button-up/prop','/controls/engines/engine[0]/reverser');
+                  setprop('/honeycomb/bravo/axis5-button-up/prop/value/on',1);
+                  setprop('/honeycomb/bravo/axis5-button-low/prop','/controls/engines/engine[0]/reverser');
+                  setprop('/honeycomb/bravo/axis5-button-low/prop/value/on',0);
+                  setprop('/honeycomb/bravo/axis4-button-up/prop','/controls/engines/engine[1]/reverser');
+                  setprop('/honeycomb/bravo/axis4-button-up/prop/value/on',1);
+                  setprop('/honeycomb/bravo/axis4-button-low/prop','/controls/engines/engine[1]/reverser');
+                  setprop('/honeycomb/bravo/axis4-button-low/prop/value/on',0);
+                
+                }
     
               }
             }
@@ -114,6 +145,15 @@
               setprop('/honeycomb/bravo/axis3-button-up/prop/value/on',1);
               setprop('/honeycomb/bravo/axis3-button-low/prop','/controls/engines/engine[3]/reverser');
               setprop('/honeycomb/bravo/axis3-button-low/prop/value/on',0);
+              if (getprop('/sim/aero')=='Concorde'){
+                setprop('/honeycomb/bravo/axis0/prop','/controls/engines/engine[0]/throttle-manual');
+                setprop('/honeycomb/bravo/axis5/prop','/controls/engines/engine[1]/throttle-manual');
+                setprop('/honeycomb/bravo/axis4/prop','/controls/engines/engine[2]/throttle-manual');
+                setprop('/honeycomb/bravo/axis3/prop','/controls/engines/engine[3]/throttle-manual');
+                setprop('/honeycomb/bravo/axis2/prop','/controls/gear/brake-pos-norm');
+                setprop('/honeycomb/bravo/axis2/prop/rev',1);
+                setprop('/honeycomb/bravo/axis1/prop','');
+              }
     }            
             var initProps= func(){
               ## DISCOVER AUTOPILOT TYPE
