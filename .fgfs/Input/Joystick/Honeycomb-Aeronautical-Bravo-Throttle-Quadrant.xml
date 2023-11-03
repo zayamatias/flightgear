@@ -33,7 +33,7 @@
       }
       var assigntoaxis=func(prop,value){
         myprop = getprop(prop);
-        print ('UPDATING ',myprop);
+        #print ('UPDATING ',myprop);
         if (typeof(myprop)=='nil'){
           return;
         }
@@ -54,9 +54,9 @@
           newvalue=mult-newvalue;
         }
         if (isint){
-          newvalue = int(newvalue);
+          newvalue = math.round(newvalue);
         }
-        print (newvalue);
+        #print (newvalue);
         setprop(myprop,newvalue);
       }
     ]]>
