@@ -23,33 +23,51 @@ FULL360 = 4096/2  # this is a full 360º
 LEFTOVER = 0
 LASTPATH = 0
 currentaltitude=0
-
-coils = (
+motors=[]
+motor=dict()
+motor['name']='altimeter'
+motor['leftover']=0
+motor['lastpath']=0
+motor['coils'] = (
     DigitalInOut(board.GP21),  # A1
     DigitalInOut(board.GP19),  # A2
     DigitalInOut(board.GP20),  # B1
     DigitalInOut(board.GP18),  # B2
 )
-for coil in coils:
-    coil.direction = Direction.OUTPUT
-
-stepper_motor = stepper.StepperMotor(
-    coils[0], coils[1], coils[2], coils[3], microsteps=None
+motors.append(motor)
+motor=dict()
+motor['name']='pressure'
+motor['leftover']=0
+motor['lastpath']=0
+motor['coils'] = (
+    DigitalInOut(board.GP13),  # A1
+    DigitalInOut(board.GP11),  # A2
+    DigitalInOut(board.GP12),  # B1
+    DigitalInOut(board.GP10),  # B2
 )
+motors.append(motor)
+for motor in motors:
+    for coil in motor['coils']:
+        coil.direction = Direction.OUTPUT
+    motor['stepper']= stepper.StepperMotor(
+        motor['coils'][0], motor['coils'][1], motor['coils'][2], motor['coils'][3], microsteps=None
+    )
 
-
+print(motors)
 def move(steps):
     for n in range (0,steps+1):
         stepper_fwd()
 
-def stepper_fwd():
-    stepper_motor.onestep(direction=stepper.FORWARD)
+def stepper_fwd(mystepper):
+    print(mystepper)
+    mystepper.onestep(direction=stepper.FORWARD)
     time.sleep(DELAY)
     #stepper_motor.release()
 
 
-def stepper_back():
-    stepper_motor.onestep(direction=stepper.BACKWARD)
+def stepper_back(mystepper):
+    print(mystepper)
+    mystepper.onestep(direction=stepper.BACKWARD)
     time.sleep(DELAY)
     #stepper_motor.release()
 
@@ -66,28 +84,30 @@ def calculateDelta(oldangle,newangle):
     else:
         return -1*(countercw)
 
-def rotateHDG(diff):
+def rotateHDG(motor,diff):
+    print (motor)
     #print ('DIFF '+str(diff))
-    global LEFTOVER
-    global LASTPATH
-    if LASTPATH:
-        steps = (diff*(FULL360/1000))+LEFTOVER
+    stepper=motor['stepper']
+    leftover = motor['leftover']
+    lastpath = motor['lastpath']
+    if lastpath:
+        steps = (diff*(FULL360/1000))+leftover
     else:
-        steps = (diff*(FULL360/1000))-LEFTOVER
+        steps = (diff*(FULL360/1000))-leftover
 
     print ('ROTATING '+str(steps)+' STEPS')
     if steps>0:
         for n in range(1,steps):
             print ('ROTATE FWD '+str(n))
-            LASTPATH = 1
-            stepper_fwd()
+            motor['lastpath'] = 1
+            stepper_fwd(stepper)
     else:
         for n in range(steps,1):
             print ('ROTATE BWD '+str(n))
-            LASTPATH = 0 
-            stepper_back()
+            motor['lastpath'] = 0
+            stepper_back(stepper)
     ##Since the steps are integers and not decimal, if we do not carry what was left to the next turn then there will be a desadjustment
-    LEFTOVER=steps % 1
+    motor['leftover']=steps % 1
     return
 
 def sendStop(custom_device):
@@ -117,6 +137,16 @@ val['name']='CORRALT'
 val['digits']=[5,6,7,8,9]
 val['currval']=0
 printout.append(val)
+val = dict()
+val['name']='PRESSURE'
+val['digits']=[10,11,12,13,14]
+val['currval']=0
+printout.append(val)
+val = dict()
+val['name']='CORRPRESSURE'
+val['digits']=[15,16,17,18,19]
+val['currval']=0
+printout.append(val)
 
 out_report=[48]*28
 while True:
@@ -136,12 +166,12 @@ while True:
             if newvalue!=currpo['currval']:
                 if currpo['name']!='CORRALT':
                     print ('ROTATING BY: '+str(newvalue-currpo['currval']))
-                    rotateHDG(newvalue-currpo['currval'])
+                    rotateHDG(motors[0],newvalue-currpo['currval'])
                     currpo['currval']=newvalue
                 else:
                     print ('CORRECTING BY: '+str(newvalue-currpo['currval']))
                     currpo['currval']=newvalue
-                    rotateHDG(newvalue)
+                    rotateHDG(motors[0],newvalue)
                     sendStop(custom_device)
     time.sleep(0.01)
     
