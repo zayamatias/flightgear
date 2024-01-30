@@ -4,7 +4,7 @@
 import usb_hid
 import supervisor
 
-supervisor.set_usb_identification(product="Panels Board")
+supervisor.set_usb_identification(product="Altimeter")
 
 REPORT_COUNT = 63  # size of report in bytes
 

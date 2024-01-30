@@ -12,10 +12,9 @@ import time
 import usb_hid
 import adafruit_hid
 import board
-import digitalio
-
 
 custom_device = adafruit_hid.find_device(usb_hid.devices, usage_page=1, usage=4)
+
 
 # Stepper motor setup
 DELAY = 0.0046  # fastest is ~ 0.004, 0.01 is still very smooth, gets steppy after that
@@ -53,20 +52,20 @@ for motor in motors:
         motor['coils'][0], motor['coils'][1], motor['coils'][2], motor['coils'][3], microsteps=None
     )
 
-print(motors)
+#print(motors)
 def move(steps):
     for n in range (0,steps+1):
         stepper_fwd()
 
 def stepper_fwd(mystepper):
-    print(mystepper)
+    #print(mystepper)
     mystepper.onestep(direction=stepper.FORWARD)
     time.sleep(DELAY)
     #stepper_motor.release()
 
 
 def stepper_back(mystepper):
-    print(mystepper)
+    #print(mystepper)
     mystepper.onestep(direction=stepper.BACKWARD)
     time.sleep(DELAY)
     #stepper_motor.release()
@@ -85,8 +84,8 @@ def calculateDelta(oldangle,newangle):
         return -1*(countercw)
 
 def rotateHDG(motor,diff):
-    print (motor)
-    #print ('DIFF '+str(diff))
+    #print (motor)
+    ##print ('DIFF '+str(diff))
     stepper=motor['stepper']
     leftover = motor['leftover']
     lastpath = motor['lastpath']
@@ -95,24 +94,24 @@ def rotateHDG(motor,diff):
     else:
         steps = (diff*(FULL360/1000))-leftover
 
-    print ('ROTATING '+str(steps)+' STEPS')
+    #print ('ROTATING '+str(steps)+' STEPS')
     if steps>0:
         for n in range(1,steps):
-            print ('ROTATE FWD '+str(n))
+            #print ('ROTATE FWD '+str(n))
             motor['lastpath'] = 1
             stepper_fwd(stepper)
     else:
         for n in range(steps,1):
-            print ('ROTATE BWD '+str(n))
+            #print ('ROTATE BWD '+str(n))
             motor['lastpath'] = 0
             stepper_back(stepper)
     ##Since the steps are integers and not decimal, if we do not carry what was left to the next turn then there will be a desadjustment
     motor['leftover']=steps % 1
     return
 
-def sendStop(custom_device):
+def sendStop(custom_device,value):
     new_status = [0]
-    new_status[0]=1
+    new_status[0]=value
     in_report = bytearray(new_status)  # copy in case we want to modify
     try:
         custom_device.send_report(in_report,0);  # in to computer    
@@ -139,12 +138,12 @@ val['currval']=0
 printout.append(val)
 val = dict()
 val['name']='PRESSURE'
-val['digits']=[10,11,12,13,14]
-val['currval']=0
+val['digits']=[10,11,12,13]
+val['currval']=1027 ## TAKING 1027 as a good starting point
 printout.append(val)
 val = dict()
 val['name']='CORRPRESSURE'
-val['digits']=[15,16,17,18,19]
+val['digits']=[14,15,16,17]
 val['currval']=0
 printout.append(val)
 
@@ -153,7 +152,7 @@ while True:
     new_report = custom_device.get_last_received_report(0) # out from computer
     if new_report:
         out_report=new_report
-        #print ('NEW REPORT RECEIVED')
+        print (out_report)
     if out_report:
         for currpo in printout:
             text=''
@@ -164,14 +163,26 @@ while True:
             except:
                 newavalue=currpo['currval']
             if newvalue!=currpo['currval']:
-                if currpo['name']!='CORRALT':
-                    print ('ROTATING BY: '+str(newvalue-currpo['currval']))
+                if currpo['name']=='ALT':
+                    print ('ROTATING ALT BY: '+str(newvalue-currpo['currval']))
                     rotateHDG(motors[0],newvalue-currpo['currval'])
                     currpo['currval']=newvalue
-                else:
-                    print ('CORRECTING BY: '+str(newvalue-currpo['currval']))
+                if currpo['name']=='CORRALT':
+                    print ('CORRECTING ALT BY: '+str(newvalue-currpo['currval']))
                     currpo['currval']=newvalue
                     rotateHDG(motors[0],newvalue)
-                    sendStop(custom_device)
+                    sendStop(custom_device,1)
+                if currpo['name']=='PRESSURE':
+                    if newvalue!=0:
+                        print ('CURRENT PRESSURE '+str(currpo['currval']))
+                        print ('RECEIVED PRESSURE '+str(newvalue))
+                        print ('ROTATING PRESSURE BY: '+str(newvalue-currpo['currval']))
+                        rotateHDG(motors[1],newvalue-currpo['currval'])
+                        currpo['currval']=newvalue
+                if currpo['name']=='CORRPRESSURE':
+                    print ('CORRECTING PRESSURE BY: '+str(newvalue))
+                    currpo['currval']=newvalue
+                    rotateHDG(motors[1],newvalue)
+                    sendStop(custom_device,2)
     time.sleep(0.01)
     
