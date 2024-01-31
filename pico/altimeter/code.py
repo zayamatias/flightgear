@@ -12,6 +12,7 @@ import time
 import usb_hid
 import adafruit_hid
 import board
+import math
 
 custom_device = adafruit_hid.find_device(usb_hid.devices, usage_page=1, usage=4)
 
@@ -19,8 +20,8 @@ custom_device = adafruit_hid.find_device(usb_hid.devices, usage_page=1, usage=4)
 # Stepper motor setup
 DELAY = 0.0046  # fastest is ~ 0.004, 0.01 is still very smooth, gets steppy after that
 FULL360 = 4096/2  # this is a full 360º
-LEFTOVER = 0
-LASTPATH = 0
+
+
 currentaltitude=0
 motors=[]
 motor=dict()
@@ -57,6 +58,12 @@ def move(steps):
     for n in range (0,steps+1):
         stepper_fwd()
 
+def stepper_move(mystepper,movedir):
+    #print(mystepper)
+    mystepper.onestep(direction=movedir)
+    time.sleep(DELAY)
+    #stepper_motor.release()
+
 def stepper_fwd(mystepper):
     #print(mystepper)
     mystepper.onestep(direction=stepper.FORWARD)
@@ -86,27 +93,18 @@ def calculateDelta(oldangle,newangle):
 def rotateHDG(motor,diff):
     #print (motor)
     ##print ('DIFF '+str(diff))
-    stepper=motor['stepper']
+    mystepper=motor['stepper']
+    ## By leftover I mean anything that is in the decimal part, since the stepper does full steps, we need to carry on decimals for next movement.
     leftover = motor['leftover']
     lastpath = motor['lastpath']
-    if lastpath:
-        steps = (diff*(FULL360/1000))+leftover
+    steps = abs((diff*(FULL360/1000)))+leftover
+    if diff >0:
+        mydir = stepper.FORWARD
     else:
-        steps = (diff*(FULL360/1000))-leftover
-
-    #print ('ROTATING '+str(steps)+' STEPS')
-    if steps>0:
-        for n in range(1,steps):
-            #print ('ROTATE FWD '+str(n))
-            motor['lastpath'] = 1
-            stepper_fwd(stepper)
-    else:
-        for n in range(steps,1):
-            #print ('ROTATE BWD '+str(n))
-            motor['lastpath'] = 0
-            stepper_back(stepper)
-    ##Since the steps are integers and not decimal, if we do not carry what was left to the next turn then there will be a desadjustment
-    motor['leftover']=steps % 1
+        mydir = stepper.BACKWARD
+    for n in range(1,steps):
+        stepper_move(mystepper,mydir)
+    motor['leftover'],discard=math.modf(steps)
     return
 
 def sendStop(custom_device,value):
