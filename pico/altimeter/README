@@ -1,5 +1,5 @@
-Code for the rpi pico and Flightgear in order to use the altimeter based on this model : https://www.printables.com/model/341603-altimeter-for-flight-simulation
+Code for the rpi pico and Flightgear in order to use the altimeter based on this model: https://www.printables.com/model/341603-altimeter-for-flight-simulation
 
 Connect the rpi pico to the Flightgear PC via USB.
 
-/rpi/altimeter/correctors will give you to settings to corect the altimeter and pressure gauge to the proper position (just enter positive or negative amount to turn)
+/rpi/altimeter/correctors will give you two settings to correct the altimeter and pressure gauge to the proper position (just enter positive or negative amount to turn)
