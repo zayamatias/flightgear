@@ -15,7 +15,7 @@ CUSTOM_REPORT_DESCRIPTOR = bytes((
 0x09, 0x04,          ##   USAGE = Pointer (an available sub USAGE of the parent USAGE)
 0xa1, 0x02,          ##   COLLECTION = Physical (Allows you to define different groups of related attributes etc)
 0x05, 0x09,          ##     USAGE_PAGE = Button (a change of USAGE_PAGE, like moving to a new namespace)
-#0x85, 0x01,          # Report ID (1)
+0x85, 0x01,          # Report ID (1)
 0x19, 0x01,          ##     USAGE_MINIMUM = Button 1 (specifying the buttons)
 0x29, 0x10,          ##     USAGE_MAXIMUM = Button 3 (specifying the buttons)
 0x15, 0x00,          ##     LOGICAL_MINIMUM = 0 (the min value that can be reported)
@@ -25,7 +25,7 @@ CUSTOM_REPORT_DESCRIPTOR = bytes((
 0x81, 0x02,          ##     INPUT = Data,Var,Abs (add the above data variables to the report)
 0x06, 0x00, 0xFF,    ##     USAGE_PAGE = Generic Desktop (returning USAGE_PAGE back again)
 0x09, 0x01,          # Usage Page (Undefined)
-#0x85, 0x02,          # Report ID (1)
+0x85, 0x02,          # Report ID (1)
 0x15, 0x00,          ##     LOGICAL_MINIMUM = 0
 0x25, 0xFF,          ##     LOGICAL_MAXIMUM = 255
 0x75, 0x08,          ##     REPORT_SIZE = 
@@ -45,9 +45,9 @@ raw_hid = usb_hid.Device(
     report_descriptor=CUSTOM_REPORT_DESCRIPTOR,
     usage_page=0x1,         # Vendor defined
     usage=0x04,                # Vendor page 1
-    report_ids=(0,),
-    out_report_lengths=(28,),
-    in_report_lengths=(1,)
+    report_ids=(1,2),
+    out_report_lengths=(0,28),
+    in_report_lengths=(2,0)
 )
 
 usb_hid.enable( (raw_hid,) )
