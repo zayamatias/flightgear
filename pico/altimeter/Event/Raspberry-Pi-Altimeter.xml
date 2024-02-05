@@ -5,7 +5,7 @@
   <debug-events type="bool">true</debug-events>
   <nasal>
     <open>
-            <![CDATA[
+      <![CDATA[
             
             setprop('/rpi/altimeter/correctors/corrected-altitude',0);
             setprop('/rpi/altimeter/correctors/corrected-pressure',0);
@@ -114,15 +114,15 @@
               
             }
             # Some planes chnage the HPA and then converts to INHG and others do teh opposite...that's why there are two listeners
-            var presslis = setlistener('/instrumentation/altimeter/setting-hpa',press,runtime=0);
-            var presslis2 = setlistener('/instrumentation/altimeter/setting-inhg',press,runtime=0);
-            var corrpresslis = setlistener('/rpi/altimeter/correctors/corrected-pressure',corrpress,runtime=0);
-            var altlis = setlistener('/instrumentation/altimeter/indicated-altitude-ft',alt,runtime=0);
-            var corraltlis = setlistener('/rpi/altimeter/correctors/corrected-altitude',corralt,runtime=0);
+            var presslis = setlistener('/instrumentation/altimeter/setting-hpa',press,runtime=1);
+            var presslis2 = setlistener('/instrumentation/altimeter/setting-inhg',press,runtime=1);
+            var corrpresslis = setlistener('/rpi/altimeter/correctors/corrected-pressure',corrpress,runtime=1);
+            var altlis = setlistener('/instrumentation/altimeter/indicated-altitude-ft',alt,runtime=1);
+            var corraltlis = setlistener('/rpi/altimeter/correctors/corrected-altitude',corralt,runtime=1);
 
             ]]>
-            </open>
-            </nasal>
+    </open>
+  </nasal>
   <event>
     <desc>STOP ALT CORRECTION</desc>
     <name>button-1</name>
@@ -139,6 +139,31 @@
       <command>property-assign</command>
       <property>/rpi/altimeter/correctors/corrected-pressure</property>
       <value>0</value>
+    </binding>
+  </event>
+
+  <event>
+    <desc>STOP ALT CORRECTION</desc>
+    <name>button-thumb2</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/instrumentation/altimeter/setting-hpa</property>
+      <step>1</step>
+      <min>0</min>
+      <max>1090</max>
+      <wrap>false</wrap>
+    </binding>
+  </event>
+  <event>
+    <desc>STOP PRESS CORRECTION</desc>
+    <name>button-top</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/instrumentation/altimeter/setting-hpa</property>
+      <step>-1</step>
+      <min>0</min>
+      <max>1090</max>
+      <wrap>false</wrap>
     </binding>
   </event>
 
@@ -163,7 +188,7 @@
       <property>/rpi/altimeter/digits/alt-3</property>
     </setting>
   </event>
-  
+
   <event>
     <desc>ALT4</desc>
     <name>vendor-3</name>
@@ -199,7 +224,7 @@
       <property>/rpi/altimeter/digits/corralt-3</property>
     </setting>
   </event>
- <event>
+  <event>
     <desc>CORRECTED ALT4</desc>
     <name>vendor-8</name>
     <setting>
