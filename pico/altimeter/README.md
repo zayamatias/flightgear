@@ -31,6 +31,8 @@ Now if you launch flightgear and everything is soldered properly, the altimeter 
 
 Code for the RPI pico and Flightgear to use the altimeter based on this model: https://www.printables.com/model/341603-altimeter-for-flight-simulation
 
+Variometer : https://www.printables.com/model/338636-variometer-for-flight-simulation
+
 Calibrating the altimeter
 
 The Altimeter has no way (as far as I'm able to do it) to know which is its exact position, so you have to manually calibrate it so the starting position is the same as the starting position in the sim. To do so press the slash '/' key to open the properties navigator. search for 'rpi' then 'altimeter' then 'correctors'. You will see 2 values you can modify, altitude and pressure, enter the value in either feet or HP you want to correct (plus or minus) until the altimeter shows everything as in the plane's cockpit.
