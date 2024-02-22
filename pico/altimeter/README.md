@@ -9,7 +9,13 @@ Soldering
 
 Once you've built the Altimeter, time to solder everything to the controller. For the controller, I'm using an RPI [Pico](https://thepihut.com/products/raspberry-pi-pico) W, any RPI Pico should work anyway (just check the pins in case they are different)
 
+Altimeter Only
+
 ![Circuit diagram](https://github.com/zayamatias/flightgear/blob/main/pico/altimeter/Altimeter_bb.png?raw=true)
+
+Altimeter + VSI variant
+
+![Circuit diagram](https://github.com/zayamatias/flightgear/blob/main/pico/altimeter/Altimeter+vsi_bb.png?raw=true)
 
 The 5V external power supply is optional in case your USB power output is not enough to power 2 stepper motors.
 
