@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <name type="string">Raspberry Pi Heading</name>
+  <debug-events type="bool">true</debug-events>
+  <nasal>
+    <open>
+      <![CDATA[
+            
+            setprop('/rpi/heading/correctors/corrected-heading',0);
+            setprop('/rpi/heading/correctors/corrected-headingbug',0);
+            setprop('/rpi/heading/digits/hdg-1',0);
+            setprop('/rpi/heading/digits/hdg-2',0);
+            setprop('/rpi/heading/digits/hdg-3',0);
+            setprop('/rpi/heading/digits/corrhdg-1',0);
+            setprop('/rpi/heading/digits/corrhdg-2',0);
+            setprop('/rpi/heading/digits/corrhdg-3',0);
+            setprop('/rpi/heading/digits/hdgbg-1',0);
+            setprop('/rpi/heading/digits/hdgbg-2',0);
+            setprop('/rpi/heading/digits/hdgbg-3',0);
+            setprop('/rpi/heading/digits/corrhdgbg-1',0);
+            setprop('/rpi/heading/digits/corrhdgbg-2',0);
+            setprop('/rpi/heading/digits/corrhdgbg-3',0);
+            
+            var ascdict={};
+            for (var i=32;i<127;i=i+1){
+              var ch = sprintf('%c',i);
+              ascdict[ch]=i;
+            }
+
+            var toAscii = func(myvalue,fullsize){
+              if (myvalue==nil){
+                return [0,0,0,0,0,0,0,0,0];
+              }
+              var retvect =[];
+              if (myvalue<0){
+                myvalue = myvalue*-1;
+                append(retvect,45);
+                fullsize=fullsize-1;
+              }
+              mystrvalue = sprintf("%i",myvalue);
+              var mysize = size(mystrvalue);
+              for (var i=0;i<(fullsize-mysize);i=i+1){
+                append (retvect,48);
+              }
+              for (var i=0;i<mysize;i=i+1){
+                var ch = substr(mystrvalue,i,1);
+                var c = ascdict[ch];
+                append (retvect,c);
+              }
+              return retvect;
+            }
+
+
+            var corrhdg = func(){
+              var myvalue = getprop('/rpi/heading/correctors/corrected-heading');
+              if (myvalue==nil){
+                myvalue = 0;
+              }
+              mystrvalue = sprintf("%03d",myvalue);
+              setprop('/rpi/heading/digits/corrhdg-1',mystrvalue[0]);
+              setprop('/rpi/heading/digits/corrhdg-2',mystrvalue[1]);
+              setprop('/rpi/heading/digits/corrhdg-3',mystrvalue[2]);
+
+            }
+            var hdg = func(){
+              var myvalue = getprop('/instrumentation/heading-indicator/indicated-heading-deg');
+              if (myvalue==nil){
+                myvalue = 0;
+              }
+              mystrvalue = sprintf("%03d",myvalue);
+              setprop('/rpi/heading/digits/hdg-1',mystrvalue[0]);
+              setprop('/rpi/heading/digits/hdg-2',mystrvalue[1]);
+              setprop('/rpi/heading/digits/hdg-3',mystrvalue[2]);
+              
+            }
+            var hdgbug = func(){
+              var myvalue = getprop('/autopilot/settings/heading-bug-deg');
+              if (myvalue==nil){
+                myvalue = 0;
+              }
+              mystrvalue = sprintf("%03d",myvalue);
+              setprop('/rpi/heading/digits/hdgbg-1',mystrvalue[0]);
+              setprop('/rpi/heading/digits/hdgbg-2',mystrvalue[1]);
+              setprop('/rpi/heading/digits/hdgbg-3',mystrvalue[2]);
+              
+            }
+            var corrhdgbug = func(){
+              var myvalue = getprop('/rpi/heading/correctors/corrected-headingbug');
+              if (myvalue==nil){
+                myvalue = 0;
+              }
+              mystrvalue = sprintf("%03d",myvalue);
+              setprop('/rpi/heading/digits/corrhdgbg-1',mystrvalue[0]);
+              setprop('/rpi/heading/digits/corrhdgbg-2',mystrvalue[1]);
+              setprop('/rpi/heading/digits/corrhdgbg-3',mystrvalue[2]);
+              
+            }
+              
+        
+            # Some planes chnage the HPA and then converts to INHG and others do teh opposite...that's why there are two listeners
+            var hdgbug = setlistener('/autopilot/settings/heading-bug-deg',hdgbug,runtime=1);
+            var corrhdgbuglis = setlistener('/rpi/heading/correctors/corrected-headingbug',corrhdgbug,runtime=1);
+            var hdglis = setlistener('/instrumentation/heading-indicator/indicated-heading-deg',hdg,runtime=1);
+            var corrhdglis = setlistener('/rpi/heading/correctors/corrected-heading',corrhdg,runtime=1);
+
+            ]]>
+    </open>
+  </nasal>
+  <event>
+    <desc>STOP HDG CORRECTION</desc>
+    <name>button-1</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/rpi/heading/correctors/corrected-heading</property>
+      <value>0</value>
+    </binding>
+  </event>
+  <event>
+    <desc>STOP HDGBUG CORRECTION</desc>
+    <name>button-thumb</name>
+    <binding>
+      <command>property-assign</command>
+      <property>/rpi/heading/correctors/corrected-headingbug</property>
+      <value>0</value>
+    </binding>
+  </event>
+
+  <event>
+    <desc>INCREASE HDG-BUG</desc>
+    <name>button-thumb2</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/autopilot/settings/heading-bug-deg</property>
+      <step>1</step>
+      <min>0</min>
+      <max>360</max>
+      <wrap>true</wrap>
+    </binding>
+  </event>
+  <event>
+    <desc>DECREASE HDG-BUG</desc>
+    <name>button-top</name>
+    <binding>
+      <command>property-adjust</command>
+      <property>/autopilot/settings/heading-bug-deg</property>
+      <step>-1</step>
+      <min>0</min>
+      <max>360</max>
+      <wrap>true</wrap>
+    </binding>
+  </event>
+
+  <event>
+    <desc>HDG1</desc>
+    <name>vendor-0</name>
+    <setting>
+      <property>/rpi/heading/digits/hdg-1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HDG2</desc>
+    <name>vendor-1</name>
+    <setting>
+      <property>/rpi/heading/digits/hdg-2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HDG3</desc>
+    <name>vendor-2</name>
+    <setting>
+      <property>/rpi/heading/digits/hdg-3</property>
+    </setting>
+  </event>
+
+  <event>
+    <desc>CORRECTED HDG1</desc>
+    <name>vendor-3</name>
+    <setting>
+      <property>/rpi/heading/digits/corrhdg-1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>CORRECTED HDG2</desc>
+    <name>vendor-4</name>
+    <setting>
+      <property>/rpi/heading/digits/corrhdg-2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>CORRECTED HDG3</desc>
+    <name>vendor-5</name>
+    <setting>
+      <property>/rpi/heading/digits/corrhdg-3</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HDGBUG1</desc>
+    <name>vendor-6</name>
+    <setting>
+      <property>/rpi/heading/digits/hdgbg-1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HDGBUG2</desc>
+    <name>vendor-7</name>
+    <setting>
+      <property>/rpi/heading/digits/hdgbg-2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>HDGBUG3</desc>
+    <name>vendor-8</name>
+    <setting>
+      <property>/rpi/heading/digits/hdgbg-3</property>
+    </setting>
+  </event>
+  <event>
+    <desc>CORRECTED HDGBUG1</desc>
+    <name>vendor-9</name>
+    <setting>
+      <property>/rpi/heading/digits/corrhdgbg-1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>CORRECTED HDGBUG2</desc>
+    <name>vendor-10</name>
+    <setting>
+      <property>/rpi/heading/digits/corrhdgbg-2</property>
+    </setting>
+  </event>
+  <event>
+    <desc>CORRECTED HDGBUG3</desc>
+    <name>vendor-11</name>
+    <setting>
+      <property>/rpi/heading/digits/corrhdgbg-3</property>
+    </setting>
+  </event>
+  
+</PropertyList>
