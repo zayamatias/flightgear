@@ -1,4 +1,7 @@
 # flightgear
+
+These files will work only under Linux until the HID event subsystem in FG is fixed so it works also under windows (you can "read" more here https://wiki.flightgear.org/USB_HID_Support).
+
 Files for joysticks/panels to be used with flightgear
 
 If not done yet, create a 'js' group and add your user to it.
