@@ -1,0 +1,687 @@
+<?xml version="1.0"?>
+<PropertyList>
+  <name type="string">raspberrypi FGMOD</name>
+  <debug-events type="bool">true</debug-events>
+  <nasal>
+    <open>
+      <![CDATA[
+
+            setprop('/rpi/fgmod/val-0',0);
+            setprop('/rpi/fgmod/val-1',0);
+            setprop('/rpi/fgmod/val-2',0);
+            setprop('/rpi/fgmod/val-3',0);
+            setprop('/rpi/fgmod/val-4',0);
+            setprop('/rpi/fgmod/val-5',0);
+            setprop('/rpi/fgmod/val-6',0);
+            setprop('/rpi/fgmod/val-7',0);
+            setprop('/rpi/fgmod/val-8',0);
+            setprop('/rpi/fgmod/val-9',0);
+            setprop('/rpi/fgmod/val-10',0);
+            setprop('/rpi/fgmod/val-11',0);
+            setprop('/rpi/fgmod/val-12',0);
+            setprop('/rpi/fgmod/val-13',0);
+            setprop('/rpi/fgmod/val-14',0);
+            setprop('/rpi/fgmod/val-15',0);
+            setprop('/rpi/fgmod/val-16',0);
+            setprop('/rpi/fgmod/val-17',0);
+            setprop('/rpi/fgmod/val-18',0);
+            setprop('/rpi/fgmod/val-19',0);
+            setprop('/rpi/fgmod/val-20',0);
+            setprop('/rpi/fgmod/val-21',0);
+            setprop('/rpi/fgmod/val-22',0);
+            setprop('/rpi/fgmod/val-23',0);
+            setprop('/rpi/fgmod/val-24',0);
+            setprop('/rpi/fgmod/val-25',0);
+            setprop('/rpi/fgmod/val-26',0);
+            setprop('/rpi/fgmod/val-27',0);
+            setprop('/rpi/fgmod/val-28',0);
+            setprop('/rpi/fgmod/val-29',0);
+            setprop('/rpi/fgmod/val-30',0);
+            setprop('/rpi/fgmod/val-31',0);
+            setprop('/rpi/fgmod/val-32',0);
+            setprop('/rpi/fgmod/val-33',0);
+            setprop('/rpi/fgmod/val-34',0);
+            setprop('/rpi/fgmod/datalist',1);
+
+             var proplist = ['/position/latitude-deg',
+                            '/position/longitude-deg',
+                            '/instrumentation/airspeed-indicator/indicated-speed-kt',
+                            '/instrumentation/altimeter/indicated-altitude-ft',
+                            '/instrumentation/vertical-speed-indicator/indicated-speed-fpm',
+                            '/orientation/heading-deg',
+                            '/instrumentation/comm/frequencies/selected-mhz',
+                            '/instrumentation/comm[1]/frequencies/selected-mhz',
+                            '/instrumentation/nav/frequencies/selected-mhz',
+                            '/instrumentation/nav[1]/frequencies/selected-mhz',
+                            '/instrumentation/altimeter/setting-hpa',
+                            '/instrumentation/attitude-indicator/indicated-pitch-deg',
+                            '/instrumentation/attitude-indicator/indicated-roll-deg',
+                            '/instrumentation/turn-indicator/indicated-turn-rate',
+                            '/instrumentation/slip-skid-ball/indicated-slip-skid',
+
+                            '/instrumentation/nav[1]/frequencies/selected-mhz',
+                            '/instrumentation/nav[1]/frequencies/selected-mhz',
+                            '/instrumentation/nav[1]/frequencies/selected-mhz',
+                            '/instrumentation/nav[1]/frequencies/selected-mhz',
+                            '/instrumentation/nav[1]/frequencies/selected-mhz',
+                            '/instrumentation/nav[1]/frequencies/selected-mhz',
+                            '/instrumentation/nav[1]/frequencies/selected-mhz',
+                            '/instrumentation/nav[1]/frequencies/selected-mhz',
+                            '/instrumentation/nav[1]/frequencies/selected-mhz',
+
+                            ];
+
+            var encodeDouble=func(d){
+              retbuff=[0,0,0,0,0,0,0,0,0,0];
+              TWOTO31 = 2147483648;
+              TWOTO32 = 4294967296;
+              intpart = int(d);
+              if (intpart<0){
+                intpart=intpart+TWOTO32;
+              }
+              decpart=int(d-int(d))*TWOTO31;
+              var leftover = intpart;
+              for (i=0;i<5;i=i+1){
+                  ith_byte = math.mod((intpart / math.pow(256,i)),256);
+                  # Store the ith byte in the byte array
+                  retbuff[i] = ith_byte
+              }
+              for (i=0;i<5;i=i+1){
+                  ith_byte = math.mod((decpart / (256^i)),256);
+                  # Store the ith byte in the byte array
+                  retbuff[i+5] = ith_byte
+              }
+            return retbuff;
+            }
+
+            var repparse = func(propnum){
+              setprop ('/rpi/fgmod/propnum/',propnum);
+              print ('SETTING PROPS');
+              print ('SETTING PROP ',propnum,proplist[propnum]);
+              var myvalue = getprop(proplist[propnum]);
+              if (myvalue==nil){
+                myvalue = 0;
+              }
+              print ('GOT VALUE ',myvalue);
+              mybytevalue = mp_broadcast.Binary.encodeDouble(myvalue);
+              #print ('@@@@@@@@',myvalue,'@@@@@@@',mybytevalue,'@@@@@@');
+              #print (myvalue,'++++++++++++++++++++++',myprop,'+++++++++++++++++',mybytevalue[0],mybytevalue[1],mybytevalue[2],mybytevalue[3],,mybytevalue[4],mybytevalue[5],mybytevalue[6],mybytevalue[7],mybytevalue[8],mybytevalue[9],'++++++++++++++',size(mybytevalue));
+                for (var n=1;n<11;n=n+1){
+                setprop('/rpi/fgmod/val-'~n,mybytevalue[n-1]);
+                #print ('######### val-'~n,'----',mybytevalue[n-1],']');
+              }
+            #print ('SETTED PROPS');
+            }
+
+          ]]>
+    </open>
+  </nasal>
+  <event>
+    <desc>LAT REQ</desc>
+    <name>button-1</name>
+    <repeatable type="bool">true</repeatable>
+      <binding>
+        <command>nasal</command>
+        <script>repparse(0);</script>
+      </binding>
+  </event>
+  <event>
+    <desc>LON REQ</desc>
+    <name>button-2</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(1);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>HDG REQ</desc>
+    <name>button-3</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(2);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>ALT REQ</desc>
+    <name>button-4</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(3);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-5</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(4);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-6</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(5);</script>
+      <repeatable type="bool">true</repeatable>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-6</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(5);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-6</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(5);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-7</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(6);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-7</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(6);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-8</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(7);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-9</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(8);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-10</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(9);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-11</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(10);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <repeatable type="bool">true</repeatable>
+    <name>button-12</name>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(11);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-13</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(12);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-14</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(13);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-15</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(14);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-16</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(15);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-17</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(16);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-18</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(17);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <repeatable type="bool">true</repeatable>
+    <name>button-19</name>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(18);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-20</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(19);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <repeatable type="bool">true</repeatable>
+    <name>button-21</name>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(20);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-22</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(21);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-23</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(22);</script>
+    </binding>
+  </event>
+  <event>
+    <desc>IAS REQ</desc>
+    <name>button-24</name>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>repparse(23);</script>
+    </binding>
+  </event>
+
+  <event>
+    <desc>PROPNUM</desc>
+    <name>vendor-0</name>
+    <setting>
+      <property>/rpi/fgmod/propnum/</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE1</desc>
+    <name>vendor-1</name>
+    <setting>
+      <property>/rpi/fgmod/val-1</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE2</desc>
+    <name>vendor-2</name>
+    <setting>
+      <property>/rpi/fgmod/val-2</property>
+    </setting>
+  </event>
+
+  <event>
+    <desc>VALUE3</desc>
+    <name>vendor-3</name>
+    <setting>
+      <property>/rpi/fgmod/val-3</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE4</desc>
+    <name>vendor-4</name>
+    <setting>
+      <property>/rpi/fgmod/val-4</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE5</desc>
+    <name>vendor-5</name>
+    <setting>
+      <property>/rpi/fgmod/val-5</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE6</desc>
+    <name>vendor-6</name>
+    <setting>
+      <property>/rpi/fgmod/val-6</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE7</desc>
+    <name>vendor-7</name>
+    <setting>
+      <property>/rpi/fgmod/val-7</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE8</desc>
+    <name>vendor-8</name>
+    <setting>
+      <property>/rpi/fgmod/val-8</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE9</desc>
+    <name>vendor-9</name>
+    <setting>
+      <property>/rpi/fgmod/val-9</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE10</desc>
+    <name>vendor-10</name>
+    <setting>
+      <property>/rpi/fgmod/val-10</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE11</desc>
+    <name>vendor-11</name>
+    <setting>
+      <property>/rpi/fgmod/val-11</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE12</desc>
+    <name>vendor-12</name>
+    <setting>
+      <property>/rpi/fgmod/val-12</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE13</desc>
+    <name>vendor-13</name>
+    <setting>
+      <property>/rpi/fgmod/val-13</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE14</desc>
+    <name>vendor-14</name>
+    <setting>
+      <property>/rpi/fgmod/val-14</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE15</desc>
+    <name>vendor-15</name>
+    <setting>
+      <property>/rpi/fgmod/val-15</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE16</desc>
+    <name>vendor-16</name>
+    <setting>
+      <property>/rpi/fgmod/val-16</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE17</desc>
+    <name>vendor-17</name>
+   <setting>
+      <property>/rpi/fgmod/val-17</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE18</desc>
+    <name>vendor-18</name>
+   <setting>
+      <property>/rpi/fgmod/val-18</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE19</desc>
+    <name>vendor-19</name>
+   <setting>
+      <property>/rpi/fgmod/val-19</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE20</desc>
+    <name>vendor-20</name>
+   <setting>
+      <property>/rpi/fgmod/val-20</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE21</desc>
+    <name>vendor-17</name>
+   <setting>
+      <property>/rpi/fgmod/val-21</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE22</desc>
+    <name>vendor-22</name>
+   <setting>
+      <property>/rpi/fgmod/val-22</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE23</desc>
+    <name>vendor-23</name>
+   <setting>
+      <property>/rpi/fgmod/val-23</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE24</desc>
+    <name>vendor-24</name>
+   <setting>
+      <property>/rpi/fgmod/val-24</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE25</desc>
+    <name>vendor-25</name>
+   <setting>
+      <property>/rpi/fgmod/val-25</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE26</desc>
+    <name>vendor-26</name>
+   <setting>
+      <property>/rpi/fgmod/val-26</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE27</desc>
+    <name>vendor-27</name>
+   <setting>
+      <property>/rpi/fgmod/val-27</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE28</desc>
+    <name>vendor-28</name>
+   <setting>
+      <property>/rpi/fgmod/val-28</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE29</desc>
+    <name>vendor-29</name>
+   <setting>
+      <property>/rpi/fgmod/val-29</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE30</desc>
+    <name>vendor-30</name>
+   <setting>
+      <property>/rpi/fgmod/val-30</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE31</desc>
+    <name>vendor-31</name>
+   <setting>
+      <property>/rpi/fgmod/val-31</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE32</desc>
+    <name>vendor-32</name>
+   <setting>
+      <property>/rpi/fgmod/val-32</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE33</desc>
+    <name>vendor-33</name>
+   <setting>
+      <property>/rpi/fgmod/val-33</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE34</desc>
+    <name>vendor-34</name>
+   <setting>
+      <property>/rpi/fgmod/val-34</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE35</desc>
+    <name>vendor-35</name>
+   <setting>
+      <property>/rpi/fgmod/val-35</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE36</desc>
+    <name>vendor-36</name>
+   <setting>
+      <property>/rpi/fgmod/val-36</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE37</desc>
+    <name>vendor-37</name>
+   <setting>
+      <property>/rpi/fgmod/val-37</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE38</desc>
+    <name>vendor-38</name>
+   <setting>
+      <property>/rpi/fgmod/val-38</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE39</desc>
+    <name>vendor-39</name>
+   <setting>
+      <property>/rpi/fgmod/val-39</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE40</desc>
+    <name>vendor-40</name>
+   <setting>
+      <property>/rpi/fgmod/val-40</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE41</desc>
+    <name>vendor-41</name>
+   <setting>
+      <property>/rpi/fgmod/val-41</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE42</desc>
+    <name>vendor-42</name>
+   <setting>
+      <property>/rpi/fgmod/val-42</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE43</desc>
+    <name>vendor-43</name>
+   <setting>
+      <property>/rpi/fgmod/val-43</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE44</desc>
+    <name>vendor-44</name>
+   <setting>
+      <property>/rpi/fgmod/val-44</property>
+    </setting>
+  </event>
+  <event>
+    <desc>VALUE45</desc>
+    <name>vendor-45</name>
+   <setting>
+      <property>/rpi/fgmod/val-45</property>
+    </setting>
+  </event>
+</PropertyList>
