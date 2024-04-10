@@ -4,6 +4,8 @@ Instead of executing their hid descriptor, execute the one found in this repo (h
 
 Copy the .xml file in the Event subdir into your event directory for FG.
 
-Launch the hid.py in your RPI (it needs to be a W version to be connected to the internet, at least for the map downloading)
+Copy the files in the SD directory to your RPI (any directory should be ok as long as it is under /home/pi)
+
+Launch the hid.py (sudo) in your RPI (it needs to be a W version to be connected to the internet, at least for the map downloading)
 
 Good luck!
