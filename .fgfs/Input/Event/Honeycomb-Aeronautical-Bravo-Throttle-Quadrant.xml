@@ -1220,7 +1220,7 @@
   </nasal>  <!-- AUTOPILOT BUTTON, SELECT FREQUENCY STEP (AFTER DOT/ BEFORE DOT)-->
   <event>
     <desc>AUTOPILOT BTN</desc>
-    <name>button-base2</name>
+    <name>button-8</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/apbtn/prop');      </script>
@@ -1228,7 +1228,7 @@
   </event>  <!-- HEADING BUTTON  -->
   <event>
     <desc>HEADING Button</desc>
-    <name>button-trigger</name>
+    <name>button-1</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/hdgbtn/prop');      </script>
@@ -1236,7 +1236,7 @@
   </event>  <!-- NAV BUTTON  -->
   <event>
     <desc>NAV Button</desc>
-    <name>button-thumb</name>
+    <name>button-2</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/navbtn/prop');      </script>
@@ -1244,7 +1244,7 @@
   </event>  <!-- APR BUTTON -->
   <event>
     <desc>APR Button</desc>
-    <name>button-thumb2</name>
+    <name>button-3</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/aprbtn/prop');      </script>
@@ -1252,7 +1252,7 @@
   </event>  <!-- REV BUTTON -->
   <event>
     <desc>REV Button</desc>
-    <name>button-top</name>
+    <name>button-4</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/revbtn/prop');      </script>
@@ -1260,7 +1260,7 @@
   </event>  <!-- ALT BUTTON -->
   <event>
     <desc>ALT Button</desc>
-    <name>button-top2</name>
+    <name>button-5</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/altbtn/prop');      </script>
@@ -1268,7 +1268,7 @@
   </event>  <!-- VS BUTTON -->
   <event>
     <desc>VS Button</desc>
-    <name>button-pinkie</name>
+    <name>button-6</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/vsbtn/prop');      </script>
@@ -1276,7 +1276,7 @@
   </event>  <!-- IAS BUTTON-->
   <event>
     <desc>IAS Button</desc>
-    <name>button-base</name>
+    <name>button-7</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/iasbtn/prop');      </script>
@@ -1284,7 +1284,7 @@
   </event>  <!-- GEAR SWITCH -->
   <event>
     <desc>GEAR UP SWITCH</desc>
-    <name>button-718</name>
+    <name>button-31</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/gearup/prop');      </script>
@@ -1292,7 +1292,7 @@
   </event>
   <event>
     <desc>GEAR DOWN SWITCH</desc>
-    <name>button-719</name>
+    <name>button-32</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/geardown/prop');      </script>
@@ -1300,7 +1300,7 @@
   </event>
   <event>
     <desc>TRIM WHEEL / HADNLED IN JOYSTICK FILE</desc>
-    <name>button-709</name>
+    <name>button-22</name>
     <binding>
       <command>nasal</command>
       <script></script>
@@ -1308,7 +1308,7 @@
   </event>
   <event>
     <desc>TRIM WHEEL / HADNLED IN JOYSTICK FILE</desc>
-    <name>button-710</name>
+    <name>button-23</name>
     <binding>
       <command>nasal</command>
       <script></script>
@@ -1316,7 +1316,7 @@
   </event>
   <event>
     <desc>AXIS 1 REVERSE BUTTON</desc>
-    <name>button-711</name>
+    <name>button-24</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/axis1-rev-button-up/prop');      </script>
@@ -1330,7 +1330,7 @@
   </event>
   <event>
     <desc>AXIS 0 REVERSE BUTTON</desc>
-    <name>button-712</name>
+    <name>button-25</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/axis0-rev-button-up/prop');      </script>
@@ -1344,7 +1344,7 @@
   </event>
   <event>
     <desc>AXIS 5 REVERSE BUTTON</desc>
-    <name>button-713</name>
+    <name>button-26</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/axis5-rev-button-up/prop');      </script>
@@ -1358,7 +1358,7 @@
   </event>
   <event>
     <desc>AXIS 4 REVERSE BUTTON</desc>
-    <name>button-714</name>
+    <name>button-27</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/axis4-rev-button-up/prop');      </script>
@@ -1372,7 +1372,7 @@
   </event>
   <event>
     <desc>AXIS 3 REVERSE BUTTON</desc>
-    <name>button-715</name>
+    <name>button-28</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/axis3-rev-button-up/prop');      </script>
@@ -1386,7 +1386,7 @@
   </event>
   <event>
     <desc>AXIS 1 BUTTON AND AXIS 0 BUTTON #2</desc>
-    <name>button-716</name>
+    <name>button-29</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/axis1-button-up/prop');      </script>
@@ -1400,7 +1400,7 @@
   </event>
   <event>
     <desc>AXIS 5 BUTTON #2</desc>
-    <name>button-717</name>
+    <name>button-30</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/axis5-button2-up/prop');      </script>
@@ -1414,7 +1414,7 @@
   </event>
   <event>
     <desc>AXIS 2 REV BUTTON</desc>
-    <name>button-720</name>
+    <name>button-31</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/axis2-rev-button-up/prop');      </script>
@@ -1428,7 +1428,7 @@
   </event>
   <event>
     <desc>PANEL FIRST SWITCH UP</desc>
-    <name>button-721</name>
+    <name>button-34</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button1-up/prop');      </script>
@@ -1436,7 +1436,7 @@
   </event>
   <event>
     <desc>PANEL FIRST SWITCH DOWN</desc>
-    <name>button-722</name>
+    <name>button-35</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button1-low/prop');      </script>
@@ -1444,7 +1444,7 @@
   </event>
   <event>
     <desc>PANEL SECOND SWITCH UP</desc>
-    <name>button-723</name>
+    <name>button-36</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button2-up/prop');      </script>
@@ -1452,7 +1452,7 @@
   </event>
   <event>
     <desc>PANEL SECOND SWITCH DOWN</desc>
-    <name>button-724</name>
+    <name>button-37</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button2-low/prop');      </script>
@@ -1460,7 +1460,7 @@
   </event>
   <event>
     <desc>PANEL THIRD SWITCH UP</desc>
-    <name>button-725</name>
+    <name>button-38</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button3-up/prop');      </script>
@@ -1468,7 +1468,7 @@
   </event>
   <event>
     <desc>PANEL THIRD SWITCH DOWN</desc>
-    <name>button-726</name>
+    <name>button-39</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button3-low/prop');      </script>
@@ -1476,7 +1476,7 @@
   </event>
   <event>
     <desc>PANEL FOURTH SWITCH UP</desc>
-    <name>button-727</name>
+    <name>button-40</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button4-up/prop');      </script>
@@ -1484,7 +1484,7 @@
   </event>
   <event>
     <desc>PANEL FOURTH SWITCH DOWN</desc>
-    <name>button-728</name>
+    <name>button-41</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button4-low/prop');      </script>
@@ -1492,7 +1492,7 @@
   </event>
   <event>
     <desc>PANEL FIFTH SWITCH UP</desc>
-    <name>button-729</name>
+    <name>button-42</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button5-up/prop');      </script>
@@ -1500,7 +1500,7 @@
   </event>
   <event>
     <desc>PANEL FIFTH SWITCH DOWN</desc>
-    <name>button-730</name>
+    <name>button-43</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button5-low/prop');      </script>
@@ -1508,7 +1508,7 @@
   </event>
   <event>
     <desc>PANEL SIXTH SWITCH UP</desc>
-    <name>button-731</name>
+    <name>button-44</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button6-up/prop');      </script>
@@ -1516,7 +1516,7 @@
   </event>
   <event>
     <desc>PANEL SIXTH SWITCH DOWN</desc>
-    <name>button-732</name>
+    <name>button-45</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button6-low/prop');      </script>
@@ -1524,7 +1524,7 @@
   </event>
   <event>
     <desc>PANEL SEVENTH SWITCH UP</desc>
-    <name>button-733</name>
+    <name>button-46</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button7-up/prop');      </script>
@@ -1532,7 +1532,7 @@
   </event>
   <event>
     <desc>PANEL SEVENTH SWITCH DOWN</desc>
-    <name>button-734</name>
+    <name>button-47</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/button7-low/prop');      </script>
@@ -1540,7 +1540,7 @@
   </event>
   <event>
     <desc>UNKOWN BUTTON 2</desc>
-    <name>button-700</name>
+    <name>button-48</name>
     <binding>
       <command>nasal</command>
       <script>        updatePropValue('/honeycomb/bravo/unknown2/prop');      </script>
@@ -1628,7 +1628,7 @@
   </event>  <!-- SELECTOR KNOB AS HDG [IN THIS PLANE IS THE HDG BUG KNOB SELECTOR] -->
   <event>
     <desc>AP ALT SELECTOR Button</desc>
-    <name>button-708</name>
+    <name>button-21</name>
     <binding>
       <command>property-assign</command>
       <property>/honeycomb/bravo/selknob</property>
@@ -1637,7 +1637,7 @@
   </event>
   <event>
     <desc>AP VS SELECTOR Button</desc>
-    <name>button-707</name>
+    <name>button-20</name>
     <binding>
       <command>property-assign</command>
       <property>/honeycomb/bravo/selknob</property>
@@ -1646,7 +1646,7 @@
   </event>
   <event>
     <desc>AP HDG SELECTOR Button</desc>
-    <name>button-706</name>
+    <name>button-19</name>
     <binding>
       <command>property-assign</command>
       <property>/honeycomb/bravo/selknob</property>
@@ -1655,7 +1655,7 @@
   </event>
   <event>
     <desc>AP CRS SELECTOR Button</desc>
-    <name>button-705</name>
+    <name>button-18</name>
     <binding>
       <command>property-assign</command>
       <property>/honeycomb/bravo/selknob</property>
@@ -1664,7 +1664,7 @@
   </event>
   <event>
     <desc>AP IAS SELECTOR Button</desc>
-    <name>button-704</name>
+    <name>button-17</name>
     <binding>
       <command>property-assign</command>
       <property>/honeycomb/bravo/selknob</property>
@@ -1672,18 +1672,8 @@
     </binding>
   </event>
   <event>
-    <desc>ALTITUDE Button</desc>
-    <name>button-top2</name>
-    <binding>
-      <command>property-cycle</command>
-      <property>/autopilot/locks/altitude</property>
-      <value type="string">altitude-hold</value>
-      <value type="string"></value>
-    </binding>
-  </event>
-  <event>
     <desc>FLAPS DOWN</desc>
-    <name>button-302</name>
+    <name>button-15</name>
     <binding>
       <command>property-adjust</command>
       <property>/controls/flight/flaps</property>
@@ -1693,7 +1683,7 @@
   </event>
   <event>
     <desc>FLAPS UP</desc>
-    <name>button-dead</name>
+    <name>button-16</name>
     <binding>
       <command>property-adjust</command>
       <property>/controls/flight/flaps</property>
@@ -1703,7 +1693,7 @@
   </event>
   <event>
     <desc>AP INCR Button </desc>
-    <name>button-300</name>    <!-- INCREASE AUTOPILOT ALT-->
+    <name>button-13</name>    <!-- INCREASE AUTOPILOT ALT-->
     <binding>
       <condition>
         <equals>
@@ -1757,7 +1747,7 @@
   </event>
   <event>
     <desc>APR DECR Button</desc>
-    <name>button-301</name>    <!-- DECREASE AUTOPILOT ALT-->
+    <name>button-14</name>    <!-- DECREASE AUTOPILOT ALT-->
     <binding>
       <condition>
         <equals>

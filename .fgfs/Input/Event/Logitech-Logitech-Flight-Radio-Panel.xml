@@ -199,6 +199,7 @@
         setprop('/saitek/RP/URpanel/digit2',paneldigits[1]);
         setprop('/saitek/RP/URpanel/digit3',paneldigits[2]);
         setprop('/saitek/RP/URpanel/digit4',paneldigits[3]);
+        print ('aaaaaaaaaaaaaaaaaaaaaaaa',paneldigits[3]);
         setprop('/saitek/RP/URpanel/digit5',paneldigits[4]);
       }
 
@@ -220,6 +221,7 @@
         setprop('/saitek/RP/ULpanel/digit1',paneldigits[0]);
         setprop('/saitek/RP/ULpanel/digit2',paneldigits[1]);
         setprop('/saitek/RP/ULpanel/digit3',paneldigits[2]);
+        print ('////////////////////',paneldigits[3]);
         setprop('/saitek/RP/ULpanel/digit4',paneldigits[3]);
         setprop('/saitek/RP/ULpanel/digit5',paneldigits[4]);
       }
@@ -1263,21 +1265,21 @@
   <!-- UL PANEL -->
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-0</name>
+    <name>pointer</name>
     <setting>
       <property>/saitek/RP/ULpanel/digit1</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-1</name>
+    <name>mouse</name>
     <setting>
       <property>/saitek/RP/ULpanel/digit2</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-2</name>
+    <name>reserved03</name>
     <setting>
       <property>/saitek/RP/ULpanel/digit3</property>
     </setting>
@@ -1291,42 +1293,42 @@
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-3</name>
+    <name>gamepad</name>
     <setting>
       <property>/saitek/RP/ULpanel/digit5</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-4</name>
+    <name>keyboard</name>
     <setting>
       <property>/saitek/RP/URpanel/digit1</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-5</name>
+    <name>keypad</name>
     <setting>
       <property>/saitek/RP/URpanel/digit2</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-6</name>
+    <name>multiaxiscontroller</name>
     <setting>
       <property>/saitek/RP/URpanel/digit3</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-7</name>
+    <name>tabletpcsysctrls</name>
     <setting>
       <property>/saitek/RP/URpanel/digit4</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-8</name>
+    <name>watercoolingdevice</name>
     <setting>
       <property>/saitek/RP/URpanel/digit5</property>
     </setting>
@@ -1334,35 +1336,35 @@
   <!-- LL PANEL -->
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-9</name>
+    <name>computerchassisdevice</name>
     <setting>
       <property>/saitek/RP/LLpanel/digit1</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-10</name>
+    <name>wirelessradiocontrols</name>
     <setting>
       <property>/saitek/RP/LLpanel/digit2</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-11</name>
+    <name>portabledevicecontrol</name>
     <setting>
       <property>/saitek/RP/LLpanel/digit3</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-12</name>
+    <name>systemmultiaxiscontroller</name>
     <setting>
       <property>/saitek/RP/LLpanel/digit4</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-13</name>
+    <name>spatialcontroller</name>
     <setting>
       <property>/saitek/RP/LLpanel/digit5</property>
     </setting>
@@ -1370,35 +1372,35 @@
   <!-- LR panel -->
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-14</name>
+    <name>assistivecontrol</name>
     <setting>
       <property>/saitek/RP/LRpanel/digit1</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-15</name>
+    <name>devicedock</name>
     <setting>
       <property>/saitek/RP/LRpanel/digit2</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-16</name>
+    <name>dockabledevice</name>
     <setting>
       <property>/saitek/RP/LRpanel/digit3</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-17</name>
+    <name>callstatemanagementcontrol</name>
     <setting>
       <property>/saitek/RP/LRpanel/digit4</property>
     </setting>
   </event>
   <event>
     <desc>RADIO INDICATORS</desc>
-    <name>unknown-18</name>
+    <name>reserved14</name>
     <setting>
       <property>/saitek/RP/LRpanel/digit5</property>
     </setting>

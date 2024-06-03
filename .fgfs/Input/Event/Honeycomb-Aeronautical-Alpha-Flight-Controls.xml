@@ -141,7 +141,7 @@
           sw = 'on';
         }
         foreach (myprop;props){
-          #print ('PROPPPPP ',myprop[0]);
+          print ('PROPPPPP ',myprop[0]);
           foreach (myvalue;myprop[1]){
             if (sw==myvalue[0]){
               setprop(myprop[0],myvalue[1]);
@@ -156,7 +156,7 @@
 
   <event>
     <desc>LEFT Magnetos switch</desc>
-    <name>button-720</name>
+    <name>button-33</name>
     <binding>
       <command>nasal</command>
       <script>setValue('/honeycomb/alpha/leftmagnetos/prop',1);</script>
@@ -164,7 +164,7 @@
   </event>
   <event>
     <desc>BOTH Magnetos switch</desc>
-    <name>button-721</name>
+    <name>button-34</name>
     <binding>
       <command>nasal</command>
       <script>setValue('/honeycomb/alpha/bothmagnetos/prop',1);</script>
@@ -172,7 +172,7 @@
   </event>
   <event>
     <desc>STARTER</desc>
-    <name>button-722</name>
+    <name>button-35</name>
     <binding>
       <command>nasal</command>
       <script>setValue('/honeycomb/alpha/starter/prop',1);</script>
