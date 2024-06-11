@@ -144,6 +144,7 @@
               # 3 - Jet
               var engines = 1;  ## Default value
               var propeller = 1; ## Default value
+              var jetbrand = 0;
               var idx = 0;
               thisval = '';
               while (typeof(thisval)!='nil'){
@@ -165,11 +166,14 @@
                 }
                 if (thisval=='jet'){ propeller=3;
                 }
+                if (thisval=='bombardier'){ 
+                  jetbrand=1;
+                }
                 
                 idx = idx +1;
               }
-              print ('===========================================>>>>>>>>>>>> ENGINES:',engines,' PROPELLER:',propeller);
-              return [engines,propeller];
+              print ('===========================================>>>>>>>>>>>> ENGINES:',engines,' PROPELLER:',propeller,' JET BRAND:',jetbrand);
+              return [engines,propeller,jetbrand];
             }
 
             airplanetype = getAirplaneType();
@@ -221,15 +225,37 @@
                 setprop('/honeycomb/bravo/axis2/prop','/controls/flight/flaps');
                 setprop('/honeycomb/bravo/axis2/prop/rev',1);
                 if (getprop('/sim/aero')!='738'){
-                  setprop('/honeycomb/bravo/axis5-button-up/prop','/controls/engines/engine[0]/throttle-rev');
-                  setprop('/honeycomb/bravo/axis5-button-up/prop/value/on',1);
-                  setprop('/honeycomb/bravo/axis5-button-low/prop','/controls/engines/engine[0]/throttle-rev');
-                  setprop('/honeycomb/bravo/axis5-button-low/prop/value/on',0);
-                  setprop('/honeycomb/bravo/axis4-button-up/prop','/controls/engines/engine[1]/throttle-rev');
-                  setprop('/honeycomb/bravo/axis4-button-up/prop/value/on',1);
-                  setprop('/honeycomb/bravo/axis4-button-low/prop','/controls/engines/engine[1]/throttle-rev');
-                  setprop('/honeycomb/bravo/axis4-button-low/prop/value/on',0);
+                  if (airplanetype[2]==0){
+                    print ('=========================== DEFAULT JET BRAND ===================');
+                    setprop('/honeycomb/bravo/axis5-button-up/prop','/controls/engines/engine[0]/throttle-rev');
+                    setprop('/honeycomb/bravo/axis5-button-up/prop/value/on',1);
+                    setprop('/honeycomb/bravo/axis5-button-low/prop','/controls/engines/engine[0]/throttle-rev');
+                    setprop('/honeycomb/bravo/axis5-button-low/prop/value/on',0);
+                    setprop('/honeycomb/bravo/axis4-button-up/prop','/controls/engines/engine[1]/throttle-rev');
+                    setprop('/honeycomb/bravo/axis4-button-up/prop/value/on',1);
+                    setprop('/honeycomb/bravo/axis4-button-low/prop','/controls/engines/engine[1]/throttle-rev');
+                    setprop('/honeycomb/bravo/axis4-button-low/prop/value/on',0);
+                  }
+                  if (airplanetype[2]==1){
+                    ### ENGINE REVERSE IS DIFFERENT BOMBARDIERS
+                    print ('========================== SETTING UP BOMBARDIER CUTOFFS ====================');
+                    setprop('/honeycomb/bravo/axis5-rev-button-up/prop','/controls/engines/engine[0]/cutoff');
+                    setprop('/honeycomb/bravo/axis5-rev-button-up/prop/value/on',1);
+                    setprop('/honeycomb/bravo/axis5-rev-button-low/prop','/controls/engines/engine[0]/cutoff');
+                    setprop('/honeycomb/bravo/axis5-rev-button-low/prop/value/on',0);
+                    setprop('/honeycomb/bravo/axis4-rev-button-up/prop','/controls/engines/engine[1]/cutoff');
+                    setprop('/honeycomb/bravo/axis4-rev-button-up/prop/value/on',1);
+                    setprop('/honeycomb/bravo/axis4-rev-button-low/prop','/controls/engines/engine[1]/cutoff');
+                    setprop('/honeycomb/bravo/axis4-rev-button-low/prop/value/on',0);
+                    ### SPOILERS FOR BOMBARDIER
+                    setprop('/honeycomb/bravo/axis1/prop','/controls/flight/spoilers');
+                    setprop('/honeycomb/bravo/axis1/prop/rev',1);
+                    setprop('/honeycomb/bravo/axis1/prop/mult',1);
+                    setprop('/honeycomb/bravo/axis1/prop/int',0);
+      
+                  }
                 }else{
+                  print ('============================ THIS IS A 737-8');
                   ### ENGINE REVERSE IS DIFFERENT FOR 737-800's
                   setprop('/honeycomb/bravo/axis5-button1-up/prop','/controls/engines/engine[0]/reverser');
                   setprop('/honeycomb/bravo/axis5-button1-up/prop/value/on',1);
@@ -242,6 +268,7 @@
                   ## RED BUTTON ON THE THROTTLE LEVER DISARMS AUTO THROTTLE
                   setprop('/honeycomb/bravo/axis5-button2-up/prop','/controls/autoflight/autothrottle-arm');
                   setprop('/honeycomb/bravo/axis5-button2-up/prop/value/on',0);
+
                 
                 }
     
