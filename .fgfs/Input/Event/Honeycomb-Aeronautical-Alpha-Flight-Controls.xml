@@ -8,6 +8,52 @@
       <![CDATA[
       ## This is for the events file
       var aero =getprop ('/sim/aero');
+      print ('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ',aero);
+      ## SET DEFAULTS
+      setprop('/honeycomb/alpha/magnetosoff/prop[0]','/controls/engines/engine/magnetos');
+      setprop('/honeycomb/alpha/magnetosoff/prop[0]/value/on',0);
+      setprop('/honeycomb/alpha/rightmagnetos/prop[0]','/controls/engines/engine/magnetos');
+      setprop('/honeycomb/alpha/rightmagnetos/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/leftmagnetos/prop[0]','/controls/engines/engine/magnetos');
+      setprop('/honeycomb/alpha/leftmagnetos/prop[0]/value/on','2');
+      setprop('/honeycomb/alpha/bothmagnetos/prop[0]','/controls/engines/engine/magnetos');
+      setprop('/honeycomb/alpha/bothmagnetos/prop[0]/value/on','3');
+      setprop('/honeycomb/alpha/starter/prop[0]','/controls/engines/engine/starter_cmd');
+      setprop('/honeycomb/alpha/starter/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/starter/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/brake-left/prop[0]','/controls/gear/brake-left');
+      setprop('/honeycomb/alpha/brake-left/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/brake-left/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/brake-right/prop[0]','/controls/gear/brake-right');
+      setprop('/honeycomb/alpha/brake-right/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/brake-right/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/master-alt/prop[0]','/controls/engines/engine/master-alt');
+      setprop('/honeycomb/alpha/master-alt/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/master-alt/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/battery/prop[0]','/controls/electric/battery-switch');
+      setprop('/honeycomb/alpha/battery/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/battery/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/master-avionics/prop[0]','/controls/switches/master-avionics');
+      setprop('/honeycomb/alpha/master-avionics/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/master-avionics/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/secondary-avionics/prop[0]','');
+      setprop('/honeycomb/alpha/secondary-avionics/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/secondary-avionics/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/beacon/prop[0]','/controls/lighting/beacon');
+      setprop('/honeycomb/alpha/beacon/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/beacon/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/landing-lights/prop[0]','/controls/lighting/landing-lights');
+      setprop('/honeycomb/alpha/landing-lights/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/landing-lights/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/taxi-lights/prop[0]','/controls/lighting/taxi-lights');
+      setprop('/honeycomb/alpha/taxi-lights/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/taxi-lights/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/nav-lights/prop[0]','/controls/lighting/nav-lights');
+      setprop('/honeycomb/alpha/nav-lights/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/nav-lights/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/strobe-lights/prop[0]','/controls/lighting/strobe-lights');
+      setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/off',0);
       if (aero=='PA28-161-180' or aero=='PA28-161-160'){
         setprop('/honeycomb/alpha/magnetosoff/prop[0]','/controls/engines/engine/magnetos-switch');
         setprop('/honeycomb/alpha/magnetosoff/prop[0]/value/on',0);
@@ -56,56 +102,57 @@
         setprop('/honeycomb/alpha/strobe-lights/prop[0]','/controls/lighting/strobe-lights');
         setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/on',1);
         setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/off',0);
-
-
-      }else{
-        setprop('/honeycomb/alpha/magnetosoff/prop[0]','/controls/engines/engine/magnetos');
-        setprop('/honeycomb/alpha/magnetosoff/prop[0]/value/on',0);
-        setprop('/honeycomb/alpha/rightmagnetos/prop[0]','/controls/engines/engine/magnetos');
-        setprop('/honeycomb/alpha/rightmagnetos/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/leftmagnetos/prop[0]','/controls/engines/engine/magnetos');
-        setprop('/honeycomb/alpha/leftmagnetos/prop[0]/value/on','2');
-        setprop('/honeycomb/alpha/bothmagnetos/prop[0]','/controls/engines/engine/magnetos');
-        setprop('/honeycomb/alpha/bothmagnetos/prop[0]/value/on','3');
-        setprop('/honeycomb/alpha/starter/prop[0]','/controls/engines/engine/starter_cmd');
-        setprop('/honeycomb/alpha/starter/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/starter/prop[0]/value/off',0);
-        setprop('/honeycomb/alpha/brake-left/prop[0]','/controls/gear/brake-left');
-        setprop('/honeycomb/alpha/brake-left/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/brake-left/prop[0]/value/off',0);
-        setprop('/honeycomb/alpha/brake-right/prop[0]','/controls/gear/brake-right');
-        setprop('/honeycomb/alpha/brake-right/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/brake-right/prop[0]/value/off',0);
-        setprop('/honeycomb/alpha/master-alt/prop[0]','/controls/engines/engine/master-alt');
-        setprop('/honeycomb/alpha/master-alt/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/master-alt/prop[0]/value/off',0);
-        setprop('/honeycomb/alpha/battery/prop[0]','/controls/electric/battery-switch');
-        setprop('/honeycomb/alpha/battery/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/battery/prop[0]/value/off',0);
-        setprop('/honeycomb/alpha/master-avionics/prop[0]','/controls/switches/master-avionics');
-        setprop('/honeycomb/alpha/master-avionics/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/master-avionics/prop[0]/value/off',0);
-        setprop('/honeycomb/alpha/secondary-avionics/prop[0]','');
-        setprop('/honeycomb/alpha/secondary-avionics/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/secondary-avionics/prop[0]/value/off',0);
-        setprop('/honeycomb/alpha/beacon/prop[0]','/controls/lighting/beacon');
-        setprop('/honeycomb/alpha/beacon/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/beacon/prop[0]/value/off',0);
-        setprop('/honeycomb/alpha/landing-lights/prop[0]','/controls/lighting/landing-lights');
-        setprop('/honeycomb/alpha/landing-lights/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/landing-lights/prop[0]/value/off',0);
-        setprop('/honeycomb/alpha/taxi-lights/prop[0]','/controls/lighting/taxi-lights');
-        setprop('/honeycomb/alpha/taxi-lights/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/taxi-lights/prop[0]/value/off',0);
-        setprop('/honeycomb/alpha/nav-lights/prop[0]','/controls/lighting/nav-lights');
-        setprop('/honeycomb/alpha/nav-lights/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/nav-lights/prop[0]/value/off',0);
-        setprop('/honeycomb/alpha/strobe-lights/prop[0]','/controls/lighting/strobe-lights');
-        setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/on',1);
-        setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/off',0);
-
-        
       }
+      if (aero=='Systems/PZL-Koliber-160-fdm'){
+      setprop('/honeycomb/alpha/battery/prop[0]','/controls/electric/battery-switch');
+      setprop('/honeycomb/alpha/battery/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/battery/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/battery/prop[1]','/controls/switches/battery');
+      setprop('/honeycomb/alpha/battery/prop[1]/value/on',1);
+      setprop('/honeycomb/alpha/battery/prop[1]/value/off',0);
+
+      setprop('/honeycomb/alpha/starter/prop[0]','/controls/engines/engine/starter');
+      setprop('/honeycomb/alpha/starter/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/starter/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/brake-left/prop[0]','/controls/gear/brake-left');
+      setprop('/honeycomb/alpha/brake-left/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/brake-left/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/brake-right/prop[0]','/controls/gear/brake-right');
+      setprop('/honeycomb/alpha/brake-right/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/brake-right/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/master-alt/prop[0]','/controls/switches/alternator');
+      setprop('/honeycomb/alpha/master-alt/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/master-alt/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/master-alt/prop[1]','/controls/engines/engine/master-alt');
+      setprop('/honeycomb/alpha/master-alt/prop[1]/value/on',1);
+      setprop('/honeycomb/alpha/master-alt/prop[1]/value/off',0);
+      setprop('/honeycomb/alpha/battery/prop[0]','/controls/switches/battery');
+      setprop('/honeycomb/alpha/battery/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/battery/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/master-avionics/prop[0]','/controls/switches/master-avionics');
+      setprop('/honeycomb/alpha/master-avionics/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/master-avionics/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/secondary-avionics/prop[0]','');
+      setprop('/honeycomb/alpha/secondary-avionics/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/secondary-avionics/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/beacon/prop[0]','/controls/switches/beacon');
+      setprop('/honeycomb/alpha/beacon/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/beacon/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/landing-lights/prop[0]','/controls/lighting/landing-lights');
+      setprop('/honeycomb/alpha/landing-lights/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/landing-lights/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/taxi-lights/prop[0]','/controls/lighting/taxi-lights');
+      setprop('/honeycomb/alpha/taxi-lights/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/taxi-lights/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/nav-lights/prop[0]','/controls/lighting/nav-lights');
+      setprop('/honeycomb/alpha/nav-lights/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/nav-lights/prop[0]/value/off',0);
+      setprop('/honeycomb/alpha/strobe-lights/prop[0]','/controls/lighting/strobe-lights');
+      setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/on',1);
+      setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/off',0);
+
+      }
+        
       var getProps=func(prop){
         var idx = 0;
         var props =[];
@@ -141,9 +188,10 @@
           sw = 'on';
         }
         foreach (myprop;props){
-          print ('PROPPPPP ',myprop[0]);
           foreach (myvalue;myprop[1]){
+            print ('CHECKING [',myprop[0],'] TO [',myvalue[0],'] SW [',sw,']');
             if (sw==myvalue[0]){
+              print ('SETTING [',myprop[0],'] TO [',myvalue[1],']');
               setprop(myprop[0],myvalue[1]);
             }
           }
@@ -154,6 +202,318 @@
     </open>
   </nasal>
 
+  <event>
+  <!-- Reset view with left trigger button   -->
+    <desc >RESET</desc>
+    <name>button-1</name>
+    <repeatable>false</repeatable>
+    <binding>
+      <command >property-assign</command>
+      <property>/sim/current-view/goal-heading-offset-deg</property>
+      <value>0</value>
+    </binding>
+    <binding>
+      <command >property-assign</command>
+      <property>/sim/current-view/goal-pitch-offset-deg</property>
+      <value>0</value>
+    </binding>
+  </event>
+  <!-- PAUSE/RESUME WITH LEFT THUMB RED BUTTON -->
+  <event>
+    <desc >PAUSE</desc>
+    <name>button-4</name>
+    <repeatable>false</repeatable>
+    <binding>
+      <command>pause</command>
+    </binding>
+  </event>
+  <!-- CONTROL FIELD OF VIEW FROM THE YOKE LEFT THUMB RIGHT TOGGLE -->
+  <event>
+    <name>button-8</name>
+    <desc >FOV DECREASE</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/field-of-view</property>
+      <step>-1</step>
+    </binding>
+  </event>
+  <event n="6">
+    <desc >FOV INCREASE</desc>
+    <name>button-7</name>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/field-of-view</property>
+      <step>1</step>
+    </binding>
+  </event>
+  <!-- CONTROL HEIGHT OFFSET (SEAT UP/DOWN) FROM THE YOKE LEFT THUMB LEFT TOGGLE -->
+  <event >
+    <desc >Y OFFSET DECREASE</desc>
+    <name>button-5</name>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/y-offset-m</property>
+      <step>-0.01</step>
+    </binding>
+  </event>
+  <event>
+    <desc >Y OFFSET INCREASE</desc>
+    <name>button-6</name>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/y-offset-m</property>
+      <step>0.01</step>
+    </binding>
+  </event>
+  <!-- CONTROL SIDE OFFSET (SET RIGHT/LEFT) FROM THE YOKE RIGHT THUMB UPPER TOGGLE -->
+  <event>
+    <name>button-9</name>
+    <desc >X OFFSET DECREASE</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/x-offset-m</property>
+      <step>-0.01</step>
+    </binding>
+  </event>
+  <event>
+    <name>button-10</name>
+    <desc >X OFFSET INCREASE</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command >property-adjust</command>
+      <property >/sim/current-view/x-offset-m</property>
+      <step>0.01</step>
+    </binding>
+  </event>
+  <!-- CONTROL LEFT/RIGHT BRAKES WITH WHIT TRIGGERS ABOVE LEFT/RIGHT THUMB IN YOKE -->
+  <!-- LEFT BRAKE -->
+  <event>
+    <name>button-2</name>
+    <desc >LEFT BRAKE</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/brake-left/prop',1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command>nasal</command>
+        <script>setValue('/honeycomb/alpha/brake-left/prop',0);</script>
+        </binding>
+    </mod-up>
+  </event>
+  <!-- RIGHT BRAKE -->
+  <event>
+    <name>button-3</name>
+    <desc >RIGHT BRAKE</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/brake-right/prop',1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command>nasal</command>
+        <script>setValue('/honeycomb/alpha/brake-right/prop',0);</script>
+        </binding>
+    </mod-up>
+  </event>
+  <!-- ALTERNATOR -->
+  <event>
+    <name>button-13</name>
+    <desc >ALTERNATOR ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/master-alt/prop',1);</script>
+    </binding>
+  </event>
+  <event>
+    <name>button-14</name>
+    <desc >ALTERNATOR OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/master-alt/prop',0);</script>
+  </binding>
+  </event>
+  <!-- BATTERY -->
+  <event>
+    <name>button-15</name>
+    <desc >BATTERY ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/battery/prop',1);</script>
+    </binding>
+  </event>
+  <event>
+    <name>button-16</name>
+    <desc >BATTERY OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/battery/prop',0);</script>
+    </binding>
+  </event>
+  <!-- MASTER AVIONICS -->
+  <event>
+    <name>button-17</name>
+    <desc >MASTER AVIONICS ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/master-avionics/prop',1);</script>
+    </binding>
+  </event>
+  <event >
+    <name>button-18</name>
+    <desc >MASTER AVIONICS OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/master-avionics/prop',0);</script>
+    </binding>
+  </event>
+  <!-- SECONDARY AVIONICS -->
+  <event>
+    <name>button-19</name>
+    <desc>SECONDARY AVIONICS ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/secondary-avionics/prop',1);</script>
+    </binding>
+  </event>
+  <event>
+    <name>button-20</name>
+    <desc >SECONDARY AVIONICS OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/secondary-avionics/prop',0);</script>
+    </binding>
+  </event>
+  <!-- LIGHTS -->
+  <!-- BEACON -->
+  <event>
+    <name>button-21</name>
+    <desc >Beacon ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/beacon/prop',1);</script>
+    </binding>
+  </event>
+  <event>
+    <name>button-22</name>
+    <desc >Beacon OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/beacon/prop',0);</script>
+    </binding>
+  </event>
+  <!-- LANDING LIGHTS -->
+  <event>
+    <name>button-23</name>
+    <desc >Landing Lights ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/landing-lights/prop',1);</script>
+    </binding>
+  </event>
+  <event>
+    <name>button-24</name>
+    <desc >Landing Lights OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/landing-lights/prop',0);</script>
+    </binding>
+  </event>
+  <!-- TAXI LIGHTS -->
+  <event>
+    <name>button-25</name>
+    <desc >Taxi Lights ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/taxi-lights/prop',1);</script>
+    </binding>
+  </event>
+  <event>
+    <name>button-26</name>
+    <desc >Taxi Lights OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/taxi-lights/prop',0);</script>
+    </binding>
+  </event>
+  <!-- NAV LIGHTS -->
+  <event>
+    <name>button-27</name>
+    <desc >Nav Lights ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/nav-lights/prop',1);</script>
+    </binding>
+  </event>
+  <event>
+    <name>button-28</name>
+    <desc >Nav Lights OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/nav-lights/prop',0);</script>
+    </binding>
+  </event>
+  <!-- STROBE LIGHTS -->
+  <event>
+    <name>button-29</name>
+    <desc >Strobe Lights ON</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/strobe-lights/prop',1);</script>
+    </binding>
+  </event>
+  <event>
+    <name>button-30</name>
+    <desc >Strobe Lights OFF</desc>
+    <repeatable >false</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/strobe-lights/prop',0);</script>
+    </binding>
+  </event>
+  <!-- MAGNETOS  -->
+  <!-- OFF -->
+  <event >
+    <name>button-31</name>
+    <desc>Magnetos OFF</desc>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/magnetosoff/prop',1);</script>
+    </binding>
+  </event>
+  <!-- RIGHT -->
+  <event>
+    <name>button-32</name>
+    <desc>Magnetos RIGHT</desc>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/rightmagnetos/prop',1);</script>
+    </binding>
+  </event>
   <event>
     <desc>LEFT Magnetos switch</desc>
     <name>button-33</name>
