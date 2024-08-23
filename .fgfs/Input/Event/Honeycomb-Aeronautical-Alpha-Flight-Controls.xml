@@ -10,6 +10,8 @@
       var aero =getprop ('/sim/aero');
       print ('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ',aero);
       ## SET DEFAULTS
+      setprop('/honeycomb/alpha/shifted',0);
+
       setprop('/honeycomb/alpha/magnetosoff/prop[0]','/controls/engines/engine/magnetos');
       setprop('/honeycomb/alpha/magnetosoff/prop[0]/value/on',0);
       setprop('/honeycomb/alpha/rightmagnetos/prop[0]','/controls/engines/engine/magnetos');
@@ -21,6 +23,16 @@
       setprop('/honeycomb/alpha/starter/prop[0]','/controls/engines/engine/starter_cmd');
       setprop('/honeycomb/alpha/starter/prop[0]/value/on',1);
       setprop('/honeycomb/alpha/starter/prop[0]/value/off',0);
+
+      setprop('/honeycomb/alpha/brake-left/prop[0]/shifted','/sim/current-view/goal-heading-offset-deg');
+      setprop('/honeycomb/alpha/brake-left/prop[0]/shifted/value/on',0);
+      setprop('/honeycomb/alpha/brake-left/prop[0]/shifted/value/off',0);
+
+
+      setprop('/honeycomb/alpha/brake-right/prop[0]/shifted','/sim/current-view/goal-pitch-offset-deg');
+      setprop('/honeycomb/alpha/brake-right/prop[0]/shifted/value/on',0);
+      setprop('/honeycomb/alpha/brake-right/prop[0]/shifted/value/off',0);
+
       setprop('/honeycomb/alpha/brake-left/prop[0]','/controls/gear/brake-left');
       setprop('/honeycomb/alpha/brake-left/prop[0]/value/on',1);
       setprop('/honeycomb/alpha/brake-left/prop[0]/value/off',0);
@@ -54,6 +66,25 @@
       setprop('/honeycomb/alpha/strobe-lights/prop[0]','/controls/lighting/strobe-lights');
       setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/on',1);
       setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/off',0);
+
+      ## THUMB BUTTONS
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]','/controls/flight/elevator-trim');
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue',0.05);
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue/max',1);
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/','/sim/current-view/y-offset-m');
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/advalue',-0.01);
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/advalue/max',-10);
+
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]','/controls/flight/elevator-trim');
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue',-0.05);
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue/max',-1);
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted','/sim/current-view/y-offset-m');
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted/advalue',0.01);
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted/advalue/max',10);
+      
+
+
+
       if (aero=='PA28-161-180' or aero=='PA28-161-160'){
         setprop('/honeycomb/alpha/magnetosoff/prop[0]','/controls/engines/engine/magnetos-switch');
         setprop('/honeycomb/alpha/magnetosoff/prop[0]/value/on',0);
@@ -152,11 +183,21 @@
       setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/off',0);
 
       }
-        
+
+      var isShifted=func(){
+        if(getprop('/honeycomb/alpha/shifted')){
+          return '/shifted';
+        }else{
+          return '';
+        }
+      }
+
+      
       var getProps=func(prop){
+        var appendix = isShifted();
         var idx = 0;
         var props =[];
-        var propvalname = prop~'['~idx~']';
+        var propvalname = prop~'['~idx~']'~appendix;
         var thisval = getprop(propvalname);
         var values=[];
         while (typeof(thisval)!='nil'){
@@ -170,30 +211,51 @@
       }
 
       var getPropValues=func(prop,idx){
+        var appendix = isShifted();
         var values =[];
         var sws = ['on','off'];
         foreach (var sw;sws){
-          var propvalname = prop~'['~idx~']/value/'~sw;
+          var propvalname = prop~'['~idx~']'~appendix~'/value/'~sw;
           var thisval = getprop(propvalname);
-          var valhash = [sw,thisval];
-          append (values,valhash);
+          if (typeof(thisval)!='nil'){
+            var valhash = [sw,thisval,''];
+            append (values,valhash);
+          }else{
+            propvalname = prop~'['~idx~']'~appendix~'/advalue/';
+            thisval = getprop(propvalname);
+            if (typeof(thisval)!='nil'){
+              var maxpropvalname = prop~'['~idx~']'~appendix~'/advalue/max';
+              var maxthisval = getprop(maxpropvalname);
+              var valhash = [3,thisval,maxthisval];
+              append (values,valhash);
+              return values;
+            }
+          }
         }
         return values;
       }
-
       var setValue=func(prop,on){
         var props = getProps(prop);
         var sw = 'off';
-        if (on){
+        if (on==1){
           sw = 'on';
+        }
+        if (on==3){
+          sw = 'adj';
         }
         foreach (myprop;props){
           foreach (myvalue;myprop[1]){
-            print ('CHECKING [',myprop[0],'] TO [',myvalue[0],'] SW [',sw,']');
-            if (sw==myvalue[0]){
-              print ('SETTING [',myprop[0],'] TO [',myvalue[1],']');
-              setprop(myprop[0],myvalue[1]);
-            }
+            if (sw=='adj'){
+              var currval = getprop(myprop[0]);
+              if (math.abs(currval+myvalue[1])<=math.abs(myvalue[2])){
+                 setprop(myprop[0],(currval+myvalue[1]));
+              }
+            
+            }else{
+              if (sw==myvalue[0]){
+                setprop(myprop[0],myvalue[1]);
+              }
+            } 
           }
         }
         return;
@@ -204,23 +266,25 @@
 
   <event>
   <!-- Reset view with left trigger button   -->
-    <desc >RESET</desc>
+    <desc >LEFT TRIGGER</desc>
     <name>button-1</name>
     <repeatable>false</repeatable>
     <binding>
       <command >property-assign</command>
-      <property>/sim/current-view/goal-heading-offset-deg</property>
-      <value>0</value>
+      <property>/honeycomb/alpha/shifted</property>
+      <value>1</value>
     </binding>
-    <binding>
+    <mod-up>
+      <binding>
       <command >property-assign</command>
-      <property>/sim/current-view/goal-pitch-offset-deg</property>
+      <property>/honeycomb/alpha/shifted</property>
       <value>0</value>
     </binding>
-  </event>
+    </mod-up>
+    </event>
   <!-- PAUSE/RESUME WITH LEFT THUMB RED BUTTON -->
   <event>
-    <desc >PAUSE</desc>
+    <desc >RIGHT RED BUTTON</desc>
     <name>button-4</name>
     <repeatable>false</repeatable>
     <binding>
@@ -230,7 +294,7 @@
   <!-- CONTROL FIELD OF VIEW FROM THE YOKE LEFT THUMB RIGHT TOGGLE -->
   <event>
     <name>button-8</name>
-    <desc >FOV DECREASE</desc>
+    <desc >LEFT TUMB RIGHT BUTTON UP</desc>
     <repeatable >true</repeatable>
     <binding>
       <command >property-adjust</command>
@@ -239,7 +303,7 @@
     </binding>
   </event>
   <event n="6">
-    <desc >FOV INCREASE</desc>
+    <desc >LEFT THUMB RIGHT BUTTON DOWN</desc>
     <name>button-7</name>
     <repeatable >true</repeatable>
     <binding>
@@ -250,23 +314,21 @@
   </event>
   <!-- CONTROL HEIGHT OFFSET (SEAT UP/DOWN) FROM THE YOKE LEFT THUMB LEFT TOGGLE -->
   <event >
-    <desc >Y OFFSET DECREASE</desc>
+    <desc >LEFT THUMB LEFT BUTTON UP</desc>
     <name>button-5</name>
     <repeatable >true</repeatable>
     <binding>
-      <command >property-adjust</command>
-      <property >/sim/current-view/y-offset-m</property>
-      <step>-0.01</step>
-    </binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/lthumbleftup/prop',3);</script>
+      </binding>
   </event>
   <event>
-    <desc >Y OFFSET INCREASE</desc>
+    <desc >LEFT THUMB LEFT BUTTON DOWN</desc>
     <name>button-6</name>
     <repeatable >true</repeatable>
     <binding>
-      <command >property-adjust</command>
-      <property >/sim/current-view/y-offset-m</property>
-      <step>0.01</step>
+     <command>nasal</command>
+     <script>setValue('/honeycomb/alpha/lthumbleftdown/prop',3);</script>
     </binding>
   </event>
   <!-- CONTROL SIDE OFFSET (SET RIGHT/LEFT) FROM THE YOKE RIGHT THUMB UPPER TOGGLE -->
@@ -294,7 +356,7 @@
   <!-- LEFT BRAKE -->
   <event>
     <name>button-2</name>
-    <desc >LEFT BRAKE</desc>
+    <desc >LEFT THUMB WHITE BUTTON</desc>
     <repeatable >false</repeatable>
     <binding>
       <command>nasal</command>
@@ -310,7 +372,7 @@
   <!-- RIGHT BRAKE -->
   <event>
     <name>button-3</name>
-    <desc >RIGHT BRAKE</desc>
+    <desc >RIGHT THUMB WHITE BUTTON</desc>
     <repeatable >false</repeatable>
     <binding>
       <command>nasal</command>
