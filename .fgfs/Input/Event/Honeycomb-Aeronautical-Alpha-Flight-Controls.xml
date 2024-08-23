@@ -4,8 +4,7 @@
   <name type="string">Honeycomb Aeronautical Alpha Flight Controls</name>
   <debug-events type="bool">false</debug-events>
   <nasal>
-    <open>
-      <![CDATA[
+    <open><![CDATA[
       ## This is for the events file
       var aero =getprop ('/sim/aero');
       print ('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ',aero);
@@ -69,19 +68,32 @@
 
       ## THUMB BUTTONS
       setprop('/honeycomb/alpha/lthumbleftup/prop[0]','/controls/flight/elevator-trim');
-      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue',0.05);
-      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue/max',1);
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue',-0.05);
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue/min',-1);
       setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/','/sim/current-view/y-offset-m');
       setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/advalue',-0.01);
-      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/advalue/max',-10);
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/advalue/min',-10);
 
       setprop('/honeycomb/alpha/lthumbleftdown/prop[0]','/controls/flight/elevator-trim');
-      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue',-0.05);
-      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue/max',-1);
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue',0.05);
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue/max',1);
       setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted','/sim/current-view/y-offset-m');
       setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted/advalue',0.01);
       setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted/advalue/max',10);
       
+      setprop('/honeycomb/alpha/lthumbrightup/prop[0]','/controls/flight/elevator-trim');
+      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/advalue',-0.1);
+      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/advalue/min',-1);
+      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/shifted/','/sim/current-view/field-of-view');
+      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/shifted/advalue',-1);
+      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/shifted/advalue/min',1);
+
+      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]','/controls/flight/elevator-trim');
+      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/advalue',0.1);
+      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/advalue/max',1);
+      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/shifted','/sim/current-view/field-of-view');
+      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/shifted/advalue',1);
+      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/shifted/advalue/max',120);
 
 
 
@@ -225,8 +237,14 @@
             thisval = getprop(propvalname);
             if (typeof(thisval)!='nil'){
               var maxpropvalname = prop~'['~idx~']'~appendix~'/advalue/max';
+              var minpropvalname = prop~'['~idx~']'~appendix~'/advalue/min';
               var maxthisval = getprop(maxpropvalname);
-              var valhash = [3,thisval,maxthisval];
+              var minthisval = getprop(minpropvalname);
+              if (typeof(minthisval)!='nil'){
+                var valhash = [4,thisval,minthisval];
+              }else{
+                var valhash = [3,thisval,maxthisval];
+              }
               append (values,valhash);
               return values;
             }
@@ -243,12 +261,19 @@
         if (on==3){
           sw = 'adj';
         }
+
         foreach (myprop;props){
           foreach (myvalue;myprop[1]){
             if (sw=='adj'){
               var currval = getprop(myprop[0]);
-              if (math.abs(currval+myvalue[1])<=math.abs(myvalue[2])){
-                 setprop(myprop[0],(currval+myvalue[1]));
+              var newval = currval+myvalue[1];
+              if (myvalue[0]==3){
+                var isok =(newval<=myvalue[2]);
+              }else{
+                var isok =(newval>=myvalue[2]);
+              }
+              if (isok){
+                 setprop(myprop[0],newval);
               }
             
             }else{
@@ -260,13 +285,10 @@
         }
         return;
       }
-      ]]>
-    </open>
+      ]]></open>
   </nasal>
-
-  <event>
-  <!-- Reset view with left trigger button   -->
-    <desc >LEFT TRIGGER</desc>
+  <event>    
+    <desc >LEFT THUMB UNDERNEATH TRIGGER</desc>
     <name>button-1</name>
     <repeatable>false</repeatable>
     <binding>
@@ -276,84 +298,12 @@
     </binding>
     <mod-up>
       <binding>
-      <command >property-assign</command>
-      <property>/honeycomb/alpha/shifted</property>
-      <value>0</value>
-    </binding>
-    </mod-up>
-    </event>
-  <!-- PAUSE/RESUME WITH LEFT THUMB RED BUTTON -->
-  <event>
-    <desc >RIGHT RED BUTTON</desc>
-    <name>button-4</name>
-    <repeatable>false</repeatable>
-    <binding>
-      <command>pause</command>
-    </binding>
-  </event>
-  <!-- CONTROL FIELD OF VIEW FROM THE YOKE LEFT THUMB RIGHT TOGGLE -->
-  <event>
-    <name>button-8</name>
-    <desc >LEFT TUMB RIGHT BUTTON UP</desc>
-    <repeatable >true</repeatable>
-    <binding>
-      <command >property-adjust</command>
-      <property >/sim/current-view/field-of-view</property>
-      <step>-1</step>
-    </binding>
-  </event>
-  <event n="6">
-    <desc >LEFT THUMB RIGHT BUTTON DOWN</desc>
-    <name>button-7</name>
-    <repeatable >true</repeatable>
-    <binding>
-      <command >property-adjust</command>
-      <property >/sim/current-view/field-of-view</property>
-      <step>1</step>
-    </binding>
-  </event>
-  <!-- CONTROL HEIGHT OFFSET (SEAT UP/DOWN) FROM THE YOKE LEFT THUMB LEFT TOGGLE -->
-  <event >
-    <desc >LEFT THUMB LEFT BUTTON UP</desc>
-    <name>button-5</name>
-    <repeatable >true</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/lthumbleftup/prop',3);</script>
+        <command >property-assign</command>
+        <property>/honeycomb/alpha/shifted</property>
+        <value>0</value>
       </binding>
+    </mod-up>
   </event>
-  <event>
-    <desc >LEFT THUMB LEFT BUTTON DOWN</desc>
-    <name>button-6</name>
-    <repeatable >true</repeatable>
-    <binding>
-     <command>nasal</command>
-     <script>setValue('/honeycomb/alpha/lthumbleftdown/prop',3);</script>
-    </binding>
-  </event>
-  <!-- CONTROL SIDE OFFSET (SET RIGHT/LEFT) FROM THE YOKE RIGHT THUMB UPPER TOGGLE -->
-  <event>
-    <name>button-9</name>
-    <desc >X OFFSET DECREASE</desc>
-    <repeatable >true</repeatable>
-    <binding>
-      <command >property-adjust</command>
-      <property >/sim/current-view/x-offset-m</property>
-      <step>-0.01</step>
-    </binding>
-  </event>
-  <event>
-    <name>button-10</name>
-    <desc >X OFFSET INCREASE</desc>
-    <repeatable >true</repeatable>
-    <binding>
-      <command >property-adjust</command>
-      <property >/sim/current-view/x-offset-m</property>
-      <step>0.01</step>
-    </binding>
-  </event>
-  <!-- CONTROL LEFT/RIGHT BRAKES WITH WHIT TRIGGERS ABOVE LEFT/RIGHT THUMB IN YOKE -->
-  <!-- LEFT BRAKE -->
   <event>
     <name>button-2</name>
     <desc >LEFT THUMB WHITE BUTTON</desc>
@@ -366,10 +316,9 @@
       <binding>
         <command>nasal</command>
         <script>setValue('/honeycomb/alpha/brake-left/prop',0);</script>
-        </binding>
+      </binding>
     </mod-up>
   </event>
-  <!-- RIGHT BRAKE -->
   <event>
     <name>button-3</name>
     <desc >RIGHT THUMB WHITE BUTTON</desc>
@@ -382,228 +331,295 @@
       <binding>
         <command>nasal</command>
         <script>setValue('/honeycomb/alpha/brake-right/prop',0);</script>
-        </binding>
-    </mod-up>
-  </event>
-  <!-- ALTERNATOR -->
-  <event>
-    <name>button-13</name>
-    <desc >ALTERNATOR ON</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/master-alt/prop',1);</script>
-    </binding>
-  </event>
-  <event>
-    <name>button-14</name>
-    <desc >ALTERNATOR OFF</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/master-alt/prop',0);</script>
-  </binding>
-  </event>
-  <!-- BATTERY -->
-  <event>
-    <name>button-15</name>
-    <desc >BATTERY ON</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/battery/prop',1);</script>
-    </binding>
-  </event>
-  <event>
-    <name>button-16</name>
-    <desc >BATTERY OFF</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/battery/prop',0);</script>
-    </binding>
-  </event>
-  <!-- MASTER AVIONICS -->
-  <event>
-    <name>button-17</name>
-    <desc >MASTER AVIONICS ON</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/master-avionics/prop',1);</script>
-    </binding>
-  </event>
-  <event >
-    <name>button-18</name>
-    <desc >MASTER AVIONICS OFF</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/master-avionics/prop',0);</script>
-    </binding>
-  </event>
-  <!-- SECONDARY AVIONICS -->
-  <event>
-    <name>button-19</name>
-    <desc>SECONDARY AVIONICS ON</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/secondary-avionics/prop',1);</script>
-    </binding>
-  </event>
-  <event>
-    <name>button-20</name>
-    <desc >SECONDARY AVIONICS OFF</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/secondary-avionics/prop',0);</script>
-    </binding>
-  </event>
-  <!-- LIGHTS -->
-  <!-- BEACON -->
-  <event>
-    <name>button-21</name>
-    <desc >Beacon ON</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/beacon/prop',1);</script>
-    </binding>
-  </event>
-  <event>
-    <name>button-22</name>
-    <desc >Beacon OFF</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/beacon/prop',0);</script>
-    </binding>
-  </event>
-  <!-- LANDING LIGHTS -->
-  <event>
-    <name>button-23</name>
-    <desc >Landing Lights ON</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/landing-lights/prop',1);</script>
-    </binding>
-  </event>
-  <event>
-    <name>button-24</name>
-    <desc >Landing Lights OFF</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/landing-lights/prop',0);</script>
-    </binding>
-  </event>
-  <!-- TAXI LIGHTS -->
-  <event>
-    <name>button-25</name>
-    <desc >Taxi Lights ON</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/taxi-lights/prop',1);</script>
-    </binding>
-  </event>
-  <event>
-    <name>button-26</name>
-    <desc >Taxi Lights OFF</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/taxi-lights/prop',0);</script>
-    </binding>
-  </event>
-  <!-- NAV LIGHTS -->
-  <event>
-    <name>button-27</name>
-    <desc >Nav Lights ON</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/nav-lights/prop',1);</script>
-    </binding>
-  </event>
-  <event>
-    <name>button-28</name>
-    <desc >Nav Lights OFF</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/nav-lights/prop',0);</script>
-    </binding>
-  </event>
-  <!-- STROBE LIGHTS -->
-  <event>
-    <name>button-29</name>
-    <desc >Strobe Lights ON</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/strobe-lights/prop',1);</script>
-    </binding>
-  </event>
-  <event>
-    <name>button-30</name>
-    <desc >Strobe Lights OFF</desc>
-    <repeatable >false</repeatable>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/strobe-lights/prop',0);</script>
-    </binding>
-  </event>
-  <!-- MAGNETOS  -->
-  <!-- OFF -->
-  <event >
-    <name>button-31</name>
-    <desc>Magnetos OFF</desc>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/magnetosoff/prop',1);</script>
-    </binding>
-  </event>
-  <!-- RIGHT -->
-  <event>
-    <name>button-32</name>
-    <desc>Magnetos RIGHT</desc>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/rightmagnetos/prop',1);</script>
-    </binding>
-  </event>
-  <event>
-    <desc>LEFT Magnetos switch</desc>
-    <name>button-33</name>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/leftmagnetos/prop',1);</script>
-    </binding>
-  </event>
-  <event>
-    <desc>BOTH Magnetos switch</desc>
-    <name>button-34</name>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/bothmagnetos/prop',1);</script>
-    </binding>
-  </event>
-  <event>
-    <desc>STARTER</desc>
-    <name>button-35</name>
-    <binding>
-      <command>nasal</command>
-      <script>setValue('/honeycomb/alpha/starter/prop',1);</script>
-    </binding>
-    <mod-up>
-      <binding>
-        <command>nasal</command>
-        <script>setValue('/honeycomb/alpha/starter/prop',0);</script>
       </binding>
     </mod-up>
   </event>
+  <event>
+    <desc >RIGHT RED BUTTON</desc>
+    <name>button-4</name>
+    <repeatable>false</repeatable>
+    <binding>
+      <command>pause</command>
+    </binding>
+  </event>
+  <event >
+    <desc >LEFT THUMB LEFT BUTTON UP</desc>
+    <name>button-5</name>
+    <repeatable >true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/lthumbleftdown/prop',3);</script>
+    </binding>
+  </event>
+  <event>
+    <desc >LEFT THUMB LEFT BUTTON DOWN</desc>
+    <name>button-6</name>
+    <repeatable >true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/lthumbleftup/prop',3);</script>
+    </binding>
+  </event>
+  <event>
+    <name>button-7</name>
+    <desc >LEFT THUMB RIGHT BUTTON DOWN</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/lthumbrightdown/prop',3);</script>
+    </binding>
+  </event>
+  <event>
+    <name>button-8</name>
+    <desc >LEFT THUMB RIGHT BUTTON UP</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/lthumbrightup/prop',3);</script>
+    </binding>
+  </event>
+  <event>
+    <name>button-9</name>
+    <desc >RIGHT TUMB UP BUTTON RIGHT</desc>
+    <repeatable >true</repeatable>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/rthumbupright/prop',3);</script>
+    </binding>
+</event>
+<event >
+  <desc >RIGHT THUMB UP BUTTON LEFT</desc>
+  <name>button-10</name>
+  <repeatable >true</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/rthumbupleft/prop',3);</script>
+  </binding>
+</event>
+<event>
+  <name>button-11</name>
+  <desc >RIGHT TUMB DOWN BUTTON RIGHT</desc>
+  <repeatable >true</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/rthumbdownright/prop',3);</script>
+  </binding>
+</event>
+<event >
+  <desc >RIGHT THUMB DOWN BUTTON LEFT</desc>
+  <name>button-12</name>
+  <repeatable >true</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/rthumbdownleft/prop',3);</script>
+  </binding>
+</event>
+<event>
+  <name>button-13</name>
+  <desc >ALTERNATOR ON</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/master-alt/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <name>button-14</name>
+  <desc >ALTERNATOR OFF</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/master-alt/prop',0);</script>
+  </binding>
+</event>
+<event>
+  <name>button-15</name>
+  <desc >BATTERY ON</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/battery/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <name>button-16</name>
+  <desc >BATTERY OFF</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/battery/prop',0);</script>
+  </binding>
+</event>
+<event>
+  <name>button-17</name>
+  <desc >MASTER AVIONICS ON</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/master-avionics/prop',1);</script>
+  </binding>
+</event>
+<event >
+  <name>button-18</name>
+  <desc >MASTER AVIONICS OFF</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/master-avionics/prop',0);</script>
+  </binding>
+</event>
+<event>
+  <name>button-19</name>
+  <desc>SECONDARY AVIONICS ON</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/secondary-avionics/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <name>button-20</name>
+  <desc >SECONDARY AVIONICS OFF</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/secondary-avionics/prop',0);</script>
+  </binding>
+</event>
+<event>
+  <name>button-21</name>
+  <desc >Beacon ON</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/beacon/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <name>button-22</name>
+  <desc >Beacon OFF</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/beacon/prop',0);</script>
+  </binding>
+</event>
+<event>
+  <name>button-23</name>
+  <desc >Landing Lights ON</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/landing-lights/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <name>button-24</name>
+  <desc >Landing Lights OFF</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/landing-lights/prop',0);</script>
+  </binding>
+</event>
+<event>
+  <name>button-25</name>
+  <desc >Taxi Lights ON</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/taxi-lights/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <name>button-26</name>
+  <desc >Taxi Lights OFF</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/taxi-lights/prop',0);</script>
+  </binding>
+</event>
+<event>
+  <name>button-27</name>
+  <desc >Nav Lights ON</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/nav-lights/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <name>button-28</name>
+  <desc >Nav Lights OFF</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/nav-lights/prop',0);</script>
+  </binding>
+</event>
+<event>
+  <name>button-29</name>
+  <desc >Strobe Lights ON</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/strobe-lights/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <name>button-30</name>
+  <desc >Strobe Lights OFF</desc>
+  <repeatable >false</repeatable>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/strobe-lights/prop',0);</script>
+  </binding>
+</event>
+<event >
+  <name>button-31</name>
+  <desc>Magnetos OFF</desc>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/magnetosoff/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <name>button-32</name>
+  <desc>Magnetos RIGHT</desc>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/rightmagnetos/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <desc>LEFT Magnetos switch</desc>
+  <name>button-33</name>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/leftmagnetos/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <desc>BOTH Magnetos switch</desc>
+  <name>button-34</name>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/bothmagnetos/prop',1);</script>
+  </binding>
+</event>
+<event>
+  <desc>STARTER</desc>
+  <name>button-35</name>
+  <binding>
+    <command>nasal</command>
+    <script>setValue('/honeycomb/alpha/starter/prop',1);</script>
+  </binding>
+  <mod-up>
+    <binding>
+      <command>nasal</command>
+      <script>setValue('/honeycomb/alpha/starter/prop',0);</script>
+    </binding>
+  </mod-up>
+</event>
 </PropertyList>
