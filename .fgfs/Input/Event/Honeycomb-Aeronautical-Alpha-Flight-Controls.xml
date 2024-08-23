@@ -68,29 +68,29 @@
 
       ## THUMB BUTTONS
       setprop('/honeycomb/alpha/lthumbleftup/prop[0]','/controls/flight/elevator-trim');
-      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue',-0.05);
-      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue/min',-1);
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue',0.01);
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue/max',1);
       setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/','/sim/current-view/y-offset-m');
       setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/advalue',-0.01);
       setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/advalue/min',-10);
 
       setprop('/honeycomb/alpha/lthumbleftdown/prop[0]','/controls/flight/elevator-trim');
-      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue',0.05);
-      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue/max',1);
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue',-0.01);
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue/min',-1);
       setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted','/sim/current-view/y-offset-m');
       setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted/advalue',0.01);
       setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted/advalue/max',10);
       
       setprop('/honeycomb/alpha/lthumbrightup/prop[0]','/controls/flight/elevator-trim');
-      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/advalue',-0.1);
-      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/advalue/min',-1);
+      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/advalue',0.02);
+      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/advalue/max',1);
       setprop('/honeycomb/alpha/lthumbrightup/prop[0]/shifted/','/sim/current-view/field-of-view');
       setprop('/honeycomb/alpha/lthumbrightup/prop[0]/shifted/advalue',-1);
       setprop('/honeycomb/alpha/lthumbrightup/prop[0]/shifted/advalue/min',1);
 
       setprop('/honeycomb/alpha/lthumbrightdown/prop[0]','/controls/flight/elevator-trim');
-      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/advalue',0.1);
-      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/advalue/max',1);
+      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/advalue',-0.02);
+      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/advalue/min',-1);
       setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/shifted','/sim/current-view/field-of-view');
       setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/shifted/advalue',1);
       setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/shifted/advalue/max',120);
