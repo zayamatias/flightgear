@@ -66,35 +66,64 @@
       setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/on',1);
       setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/off',0);
 
-      ## THUMB BUTTONS
+      ## LEFT THUMB BUTTONS
       setprop('/honeycomb/alpha/lthumbleftup/prop[0]','/controls/flight/elevator-trim');
-      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue',0.01);
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue',0.005);
       setprop('/honeycomb/alpha/lthumbleftup/prop[0]/advalue/max',1);
       setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/','/sim/current-view/y-offset-m');
-      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/advalue',-0.01);
-      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/advalue/min',-10);
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/advalue',0.05);
+      setprop('/honeycomb/alpha/lthumbleftup/prop[0]/shifted/advalue/max',120);
 
       setprop('/honeycomb/alpha/lthumbleftdown/prop[0]','/controls/flight/elevator-trim');
-      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue',-0.01);
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue',-0.005);
       setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/advalue/min',-1);
       setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted','/sim/current-view/y-offset-m');
-      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted/advalue',0.01);
-      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted/advalue/max',10);
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted/advalue',-0.05);
+      setprop('/honeycomb/alpha/lthumbleftdown/prop[0]/shifted/advalue/min',-120);
       
       setprop('/honeycomb/alpha/lthumbrightup/prop[0]','/controls/flight/elevator-trim');
-      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/advalue',0.02);
+      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/advalue',0.01);
       setprop('/honeycomb/alpha/lthumbrightup/prop[0]/advalue/max',1);
       setprop('/honeycomb/alpha/lthumbrightup/prop[0]/shifted/','/sim/current-view/field-of-view');
       setprop('/honeycomb/alpha/lthumbrightup/prop[0]/shifted/advalue',-1);
-      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/shifted/advalue/min',1);
+      setprop('/honeycomb/alpha/lthumbrightup/prop[0]/shifted/advalue/min',-120);
 
       setprop('/honeycomb/alpha/lthumbrightdown/prop[0]','/controls/flight/elevator-trim');
-      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/advalue',-0.02);
+      setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/advalue',-0.01);
       setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/advalue/min',-1);
       setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/shifted','/sim/current-view/field-of-view');
       setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/shifted/advalue',1);
       setprop('/honeycomb/alpha/lthumbrightdown/prop[0]/shifted/advalue/max',120);
 
+
+      ## RIGHT THUMB BUTTONS
+      setprop('/honeycomb/alpha/rthumbupright/prop[0]','/controls/flight/rudder-trim');
+      setprop('/honeycomb/alpha/rthumbupright/prop[0]/advalue',-0.005);
+      setprop('/honeycomb/alpha/rthumbupright/prop[0]/advalue/min',-1);
+      setprop('/honeycomb/alpha/rthumbupright/prop[0]/shifted/','/sim/current-view/heading-offset-deg');
+      setprop('/honeycomb/alpha/rthumbupright/prop[0]/shifted/advalue',1);
+      setprop('/honeycomb/alpha/rthumbupright/prop[0]/shifted/advalue/max',361);
+
+      setprop('/honeycomb/alpha/rthumbupleft/prop[0]','/controls/flight/rudder-trim');
+      setprop('/honeycomb/alpha/rthumbupleft/prop[0]/advalue',0.005);
+      setprop('/honeycomb/alpha/rthumbupleft/prop[0]/advalue/max',1);
+      setprop('/honeycomb/alpha/rthumbupleft/prop[0]/shifted','/sim/current-view/heading-offset-deg');
+      setprop('/honeycomb/alpha/rthumbupleft/prop[0]/shifted/advalue',-1);
+      setprop('/honeycomb/alpha/rthumbupleft/prop[0]/shifted/advalue/min',-361);
+      
+      setprop('/honeycomb/alpha/rthumbdownright/prop[0]','/controls/flight/rudder-trim');
+      setprop('/honeycomb/alpha/rthumbdownright/prop[0]/advalue',-0.01);
+      setprop('/honeycomb/alpha/rthumbdownright/prop[0]/advalue/min',-1);
+      setprop('/honeycomb/alpha/rthumbdownright/prop[0]/shifted/','/sim/current-view/x-offset-m');
+      setprop('/honeycomb/alpha/rthumbdownright/prop[0]/shifted/advalue',-0.05);
+      setprop('/honeycomb/alpha/rthumbdownright/prop[0]/shifted/advalue/min',-120);
+
+      setprop('/honeycomb/alpha/rthumbdownleft/prop[0]','/controls/flight/rudder-trim');
+      setprop('/honeycomb/alpha/rthumbdownleft/prop[0]/advalue',0.01);
+      setprop('/honeycomb/alpha/rthumbdownleft/prop[0]/advalue/max',1);
+      setprop('/honeycomb/alpha/rthumbdownleft/prop[0]/shifted','/sim/current-view/x-offset-m');
+      setprop('/honeycomb/alpha/rthumbdownleft/prop[0]/shifted/advalue',0.05);
+      setprop('/honeycomb/alpha/rthumbdownleft/prop[0]/shifted/advalue/max',120);
 
 
       if (aero=='PA28-161-180' or aero=='PA28-161-160'){
