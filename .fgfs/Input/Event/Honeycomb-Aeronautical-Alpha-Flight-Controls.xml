@@ -7,7 +7,7 @@
     <open><![CDATA[
       ## This is for the events file
       var aero =getprop ('/sim/aero');
-      print ('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ',aero);
+      ## print ('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ',aero);
       ## SET DEFAULTS
       setprop('/honeycomb/alpha/shifted',0);
 
@@ -222,6 +222,28 @@
       setprop('/honeycomb/alpha/strobe-lights/prop[0]','/controls/lighting/strobe-lights');
       setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/on',1);
       setprop('/honeycomb/alpha/strobe-lights/prop[0]/value/off',0);
+
+      }
+
+
+      if (aero=='c172p'){
+        setprop('/honeycomb/alpha/master-alt/prop[0]','/controls/switches/master-alt');
+        setprop('/honeycomb/alpha/master-alt/prop[0]/value/on',1);
+        setprop('/honeycomb/alpha/master-alt/prop[0]/value/off',0);
+        setprop('/honeycomb/alpha/battery/prop[0]','/controls/switches/master-bat');
+        setprop('/honeycomb/alpha/battery/prop[0]/value/on',1);
+        setprop('/honeycomb/alpha/battery/prop[0]/value/off',0);
+        setprop('/honeycomb/alpha/magnetosoff/prop[0]','/controls/switches/magnetos');
+        setprop('/honeycomb/alpha/magnetosoff/prop[0]/value/on',0);
+        setprop('/honeycomb/alpha/rightmagnetos/prop[0]','/controls/switches/magnetos');
+        setprop('/honeycomb/alpha/rightmagnetos/prop[0]/value/on',1);
+        setprop('/honeycomb/alpha/leftmagnetos/prop[0]','/controls/switches/magnetos');
+        setprop('/honeycomb/alpha/leftmagnetos/prop[0]/value/on','2');
+        setprop('/honeycomb/alpha/bothmagnetos/prop[0]','/controls/switches/magnetos');
+        setprop('/honeycomb/alpha/bothmagnetos/prop[0]/value/on','3');
+        setprop('/honeycomb/alpha/starter/prop[0]','/controls/switches/starter');
+        setprop('/honeycomb/alpha/starter/prop[0]/value/on',1);
+        setprop('/honeycomb/alpha/starter/prop[0]/value/off',0);
 
       }
 
