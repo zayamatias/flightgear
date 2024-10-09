@@ -751,7 +751,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(1,0,0);
+        adjustvalue(1,0,1); #upper,full,dec
       </script>
     </binding>
   </event>
@@ -762,7 +762,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(1,0,1);
+        adjustvalue(1,0,0);
       </script>
     </binding>
   </event>
@@ -773,7 +773,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(1,1,0);
+        adjustvalue(1,1,1);
       </script>
     </binding>
   </event>
@@ -784,7 +784,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(1,1,1);
+        adjustvalue(1,1,0);
       </script>
     </binding>
   </event>
@@ -796,7 +796,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(0,0,0);
+        adjustvalue(0,0,1);
       </script>
     </binding>
   </event>
@@ -807,7 +807,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(0,0,1);
+        adjustvalue(0,0,0);
       </script>
     </binding>
   </event>
@@ -818,7 +818,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(0,1,0);
+        adjustvalue(0,1,1);
       </script>
     </binding>
     </event>
@@ -829,7 +829,7 @@
     <binding>
       <command>nasal</command>
       <script>
-        adjustvalue(0,1,1);
+        adjustvalue(0,1,0);
       </script>
     </binding>
   </event>
